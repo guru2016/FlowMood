@@ -144,9 +144,16 @@ def test_static_page() -> None:
         build_static.build(source=ROOT / "sample" / "latest_ranking.json", output=out)
         html = out.read_text(encoding="utf-8")
         check("入选时间" in html and "评分" in html, "静态看板含「入选时间」列")
-        check("市场核心指标" in html, "静态看板含核心指标卡片区")
+        check("市场核心指标" in html, "静态看板含核心指标胶囊条")
         check("sjdp_" not in html, "静态页不含指标代码名")
         check("FlowMood" in html, "静态看板标题正确")
+        for key, label in (("kpi-grid", "KPI 卡区"), ("core-strip", "指标胶囊条"),
+                           ("main-panel", "标签页主面板"), ("right-sidebar", "右侧实时流侧栏"),
+                           ("openStock", "个股详情弹窗"), ("stkchip", "可点击个股标的"),
+                           ("splitReport", "报告逐股明细折叠"), ("showTab", "主面板标签页"),
+                           ("extra_quotes", "报告标的额外行情"),
+                           ("data-theme", "浅色 / 深色主题")):
+            check(key in html, f"静态看板含{label}")
         check(Path(td, "summary.md").exists(), "生成了 Actions 运行摘要")
 
 

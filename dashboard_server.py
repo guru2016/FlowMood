@@ -201,6 +201,30 @@ def live_ranking(limit=30):
     return data
 
 
+def extra_quotes(raw: str) -> dict:
+    """报告里的标的不一定在 Top100 榜单里，个股详情弹窗仍要能显示实时价。
+
+    只从已缓存的全市场行情里查，不额外发起上游请求；查不到就留空由前端标注。
+    """
+    syms = [s.strip() for s in (raw or '').split(',') if s.strip()][:60]
+    if not syms:
+        return {}
+    try:
+        import live_quotes as lq
+        quotes, _ = lq.fetch_quotes_cached(ttl=30.0)
+    except Exception:  # noqa: BLE001
+        return {}
+    out = {}
+    for sym in syms:
+        q = quotes.get(sym.split('.')[0])
+        if not q:
+            continue
+        out[sym] = {'price': q.get('f2'), 'change_pct': q.get('f3'),
+                    'money_flow_pct': q.get('f184'), 'turnover_pct': q.get('f8'),
+                    'sector': q.get('f100')}
+    return out
+
+
 class Handler(BaseHTTPRequestHandler):
     def send_json(self, value, code=200):
         body = json.dumps(value, ensure_ascii=False).encode()
@@ -218,7 +242,9 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError:
                 limit = 30
             live = qs.get('live',['0'])[0] in ('1','true','yes')
-            self.send_json(live_ranking(limit) if live else ranking(limit)); return
+            data = live_ranking(limit) if live else ranking(limit)
+            data['extra_quotes'] = extra_quotes(qs.get('extra',[''])[0])
+            self.send_json(data); return
         if path == '/':
             body = (ROOT / 'web' / 'dashboard.html').read_bytes()
             self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length', str(len(body))); self.end_headers(); self.wfile.write(body); return

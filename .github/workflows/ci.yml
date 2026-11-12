@@ -70,7 +70,8 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           keys = ('午盘报告', '收盘报告', '实时分析流', '该时段候选计划',
-                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间', '市场核心指标')
+                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间', '市场核心指标',
+                  'openStock', 'showTab', 'stkchip', 'splitReport', 'extra_quotes')
           for k in keys:
               assert k in h, f'静态页缺少 {k}'
           assert 'sjdp_' not in h, '静态页不应出现指标代码名'

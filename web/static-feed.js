@@ -13,9 +13,22 @@
   var RANK0 = (BOOT.ranking && BOOT.ranking.ranking) || [];
   var REFRESH_MS = 20000;
 
+  // 报告候选里的标的不一定在 Top100 榜单里，也要一起拿行情，
+  // 否则从报告正文点开个股详情时价格 / 涨跌 / 资金流全是空的。
+  var EXTRA = [];
+  Object.keys(BOOT.reports || {}).forEach(function (k) {
+    ((BOOT.reports[k] || {}).plans || []).forEach(function (p) { if (p.symbol) EXTRA.push(p.symbol); });
+  });
+  ((BOOT.status && BOOT.status.report && BOOT.status.report.plans) || []).forEach(function (p) {
+    if (p.symbol) EXTRA.push(p.symbol);
+  });
+  EXTRA = EXTRA.filter(function (s, i, a) {
+    return a.indexOf(s) === i && RANK0.every(function (r) { return r.symbol !== s; });
+  });
+
   var FEED = {
     rows: RANK0.map(function (r) { return Object.assign({}, r); }),
-    quotes: {}, live: false, reason: '正在连接行情源…', at: '', source: 'snapshot',
+    quotes: {}, extraQuotes: {}, live: false, reason: '正在连接行情源…', at: '', source: 'snapshot',
     hit: 0, total: RANK0.length, warning: '', digest: [], started: false, failStreak: 0
   };
 
@@ -117,6 +130,15 @@
       r.quote_source = FEED.source;
     });
     FEED.hit = hit;
+    FEED.extraQuotes = {};
+    EXTRA.forEach(function (sym) {
+      var q = FEED.quotes[codeOf(sym)];
+      if (!q) return;
+      FEED.extraQuotes[sym] = {
+        price: q.f2, change_pct: q.f3, money_flow_pct: q.f184,
+        turnover_pct: q.f8, sector: q.f100
+      };
+    });
   }
 
   function buildDigest() {
@@ -139,7 +161,7 @@
   }
 
   function refresh() {
-    var symbols = FEED.rows.map(function (r) { return r.symbol; });
+    var symbols = FEED.rows.map(function (r) { return r.symbol; }).concat(EXTRA);
     if (!symbols.length) return Promise.resolve();
     return emBatch(symbols).then(function (em) {
       var emCount = em ? Object.keys(em).length : 0;
@@ -189,6 +211,7 @@
           live: FEED.live, live_reason: FEED.reason, quote_at: FEED.at,
           quote_source: FEED.source, live_warning: FEED.warning,
           live_merge: { hit: FEED.hit, total: FEED.total, elapsed: 1 },
+          extra_quotes: FEED.extraQuotes,
           feed_digest: FEED.digest, source_label: BOOT.source_label || '示例快照'
         }));
       }
