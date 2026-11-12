@@ -60,8 +60,10 @@ Wants=network-online.target
 Type=simple
 WorkingDirectory=$APP_DIR
 Environment=TZ=Asia/Shanghai
-Environment=THS_HOST=127.0.0.1
-Environment=THS_PORT=8787
+# 监听所有网卡，局域网内直接访问 http://<内网IP>:8787；
+# 要收回本机访问就把它改回 127.0.0.1 再 restart
+Environment=THS_HOST=${THS_BIND_HOST:-0.0.0.0}
+Environment=THS_PORT=${THS_BIND_PORT:-8787}
 ExecStart=$PY $APP_DIR/dashboard_server.py
 Restart=always
 RestartSec=5
