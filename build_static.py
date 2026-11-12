@@ -129,6 +129,17 @@ def render_html(boot: dict) -> str:
     # 中文指标卡片 + 无代码名/无 JSON 串的报告正文。
     boot = dict(boot)
     boot["reports"] = {k: normalize_report(v) for k, v in (boot.get("reports") or {}).items()}
+    # status 里那份「最近一份报告」同样要人话化，否则原始 metrics 字典
+    # （sjdp_* 代码名）会跟着 BOOT 一起写进页面源码，虽然不渲染但会被
+    # 静态页自检和「页面不出现代码名」的约定判为不合格。
+    st = dict(boot.get("status") or {})
+    if isinstance(st.get("report"), dict) and st["report"]:
+        st["report"] = normalize_report(st["report"])
+    for sess, item in (st.get("auto") or {}).items():
+        if isinstance(item, dict) and isinstance(item.get("report"), dict):
+            st["auto"][sess] = {**item, "report": normalize_report(item["report"])}
+    if st:
+        boot["status"] = st
     tpl = (WEB / "dashboard.html").read_text(encoding="utf-8")
     feed = (WEB / "static-feed.js").read_text(encoding="utf-8")
     if PLACEHOLDER not in tpl:

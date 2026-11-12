@@ -512,8 +512,12 @@ async function loadRank(){try{const lim=$('ranklimit').value,live=$('ranklive').
  const qtime=hhmmss(x.quote_at||x.generated_at),warn=x.live_warning?` <span class="up">⚠ ${esc(x.live_warning)}</span>`:'';
  const rankAt=String(x.ranking_at||x.generated_at||'').replace('T',' ').slice(5,16);
  const flowNote=x.flow_source==='defined'?' · <span class="warn">资金流为定稿值</span>':'';
+ // 云端 Pages 拿不到全市场采集时会回退仓库示例定稿：成分是固定的，
+ // 必须显式说清日期，否则会被误读成「今天排名没更新」。
+ const sampleNote=/示例/.test(String(x.source_label||''))
+  ?`<br><span class="warn">⚠ 云端未取到全市场行情，当前展示 ${esc(rankAt)} 的示例定稿（成分与名次固定不变），价格仍由浏览器直连刷新</span>`:'';
  const badge=FM.mode==='static'
-  ?`<span class="down">● 实时行情</span> 20s 刷新 · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span> · 榜单成分与名次不随盘中行情重排${flowNote}${warn}`
+  ?`<span class="down">● 实时行情</span> 20s 刷新 · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span> · 榜单成分与名次不随盘中行情重排${flowNote}${warn}${sampleNote}`
   :x.live?`<span class="down">● 实时重排</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${flowNote}${warn}`
   :`<span class="muted">○ 收盘定稿</span> ${esc(String(x.snapshot_at||'').replace('T',' '))}${x.live_reason?'（'+esc(x.live_reason)+'）':''}${flowNote}`;
  $('rankstat').innerHTML=`${badge}<br>样本 ${s.count} 只 · 最高 <b>${num(s.max)}</b> · 中位 ${num(s.median)} · 标准差 ${num(s.stdev)} · ≥72 分 <b>${s.ge72}</b> 只 · ${esc(act)}`;
