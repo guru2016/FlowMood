@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from selection_time import annotate
+from metric_display import normalize_report
 
 # A 股所有交易时段判断都基于系统本地时间。VPS 常为 UTC，这里强制对齐北京时区，
 # 否则「早盘/午盘/已收盘」判断和量比的时间折算会整体错位。
@@ -97,7 +98,7 @@ def reports():
                                   for s in (m.get('steps') or [])]}
             except Exception:  # noqa: BLE001
                 pass
-        out[session] = {
+        out[session] = normalize_report({
             'session': session,
             'generated_at': report.get('generated_at'),
             'market_score': report.get('market_score'),
@@ -105,10 +106,11 @@ def reports():
             'position': report.get('position'),
             'max_exposure': report.get('max_exposure'),
             'plans': report.get('plans') or [],
+            'metrics': report.get('metrics') or {},
             'markdown': md,
             'path': str(path.relative_to(ROOT)),
             'meta': meta,
-        }
+        })
     return {'reports': out}
 
 

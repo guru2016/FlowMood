@@ -18,6 +18,7 @@ from pathlib import Path
 from recovered_data import create_schema, insert_h5_chart, insert_h5_sentiment, parse_h5_chart, parse_h5_sentiment
 from stock_selector import select, render
 from sector_scoring import enrich
+from metric_display import format_metric_line
 
 BASE = "https://eq.10jqka.com.cn/open/api/dapan_v3/chart/"
 METRICS = {
@@ -117,8 +118,8 @@ def run(out_dir: Path, db_path: Path, proxy: str | None, stocks_path: Path | Non
     market_score, regime, reasons = score(latest)
     report = out_dir / f"report_{stamp}.md"
     lines = [f"# 次日资金流情绪研究报告\n", f"生成时间：{datetime.now():%Y-%m-%d %H:%M:%S}", "", f"## 市场状态\n\n- 状态：**{regime}**\n- 综合分：**{market_score} / 100**\n- 仓位建议：**{'标准仓' if market_score>=60 else '轻仓' if market_score>=42 else '空仓'}**", "", "## 核心指标"]
-    for key, name in METRICS.items():
-        if latest.get(key): lines.append(f"- {name}（{key}）：`{json.dumps(latest[key], ensure_ascii=False)}`")
+    for key in METRICS:
+        if latest.get(key): lines.append(format_metric_line(key, latest[key]))
     lines += ["", "## 判断依据"] + [f"- {x}" for x in reasons]
     lines += ["", "## 次日执行框架", "- 只观察市场状态匹配的强势题材和个股。", "- 竞价明显低开、板块转弱或资金净流入反转时，信号失效。", "- 本报告不自动下单，需结合实时行情和个人风控确认。"]
     if stocks_path and stocks_path.exists():
@@ -136,7 +137,7 @@ def run(out_dir: Path, db_path: Path, proxy: str | None, stocks_path: Path | Non
                 plan.stop_price, plan.stop_pct, json.dumps(plan.reasons, ensure_ascii=False),
                 json.dumps(plan.invalid_conditions, ensure_ascii=False)))
             conn.commit(); conn.close()
-        plan_payload={'generated_at': datetime.now().isoformat(timespec='seconds'),'session':session,'market_score':market_score,'market_regime':regime,'position':('标准仓' if market_score>=60 else '轻仓' if market_score>=42 else '空仓'),'max_exposure':(1.0 if market_score>=60 else .3 if market_score>=42 else 0.0),'plans':[plan.__dict__ for plan in plans]}
+        plan_payload={'generated_at': datetime.now().isoformat(timespec='seconds'),'session':session,'market_score':market_score,'market_regime':regime,'position':('标准仓' if market_score>=60 else '轻仓' if market_score>=42 else '空仓'),'max_exposure':(1.0 if market_score>=60 else .3 if market_score>=42 else 0.0),'metrics':{k:latest[k] for k in METRICS if latest.get(k)},'plans':[plan.__dict__ for plan in plans]}
         (out_dir / f"stock_report_{session}_{stamp}.json").write_text(json.dumps(plan_payload, ensure_ascii=False, indent=2), encoding="utf-8")
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return report

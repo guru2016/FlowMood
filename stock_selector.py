@@ -13,6 +13,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from metric_display import humanize_journal
+
 
 @dataclass
 class Plan:
@@ -448,7 +450,7 @@ def select(rows: list[dict[str, Any]], market_score: float, session: str, limit:
 def render(plans: list[Plan], market_score: float, session: str) -> str:
     lines = [f"# {session} 个股测试报告", "", f"市场分：{market_score:.2f}", ""]
     for i, p in enumerate(plans, 1):
-        lines += [f"## {i}. {p.symbol} {p.name}", f"- 结论：**{p.action}**", f"- 评分：{p.score:.2f}", f"- 交易阶段：**{p.setup_state}**", f"- 下一动作：**{p.next_action}**", f"- 交易日记：`{json.dumps(p.journal, ensure_ascii=False)}`", f"- 买入区间：`{p.buy_price}`", f"- 目标价：`{p.target_price}`（空间 {p.space_pct:.2f}%）", f"- 止损价：`{p.stop_price:.2f}`（{p.stop_pct:.2f}%）", f"- 关键枢轴价：`{p.pivot_price:.2f}`", f"- 20日高点：`{p.high20:.2f}`", f"- 回踩确认价：`{p.pullback_price:.2f}`", "- 买入理由："]
+        lines += [f"## {i}. {p.symbol} {p.name}", f"- 结论：**{p.action}**", f"- 评分：{p.score:.2f}", f"- 交易阶段：**{p.setup_state}**", f"- 下一动作：**{p.next_action}**", f"- {humanize_journal(p.journal)}", f"- 买入区间：`{p.buy_price}`", f"- 目标价：`{p.target_price}`（空间 {p.space_pct:.2f}%）", f"- 止损价：`{p.stop_price:.2f}`（{p.stop_pct:.2f}%）", f"- 关键枢轴价：`{p.pivot_price:.2f}`", f"- 20日高点：`{p.high20:.2f}`", f"- 回踩确认价：`{p.pullback_price:.2f}`", "- 买入理由："]
         lines += [f"  - {x}" for x in p.reasons] or ["  - 暂无足够强度理由"]
         lines += ["- 失效条件：" + "；".join(p.invalid_conditions), ""]
     return "\n".join(lines)

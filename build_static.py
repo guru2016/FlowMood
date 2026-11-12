@@ -17,6 +17,8 @@ import argparse
 import json
 from pathlib import Path
 
+from metric_display import normalize_report
+
 ROOT = Path(__file__).resolve().parent
 WEB = ROOT / "web"
 SAMPLE = ROOT / "sample"
@@ -59,7 +61,7 @@ def _live_reports() -> dict:
             "generated_at": r.get("generated_at"),
             "market_score": r.get("market_score"), "market_regime": r.get("market_regime"),
             "position": r.get("position"), "max_exposure": r.get("max_exposure"),
-            "plans": r.get("plans") or [], "markdown": md,
+            "plans": r.get("plans") or [], "metrics": r.get("metrics") or {}, "markdown": md,
             "path": str(p.relative_to(ROOT)),
             "meta": {
                 "finished_at": latest.get("finished_at"), "elapsed_sec": latest.get("elapsed_sec"),
@@ -123,6 +125,10 @@ def collect_payload(source: Path | None = None) -> tuple[dict, str]:
 
 
 def render_html(boot: dict) -> str:
+    # 无论报告来自本机产出、Actions 新跑的还是仓库示例，都在注入前统一人话化：
+    # 中文指标卡片 + 无代码名/无 JSON 串的报告正文。
+    boot = dict(boot)
+    boot["reports"] = {k: normalize_report(v) for k, v in (boot.get("reports") or {}).items()}
     tpl = (WEB / "dashboard.html").read_text(encoding="utf-8")
     feed = (WEB / "static-feed.js").read_text(encoding="utf-8")
     if PLACEHOLDER not in tpl:

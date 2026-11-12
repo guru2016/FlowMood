@@ -5,7 +5,8 @@
   1. 七维加权饱和评分（分数有上界、有区分度、理由里能还原维度得分）
   2. 选股排序（条件买入置顶、数量受 limit 约束）
   3. 入选时间（首次记录、连续在榜保持不变、新标的单独计时、跨日重置）
-  4. 静态看板生成（表格含「入选时间」列）
+  4. 核心指标人话化（中文标签、无代码名/JSON、历史与预告标记）
+  5. 静态看板生成（入选时间列 + 核心指标卡片）
 """
 from __future__ import annotations
 
@@ -95,6 +96,47 @@ def test_selection_time() -> None:
             selection_time.STATE_PATH = old
 
 
+def test_metric_display() -> None:
+    import metric_display as md
+    raw = {
+        "sjdp_market_capital": {"date": "20261111", "net_inflow": "204.79", "szzz": "3680.64"},
+        "sjdp_north_capital": {"date": "20240816", "net_purchase": "-67.75",
+                               "net_inflow": "-53.22", "szzz": "2879.43"},
+        "sjdp_temperature_hs": {"date": "20261110", "temperature": "76"},
+        "sjdp_rzrq": {"date": "20261110", "lrye": "22945.61", "szzz": "3663.72", "jlr": "-13.69"},
+        "sjdp_new_investors": {"date": "202610", "szzz": "3599.02", "invest": "150.06"},
+        "sjdp_market_financing": {"date": "20261111", "ipo": None, "add": None,
+                                  "szzz": "3663.70", "bond": None},
+        "sjdp_lift_the_ban": {"date": "20261230", "szzz": None, "lift_the_ban": "332.69"},
+        "sjdp_increase_or_decrease": {"date": "20261110", "szzz": "3663.72", "zjc": "-0.30"},
+        "sjdp_new_fund_size": {"date": "202611", "szzz": "3655.66", "new_fund_size": "2.80"},
+        "sjdp_reverse_repurchase": {"date": "20210830", "szzz": "3534.22",
+                                    "jtf": "400.0", "jhg": "500.0"},
+        "sjdp_dollar_rmb": {"date": "20261110", "dollar_rmb": "6.68", "szzz": "3663.72"},
+    }
+    ms = md.metrics_from_raw(raw)
+    check(len(ms) == len(md.SPEC), f"11 项核心指标全部结构化：{len(ms)}")
+    check(all("sjdp_" not in json.dumps(m, ensure_ascii=False) for m in ms),
+          "卡片数据不含 sjdp_ 代码名")
+    check(ms[0]["label"] == "大盘资金" and ms[0]["main_value"] == "+204.79",
+          "主数值保留精度与正负号")
+    check(ms[5]["no_data"] and ms[5]["main_value"] == "暂无数据",
+          "全空指标不拿上证指数冒充结果")
+    check(ms[1]["stale"] and ms[6]["future"], "历史数据与未来预告被单独标记")
+    check(not ms[4]["stale"], "月度指标不会误判为过期")
+
+    lines = [f"- 指标（{k}）：`{json.dumps(v, ensure_ascii=False)}`" for k, v in raw.items()]
+    text = "## 核心指标\n" + "\n".join(lines) + \
+           "\n\n## 交易明细\n- 交易日记：`{\"principle_pass_rate\": 100.0, \"risk_reward\": 1.52}`\n"
+    r = md.normalize_report({"markdown": text, "metrics": raw})
+    check(len(md.parse_report_metrics(text)) == 11, "兼容历史报告里的 JSON 指标段")
+    check("sjdp_" not in r["markdown"] and '{"' not in r["markdown"],
+          "报告正文无代码名、无 JSON 串")
+    check("交易审计" in r["markdown"] and "核心指标" not in r["markdown"],
+          "交易日记转中文结果、指标段由卡片区接管")
+    check(md.normalize_report(r) == r, "normalize_report 幂等")
+
+
 def test_static_page() -> None:
     import build_static
     with tempfile.TemporaryDirectory() as td:
@@ -102,12 +144,15 @@ def test_static_page() -> None:
         build_static.build(source=ROOT / "sample" / "latest_ranking.json", output=out)
         html = out.read_text(encoding="utf-8")
         check("入选时间" in html and "评分" in html, "静态看板含「入选时间」列")
+        check("市场核心指标" in html, "静态看板含核心指标卡片区")
+        check("sjdp_" not in html, "静态页不含指标代码名")
         check("FlowMood" in html, "静态看板标题正确")
         check(Path(td, "summary.md").exists(), "生成了 Actions 运行摘要")
 
 
 def main() -> None:
-    for fn in (test_scoring, test_select, test_selection_time, test_static_page):
+    for fn in (test_scoring, test_select, test_selection_time,
+               test_metric_display, test_static_page):
         fn()
     print(f"FlowMood 冒烟自测通过：{len(PASS)} 项")
     for msg in PASS:

@@ -70,10 +70,11 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           keys = ('午盘报告', '收盘报告', '实时分析流', '该时段候选计划',
-                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间')
+                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间', '市场核心指标')
           for k in keys:
               assert k in h, f'静态页缺少 {k}'
-          print(f'静态页自检通过：{len(h)} bytes，关键区块齐全')
+          assert 'sjdp_' not in h, '静态页不应出现指标代码名'
+          print(f'静态页自检通过：{len(h)} bytes，关键区块齐全，指标已中文化')
           PY
 
       - name: 写入运行摘要（Actions 页面可直接查看）

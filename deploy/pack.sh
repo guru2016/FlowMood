@@ -11,7 +11,7 @@ FILES=()
 for f in *.py *.md *.json; do
   [ -f "$f" ] && FILES+=("$f")
 done
-FILES+=(web/dashboard.html dynamic/h5_api deploy)
+FILES+=(web/dashboard.html web/static-feed.js sample dynamic/h5_api deploy)
 
 # 看板首屏要用的初始数据（不带全部历史报告，避免包体膨胀）
 for f in auto_output/latest_close.json auto_output/latest_midday.json \
