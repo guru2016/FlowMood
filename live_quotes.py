@@ -25,6 +25,7 @@ from __future__ import annotations
 import http.client
 import json
 import os
+import re
 import subprocess
 import threading
 import time
@@ -57,8 +58,14 @@ CACHE_TTL = 8.0          # 秒；东财正常时的刷新粒度
 FALLBACK_TTL = 60.0      # 秒；同花顺兜底要逐只请求，降为分钟级，别把上游打爆
 MIN_QUOTES = 4000        # 少于这个数视为「半份行情」，不能覆盖缓存
 QUOTE_MAX_AGE = 150.0    # 秒；超过则后端降级为快照，绝不把陈旧数据标成实时
-LAST_SOURCE = "eastmoney"  # eastmoney / ths_fallback / unavailable
+LAST_SOURCE = "eastmoney"  # eastmoney / sina_batch / ths_fallback / unavailable
 THS_HOST = "d.10jqka.com.cn"
+
+# 东财 clist 对 VPS 出口 IP 会整轮断连（不是 429，重试无用），A 股作战系统
+# emotion_flow 线上实测改走新浪批量：600 只/请求，5000 只 9 个请求即可全量覆盖。
+SINA_URL = "https://hq.sinajs.cn/list="
+SINA_BATCH = 600
+SINA_MIN_COVERAGE = 0.85
 
 
 def num(value, default: float = 0.0) -> float:
@@ -181,6 +188,105 @@ def fetch_quotes_ths(codes: list[str], workers: int = 48) -> dict[str, dict]:
     return out
 
 
+def _sina_symbol(code: str) -> str:
+    code = str(code or "")
+    if code.startswith(("8", "4", "92")):
+        return "bj" + code
+    return ("sh" if code.startswith(("6", "9")) else "sz") + code
+
+
+def _sina_chunk(chunk: list[str], timeout: float = 10.0) -> list[tuple[str, list[str]]]:
+    """拉一批新浪行情 -> [(6位代码, 字段列表)]。断连/脏数据返回空，绝不抛。"""
+    url = SINA_URL + ",".join(chunk)
+    try:
+        proc = subprocess.run(
+            ["curl", "-s", "-m", str(int(timeout)), "--noproxy", "*",
+             "-H", "Referer: https://finance.sina.com.cn", url],
+            capture_output=True, timeout=timeout + 3)
+        # 新浪返回 GBK；只用代码与数字字段，名称乱码不影响
+        text = proc.stdout.decode("gb18030", errors="replace")
+        out = []
+        for m in re.finditer(r'hq_str_[a-z]{2}(\d{6})="([^"]*)"', text):
+            parts = m.group(2).split(",")
+            if len(parts) >= 10 and num(parts[3]) > 0:
+                out.append((m.group(1), parts))
+        return out
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def fetch_quotes_sina() -> tuple[dict[str, dict], dict]:
+    """新浪批量报价：东财整轮被封时的主通道，字段与东财 clist 同构。
+
+    新浪不提供主力净占比 / 换手率 / 行业。按 A 股作战系统同口径处理：
+    主力净占比回填该票定稿值，换手按实时成交量相对定稿成交量缩放，
+    行业不传、由 auto_rank.restore_from_base 沿用定稿行业。价格/涨跌/成交额
+    是实时的，评分口径一行不改。返回 (quotes, 覆盖率诊断)。
+    """
+    try:
+        path = Path(__file__).resolve().parent / "normalized_snapshots.json"
+        rows = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}, {"coverage": 0.0, "total": 0}
+    if not isinstance(rows, list) or len(rows) < 50:
+        return {}, {"coverage": 0.0, "total": 0}
+    # 快照可能被一次降级采集写残，资金流/行业从不受覆盖的定稿基准取。
+    base_fields: dict[str, dict] = {}
+    try:
+        bp = Path(__file__).resolve().parent / "auto_output" / "base_flow_sector.json"
+        loaded = json.loads(bp.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            base_fields = loaded
+    except (OSError, ValueError, TypeError):
+        pass
+    base: dict[str, dict] = {}
+    syms: list[str] = []
+    for row in rows:
+        code = str(row.get("code") or "")
+        if len(code) != 6 or code in base:
+            continue
+        base[code] = row
+        syms.append(_sina_symbol(code))
+    chunks = [syms[i:i + SINA_BATCH] for i in range(0, len(syms), SINA_BATCH)]
+    pairs: list[tuple[str, list[str]]] = []
+    with ThreadPoolExecutor(max_workers=min(6, len(chunks) or 1)) as pool:
+        for got in pool.map(_sina_chunk, chunks):
+            pairs.extend(got)
+
+    quotes: dict[str, dict] = {}
+    for code, p in pairs:
+        snap = base.get(code)
+        if not snap:
+            continue
+        ref = base_fields.get(code) or {}
+        price, prev = num(p[3]), num(p[2])
+        if price <= 0 or prev <= 0:
+            continue
+        amount, vol = num(p[9]), num(p[8])
+        turnover = num(snap.get("turnover_pct"))
+        base_vol = num(snap.get("amount")) / (num(snap.get("price")) or 1.0)
+        if turnover and base_vol > 0 and vol > 0:
+            turnover = min(turnover * 1.5, turnover * vol / base_vol)
+        quotes[code] = {
+            "f12": code, "f14": str(snap.get("name") or ""),
+            "f2": price, "f18": prev,
+            "f17": num(p[1]) or price, "f15": num(p[4]) or price,
+            "f16": num(p[5]) or price,
+            "f3": round((price / prev - 1) * 100, 3),
+            "f5": vol, "f6": amount, "f8": round(turnover, 4),
+            "f184": num(ref.get("money_flow_pct")) or num(snap.get("money_flow_pct")),
+            "f100": str(ref.get("sector") or snap.get("sector") or ""),
+            "_flow_from": "defined",   # 明确告诉下游：这不是盘中实时资金流
+        }
+    return quotes, {"coverage": round(len(quotes) / (len(base) or 1), 3),
+                    "total": len(base)}
+
+
+def _min_quotes() -> int:
+    """缓存合格下限跟着当前股票池走，不能写死全市场规模。"""
+    return max(100, int(len(_snapshot_codes()) * SINA_MIN_COVERAGE))
+
+
 def fetch_quotes(workers: int = 10, max_pages: int = 60) -> dict[str, dict]:
     """拉全市场实时行情，返回 {code: 行情字段}。
 
@@ -221,11 +327,22 @@ def fetch_quotes(workers: int = 10, max_pages: int = 60) -> dict[str, dict]:
         LAST_SOURCE = "eastmoney"
         return out
 
+    # 东财整轮断连时优先走新浪批量（9 请求覆盖全市场），比逐只同花顺快一个
+    # 数量级，且带定稿资金流，不会让全市场资金维度集体归零。东财已经拿到的
+    # 那几页带实时资金流，优先级更高，留着覆盖同代码的新浪行。
+    sina, smeta = fetch_quotes_sina()
+    if (sina and len(sina) >= _min_quotes()
+            and smeta.get("coverage", 0) >= SINA_MIN_COVERAGE):
+        merged = dict(sina)
+        merged.update(out)
+        LAST_SOURCE = "sina_batch"
+        return merged
+
     codes = [c for c in _snapshot_codes() if c not in out]
     fallback = fetch_quotes_ths(codes)
     for code, item in fallback.items():
         out.setdefault(code, item)
-    LAST_SOURCE = "ths_fallback" if len(out) >= MIN_QUOTES else "unavailable"
+    LAST_SOURCE = "ths_fallback" if len(out) >= _min_quotes() else "unavailable"
     return out
 
 
@@ -241,7 +358,7 @@ def fetch_quotes_cached(ttl: float = CACHE_TTL) -> tuple[dict[str, dict], float]
         if _cache["data"] and (time.time() - _cache["at"]) < effective:
             return _cache["data"], _cache["at"]
     data = fetch_quotes()
-    if len(data) >= MIN_QUOTES:
+    if len(data) >= _min_quotes():
         with _lock:
             _cache["data"] = data
             _cache["at"] = time.time()

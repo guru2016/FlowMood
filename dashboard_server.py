@@ -192,16 +192,19 @@ def live_ranking(limit=30):
             # 不能看 LAST_SOURCE 全局态：它是上一次 fetch 留下的，会拿上一轮的
             # 「同花顺兜底」给这一轮东财完整行情挂上「资金流仍为快照值」的假警告。
             # 只认本次 quotes 里到底有没有资金流字段。
-            probe = list(quotes.values())[:100]
+            probe = list(quotes.values())[:200]
             has_flow = any(('f184' in q or 'f62' in q) for q in probe)
-            if not has_flow:
+            flow_defined = any(q.get('_flow_from') == 'defined' for q in probe)
+            if flow_defined:
+                warning = '价格/涨跌/成交额实时，主力资金流与行业沿用定稿值'
+            elif not has_flow:
                 warning = '行情源不带主力资金流，资金流/行业沿用定稿快照值'
             elif coverage < 0.8:
                 warning = f'行情覆盖仅 {coverage:.0%}，其余仍为快照价格'
             else:
                 warning = f'行情滞后 {int(age)} 秒' if age > 30 else ''
             res['live_warning'] = warning
-            res['quote_source'] = 'eastmoney_clist' if has_flow else (lq.LAST_SOURCE or 'unknown')
+            res['quote_source'] = lq.LAST_SOURCE or ('eastmoney_clist' if has_flow else 'unknown')
             _live_cache['data'] = res
             _live_cache['at'] = time.time()
             data = dict(res)

@@ -149,6 +149,22 @@ def _save_base(base: dict[str, dict]) -> None:
         pass
 
 
+def _flow_source(quotes: dict | None, base_restore: dict) -> str:
+    """资金流到底是盘中实时的，还是沿用定稿的——前端必须如实标注。
+
+    新浪批量通道会把定稿 money_flow_pct 填进 f184（保持评分口径不变），
+    这类 quotes 带 _flow_from=defined，不能因为「有 f184」就当成实时资金流。
+    """
+    probe = list(quotes.values())[:200] if quotes else []
+    if any(q.get("_flow_from") == "defined" for q in probe):
+        return "defined"
+    if base_restore.get("used"):
+        return "defined"
+    if any(("f184" in q or "f62" in q) for q in probe):
+        return "live"
+    return "defined"   # 纯定稿榜单，资金流本来就是采集那一刻的值
+
+
 def restore_from_base(rows: list[dict]) -> tuple[list[dict], dict]:
     """整列缺资金流/行业时，按代码沿用最近一份完整定稿值。"""
     before = snapshot_quality(rows)
@@ -274,9 +290,7 @@ def build_ranking(snapshot: Path | None = None, config: Path | None = None,
         "live_merge": live_merge,
         "base_restore": base_restore,
         # 前端据此标注「资金流沿用定稿」而不是让人误以为是盘中实时资金
-        "flow_source": ("live" if live_merge and any(
-            ("f184" in q or "f62" in q) for q in list(quotes.values())[:100]
-        ) else "defined" if base_restore.get("used") else "snapshot"),
+        "flow_source": _flow_source(quotes, base_restore),
         "stats": stats,
         "ranking": rows,
         "files": {},
