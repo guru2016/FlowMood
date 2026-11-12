@@ -514,8 +514,8 @@ async function loadRank(){try{const lim=$('ranklimit').value,live=$('ranklive').
  const flowNote=x.flow_source==='defined'?' · <span class="warn">资金流为定稿值</span>':'';
  // 云端 Pages 拿不到全市场采集时会回退仓库示例定稿：成分是固定的，
  // 必须显式说清日期，否则会被误读成「今天排名没更新」。
- const sampleNote=/示例/.test(String(x.source_label||''))
-  ?`<br><span class="warn">⚠ 云端未取到全市场行情，当前展示 ${esc(rankAt)} 的示例定稿（成分与名次固定不变），价格仍由浏览器直连刷新</span>`:'';
+ const sampleNote=(x.source_label&&x.source_label!=='Actions 采集')
+  ?`<br><span class="warn">⚠ 云端未取到全市场行情，当前展示 ${esc(rankAt)} 的定稿快照（成分与名次固定不变），价格仍由浏览器直连刷新</span>`:'';
  const badge=FM.mode==='static'
   ?`<span class="down">● 实时行情</span> 20s 刷新 · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span> · 榜单成分与名次不随盘中行情重排${flowNote}${warn}${sampleNote}`
   :x.live?`<span class="down">● 实时重排</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${flowNote}${warn}`

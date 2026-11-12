@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from metric_display import normalize_report
@@ -103,7 +104,10 @@ def collect_payload(source: Path | None = None) -> tuple[dict, str]:
     if used_sample:
         source = SAMPLE / "latest_ranking.json"
     ranking = _json(source, {}) or {}
-    label = "示例快照" if (used_sample or "sample" in source.parts) else "Actions 采集"
+    # sample/ 里是真实跑出来的定稿（由 sync_sample.py 从本机同步），
+    # 不再是手搓的假示例，所以标签写成「定稿快照」并带上时间，别让人误读成实时。
+    label = "定稿快照" if (used_sample or "sample" in source.parts) else (
+        "Actions 采集" if os.environ.get("GITHUB_ACTIONS") else "本机定稿")
 
     # 报告按「时段」合并：本机/Actions 新产出的覆盖示例，缺的时段仍用示例补齐，
     # 保证午盘、收盘两个 tab 永远都有内容。

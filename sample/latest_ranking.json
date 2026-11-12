@@ -1,4726 +1,4748 @@
 {
-  "generated_at": "2026-11-12T10:47:29",
-  "snapshot_at": "2026-11-11T15:51:37",
-  "snapshot_count": 5025,
-  "market_score": 58.55,
-  "live": false,
-  "stats": {
-    "count": 5025,
-    "max": 85.68,
-    "min": 11.3,
-    "median": 36.7,
-    "mean": 37.97,
-    "stdev": 13.13,
-    "ge72": 27,
-    "ge60": 273,
-    "actions": {
-      "放弃": 4752,
-      "重点观察": 266,
-      "条件买入": 7
-    },
-    "sectors": 128
+ "generated_at": "2026-11-12T15:10:25",
+ "stamp": "20261112_151005",
+ "snapshot_at": "2026-11-12T15:10:19",
+ "snapshot_count": 5022,
+ "market_score": 47.13,
+ "live": false,
+ "live_merge": null,
+ "base_restore": {
+  "used": false,
+  "ok": true,
+  "flow_ratio": 1.0,
+  "sector_ratio": 1.0,
+  "reason": ""
+ },
+ "flow_source": "defined",
+ "stats": {
+  "count": 5022,
+  "max": 69.38,
+  "min": 6.54,
+  "median": 21.88,
+  "mean": 23.56,
+  "stdev": 7.44,
+  "ge72": 0,
+  "ge60": 3,
+  "actions": {
+   "放弃": 5019,
+   "重点观察": 3
   },
-  "ranking": [
-    {
-      "rank": 1,
-      "symbol": "603966.SH",
-      "name": "法兰泰克",
-      "score": 85.68,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "7.52-7.68",
-      "space_pct": 6.0,
-      "stop_pct": -5.64,
-      "change_pct": 4.83,
-      "money_flow_pct": 21.57,
-      "amount_ratio": 2.0865,
-      "turnover_pct": 2.11,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 1.06,
-      "dims": {
-        "趋势": [
-          19.4,
-          25.0
-        ],
-        "资金": [
-          22.3,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          15.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 2,
-      "symbol": "688418.SH",
-      "name": "震有科技",
-      "score": 79.62,
-      "action": "条件买入",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "26.59-27.13",
-      "space_pct": 13.36,
-      "stop_pct": -6.0,
-      "change_pct": 2.44,
-      "money_flow_pct": 4.49,
-      "amount_ratio": 1.4611,
-      "turnover_pct": 2.76,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 2.23,
-      "dims": {
-        "趋势": [
-          16.4,
-          25.0
-        ],
-        "资金": [
-          15.4,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          15.9,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 3,
-      "symbol": "300415.SZ",
-      "name": "伊之密",
-      "score": 79.47,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "19.26-19.64",
-      "space_pct": 7.15,
-      "stop_pct": -6.0,
-      "change_pct": 5.53,
-      "money_flow_pct": 24.38,
-      "amount_ratio": 2.4877,
-      "turnover_pct": 3.02,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 1.19,
-      "dims": {
-        "趋势": [
-          19.6,
-          25.0
-        ],
-        "资金": [
-          22.5,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          11.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 4,
-      "symbol": "603270.SH",
-      "name": "金帝股份",
-      "score": 77.66,
-      "action": "条件买入",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "29.15-29.73",
-      "space_pct": 11.25,
-      "stop_pct": -6.0,
-      "change_pct": 5.14,
-      "money_flow_pct": 11.27,
-      "amount_ratio": 1.4051,
-      "turnover_pct": 8.43,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.88,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          20.5,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          14.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 5,
-      "symbol": "002613.SZ",
-      "name": "北玻股份",
-      "score": 77.46,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "3.35-3.41",
-      "space_pct": 6.0,
-      "stop_pct": -3.83,
-      "change_pct": 2.42,
-      "money_flow_pct": 10.46,
-      "amount_ratio": 1.0193,
-      "turnover_pct": 2.75,
-      "sector": "玻璃玻纤",
-      "sector_score": 81.95,
-      "risk_reward": 1.57,
-      "dims": {
-        "趋势": [
-          23.1,
-          25.0
-        ],
-        "资金": [
-          17.4,
-          23.0
-        ],
-        "板块": [
-          16.7,
-          20.0
-        ],
-        "结构": [
-          6.6,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 6,
-      "symbol": "002050.SZ",
-      "name": "三花智控",
-      "score": 77.39,
-      "action": "条件买入",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "35.99-36.71",
-      "space_pct": 8.68,
-      "stop_pct": -5.08,
-      "change_pct": 2.83,
-      "money_flow_pct": 10.68,
-      "amount_ratio": 1.891,
-      "turnover_pct": 2.91,
-      "sector": "家电零部件Ⅱ",
-      "sector_score": 62.13,
-      "risk_reward": 1.71,
-      "dims": {
-        "趋势": [
-          17.1,
-          25.0
-        ],
-        "资金": [
-          20.2,
-          23.0
-        ],
-        "板块": [
-          11.0,
-          20.0
-        ],
-        "结构": [
-          15.4,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 7,
-      "symbol": "688027.SH",
-      "name": "国盾量子",
-      "score": 76.83,
-      "action": "条件买入",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "321.65-328.15",
-      "space_pct": 9.6,
-      "stop_pct": -6.0,
-      "change_pct": 6.87,
-      "money_flow_pct": 14.59,
-      "amount_ratio": 1.6741,
-      "turnover_pct": 3.52,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.6,
-      "dims": {
-        "趋势": [
-          16.9,
-          25.0
-        ],
-        "资金": [
-          21.5,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          15.9,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 8,
-      "symbol": "600626.SH",
-      "name": "申达股份",
-      "score": 76.32,
-      "action": "条件买入",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "3.92-4.00",
-      "space_pct": 8.31,
-      "stop_pct": -4.67,
-      "change_pct": 2.59,
-      "money_flow_pct": 6.7,
-      "amount_ratio": 1.2083,
-      "turnover_pct": 2.11,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.78,
-      "dims": {
-        "趋势": [
-          16.0,
-          25.0
-        ],
-        "资金": [
-          17.7,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          15.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 9,
-      "symbol": "000812.SZ",
-      "name": "陕西金叶",
-      "score": 76.29,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "3.66-3.74",
-      "space_pct": 6.6,
-      "stop_pct": -4.88,
-      "change_pct": 3.64,
-      "money_flow_pct": 14.99,
-      "amount_ratio": 1.4382,
-      "turnover_pct": 3.39,
-      "sector": "包装印刷",
-      "sector_score": 70.69,
-      "risk_reward": 1.35,
-      "dims": {
-        "趋势": [
-          20.5,
-          25.0
-        ],
-        "资金": [
-          21.5,
-          23.0
-        ],
-        "板块": [
-          13.5,
-          20.0
-        ],
-        "结构": [
-          7.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 10,
-      "symbol": "600699.SH",
-      "name": "均胜电子",
-      "score": 76.23,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "22.69-23.15",
-      "space_pct": 10.48,
-      "stop_pct": -6.0,
-      "change_pct": 4.23,
-      "money_flow_pct": 7.14,
-      "amount_ratio": 1.272,
-      "turnover_pct": 5.43,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.75,
-      "dims": {
-        "趋势": [
-          14.8,
-          25.0
-        ],
-        "资金": [
-          18.1,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          15.8,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 11,
-      "symbol": "603967.SH",
-      "name": "中创物流",
-      "score": 75.96,
-      "action": "条件买入",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "12.68-12.94",
-      "space_pct": 6.0,
-      "stop_pct": -3.73,
-      "change_pct": 2.23,
-      "money_flow_pct": 19.07,
-      "amount_ratio": 1.5337,
-      "turnover_pct": 1.31,
-      "sector": "物流",
-      "sector_score": 39.63,
-      "risk_reward": 1.61,
-      "dims": {
-        "趋势": [
-          21.9,
-          25.0
-        ],
-        "资金": [
-          22.1,
-          23.0
-        ],
-        "板块": [
-          6.1,
-          20.0
-        ],
-        "结构": [
-          14.7,
-          16.0
-        ],
-        "流动": [
-          6.6,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 12,
-      "symbol": "002248.SZ",
-      "name": "华东数控",
-      "score": 75.76,
-      "action": "条件买入",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "9.23-9.41",
-      "space_pct": 9.01,
-      "stop_pct": -4.93,
-      "change_pct": 2.87,
-      "money_flow_pct": 4.25,
-      "amount_ratio": 1.589,
-      "turnover_pct": 5.64,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.83,
-      "dims": {
-        "趋势": [
-          17.8,
-          25.0
-        ],
-        "资金": [
-          15.1,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          14.4,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 13,
-      "symbol": "603596.SH",
-      "name": "伯特利",
-      "score": 75.34,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "20.29-20.71",
-      "space_pct": 7.43,
-      "stop_pct": -6.0,
-      "change_pct": 4.97,
-      "money_flow_pct": 10.7,
-      "amount_ratio": 1.8345,
-      "turnover_pct": 2.49,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.24,
-      "dims": {
-        "趋势": [
-          15.8,
-          25.0
-        ],
-        "资金": [
-          20.2,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          12.4,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 14,
-      "symbol": "300276.SZ",
-      "name": "三丰智能",
-      "score": 74.62,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "6.58-6.72",
-      "space_pct": 8.76,
-      "stop_pct": -5.22,
-      "change_pct": 3.1,
-      "money_flow_pct": 6.7,
-      "amount_ratio": 1.7433,
-      "turnover_pct": 5.21,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.68,
-      "dims": {
-        "趋势": [
-          15.0,
-          25.0
-        ],
-        "资金": [
-          17.7,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          12.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 15,
-      "symbol": "002599.SZ",
-      "name": "盛通股份",
-      "score": 74.62,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "6.10-6.22",
-      "space_pct": 8.62,
-      "stop_pct": -6.0,
-      "change_pct": 5.66,
-      "money_flow_pct": 9.87,
-      "amount_ratio": 2.1533,
-      "turnover_pct": 7.92,
-      "sector": "包装印刷",
-      "sector_score": 70.69,
-      "risk_reward": 1.44,
-      "dims": {
-        "趋势": [
-          16.0,
-          25.0
-        ],
-        "资金": [
-          19.9,
-          23.0
-        ],
-        "板块": [
-          13.5,
-          20.0
-        ],
-        "结构": [
-          15.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 16,
-      "symbol": "000700.SZ",
-      "name": "模塑科技",
-      "score": 74.46,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "16.92-17.26",
-      "space_pct": 14.48,
-      "stop_pct": -6.0,
-      "change_pct": 5.49,
-      "money_flow_pct": 12.0,
-      "amount_ratio": 1.5487,
-      "turnover_pct": 10.61,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 2.41,
-      "dims": {
-        "趋势": [
-          15.7,
-          25.0
-        ],
-        "资金": [
-          20.7,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          13.3,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 17,
-      "symbol": "300154.SZ",
-      "name": "瑞凌股份",
-      "score": 74.36,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "14.76-15.06",
-      "space_pct": 15.69,
-      "stop_pct": -5.1,
-      "change_pct": 0.88,
-      "money_flow_pct": 8.95,
-      "amount_ratio": 1.292,
-      "turnover_pct": 4.12,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 3.08,
-      "dims": {
-        "趋势": [
-          16.2,
-          25.0
-        ],
-        "资金": [
-          19.4,
-          23.0
-        ],
-        "板块": [
-          9.6,
-          20.0
-        ],
-        "结构": [
-          15.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 18,
-      "symbol": "002920.SZ",
-      "name": "德赛西威",
-      "score": 73.86,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "84.89-86.61",
-      "space_pct": 6.75,
-      "stop_pct": -4.38,
-      "change_pct": 3.2,
-      "money_flow_pct": 7.76,
-      "amount_ratio": 2.0151,
-      "turnover_pct": 1.77,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.54,
-      "dims": {
-        "趋势": [
-          14.7,
-          25.0
-        ],
-        "资金": [
-          18.6,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          13.9,
-          16.0
-        ],
-        "流动": [
-          8.3,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 19,
-      "symbol": "300083.SZ",
-      "name": "创世纪",
-      "score": 73.61,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "11.44-11.68",
-      "space_pct": 11.44,
-      "stop_pct": -6.0,
-      "change_pct": 3.49,
-      "money_flow_pct": 6.82,
-      "amount_ratio": 1.2013,
-      "turnover_pct": 4.6,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.91,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          17.8,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          4.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 20,
-      "symbol": "300666.SZ",
-      "name": "江丰电子",
-      "score": 73.45,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "206.98-211.16",
-      "space_pct": 13.08,
-      "stop_pct": -6.0,
-      "change_pct": 4.66,
-      "money_flow_pct": 3.66,
-      "amount_ratio": 1.3882,
-      "turnover_pct": 6.93,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 2.18,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          14.3,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          15.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 21,
-      "symbol": "301368.SZ",
-      "name": "丰立智能",
-      "score": 73.3,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "40.77-41.59",
-      "space_pct": 11.22,
-      "stop_pct": -5.25,
-      "change_pct": 2.74,
-      "money_flow_pct": 4.2,
-      "amount_ratio": 1.3854,
-      "turnover_pct": 3.38,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 2.14,
-      "dims": {
-        "趋势": [
-          15.0,
-          25.0
-        ],
-        "资金": [
-          15.0,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          14.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 22,
-      "symbol": "600522.SH",
-      "name": "中天科技",
-      "score": 72.82,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "24.40-24.90",
-      "space_pct": 10.54,
-      "stop_pct": -6.0,
-      "change_pct": 4.01,
-      "money_flow_pct": 9.25,
-      "amount_ratio": 1.2787,
-      "turnover_pct": 4.77,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.76,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          19.5,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 23,
-      "symbol": "603459.SH",
-      "name": "红板科技",
-      "score": 72.52,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "62.17-63.43",
-      "space_pct": 10.7,
-      "stop_pct": -5.65,
-      "change_pct": 2.66,
-      "money_flow_pct": 6.69,
-      "amount_ratio": 1.3656,
-      "turnover_pct": 11.03,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 1.89,
-      "dims": {
-        "趋势": [
-          22.4,
-          25.0
-        ],
-        "资金": [
-          17.7,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 24,
-      "symbol": "301448.SZ",
-      "name": "开创电气",
-      "score": 72.46,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "51.34-52.38",
-      "space_pct": 11.38,
-      "stop_pct": -6.0,
-      "change_pct": 5.6,
-      "money_flow_pct": 10.65,
-      "amount_ratio": 1.2845,
-      "turnover_pct": 2.39,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.9,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          20.2,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          11.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 25,
-      "symbol": "002324.SZ",
-      "name": "普利特",
-      "score": 72.35,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "9.18-9.36",
-      "space_pct": 8.16,
-      "stop_pct": -5.78,
-      "change_pct": 2.32,
-      "money_flow_pct": 7.06,
-      "amount_ratio": 4.2552,
-      "turnover_pct": 11.3,
-      "sector": "塑料",
-      "sector_score": 72.86,
-      "risk_reward": 1.41,
-      "dims": {
-        "趋势": [
-          15.6,
-          25.0
-        ],
-        "资金": [
-          16.8,
-          23.0
-        ],
-        "板块": [
-          14.1,
-          20.0
-        ],
-        "结构": [
-          12.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 26,
-      "symbol": "605006.SH",
-      "name": "山东玻纤",
-      "score": 72.3,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "13.16-13.42",
-      "space_pct": 13.19,
-      "stop_pct": -6.0,
-      "change_pct": 5.31,
-      "money_flow_pct": 13.8,
-      "amount_ratio": 1.2569,
-      "turnover_pct": 5.83,
-      "sector": "玻璃玻纤",
-      "sector_score": 81.95,
-      "risk_reward": 2.2,
-      "dims": {
-        "趋势": [
-          22.6,
-          25.0
-        ],
-        "资金": [
-          21.3,
-          23.0
-        ],
-        "板块": [
-          16.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 27,
-      "symbol": "000070.SZ",
-      "name": "特发信息",
-      "score": 72.24,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "12.89-13.15",
-      "space_pct": 9.56,
-      "stop_pct": -6.0,
-      "change_pct": 4.16,
-      "money_flow_pct": 8.29,
-      "amount_ratio": 1.8328,
-      "turnover_pct": 6.87,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.59,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          18.9,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 28,
-      "symbol": "002825.SZ",
-      "name": "纳尔股份",
-      "score": 71.29,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "9.07-9.25",
-      "space_pct": 7.62,
-      "stop_pct": -6.0,
-      "change_pct": 4.69,
-      "money_flow_pct": 2.21,
-      "amount_ratio": 3.2785,
-      "turnover_pct": 5.47,
-      "sector": "塑料",
-      "sector_score": 72.86,
-      "risk_reward": 1.27,
-      "dims": {
-        "趋势": [
-          16.3,
-          25.0
-        ],
-        "资金": [
-          11.6,
-          23.0
-        ],
-        "板块": [
-          14.1,
-          20.0
-        ],
-        "结构": [
-          15.6,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 29,
-      "symbol": "300002.SZ",
-      "name": "神州泰岳",
-      "score": 71.09,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "8.41-8.57",
-      "space_pct": 6.54,
-      "stop_pct": -4.27,
-      "change_pct": 2.04,
-      "money_flow_pct": 4.58,
-      "amount_ratio": 1.662,
-      "turnover_pct": 3.43,
-      "sector": "游戏Ⅱ",
-      "sector_score": 89.38,
-      "risk_reward": 1.53,
-      "dims": {
-        "趋势": [
-          7.7,
-          25.0
-        ],
-        "资金": [
-          15.5,
-          23.0
-        ],
-        "板块": [
-          18.8,
-          20.0
-        ],
-        "结构": [
-          15.3,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 30,
-      "symbol": "002965.SZ",
-      "name": "祥鑫科技",
-      "score": 70.96,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "25.03-25.53",
-      "space_pct": 10.08,
-      "stop_pct": -6.0,
-      "change_pct": 4.55,
-      "money_flow_pct": 8.27,
-      "amount_ratio": 1.2324,
-      "turnover_pct": 5.51,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.68,
-      "dims": {
-        "趋势": [
-          17.8,
-          25.0
-        ],
-        "资金": [
-          18.9,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          6.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 31,
-      "symbol": "300292.SZ",
-      "name": "吴通控股",
-      "score": 70.92,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "4.21-4.29",
-      "space_pct": 6.69,
-      "stop_pct": -3.94,
-      "change_pct": 2.16,
-      "money_flow_pct": 8.1,
-      "amount_ratio": 1.2041,
-      "turnover_pct": 3.29,
-      "sector": "通信服务",
-      "sector_score": 61.7,
-      "risk_reward": 1.7,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          18.8,
-          23.0
-        ],
-        "板块": [
-          10.9,
-          20.0
-        ],
-        "结构": [
-          6.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 32,
-      "symbol": "603036.SH",
-      "name": "如通股份",
-      "score": 70.9,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "13.00-13.26",
-      "space_pct": 7.66,
-      "stop_pct": -6.0,
-      "change_pct": 5.72,
-      "money_flow_pct": 10.62,
-      "amount_ratio": 3.1156,
-      "turnover_pct": 5.11,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 1.28,
-      "dims": {
-        "趋势": [
-          20.2,
-          25.0
-        ],
-        "资金": [
-          20.1,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          5.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 33,
-      "symbol": "001324.SZ",
-      "name": "长青科技",
-      "score": 70.83,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "20.11-20.51",
-      "space_pct": 7.5,
-      "stop_pct": -6.0,
-      "change_pct": 4.91,
-      "money_flow_pct": 5.56,
-      "amount_ratio": 2.2036,
-      "turnover_pct": 4.36,
-      "sector": "轨交设备Ⅱ",
-      "sector_score": 53.65,
-      "risk_reward": 1.25,
-      "dims": {
-        "趋势": [
-          16.6,
-          25.0
-        ],
-        "资金": [
-          16.7,
-          23.0
-        ],
-        "板块": [
-          8.6,
-          20.0
-        ],
-        "结构": [
-          15.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 34,
-      "symbol": "688635.SH",
-      "name": "长进光子",
-      "score": 70.7,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "183.35-187.05",
-      "space_pct": 13.92,
-      "stop_pct": -6.0,
-      "change_pct": 4.53,
-      "money_flow_pct": 7.38,
-      "amount_ratio": 1.5692,
-      "turnover_pct": 11.33,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 2.32,
-      "dims": {
-        "趋势": [
-          20.5,
-          25.0
-        ],
-        "资金": [
-          18.3,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 35,
-      "symbol": "601689.SH",
-      "name": "拓普集团",
-      "score": 70.55,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "50.74-51.76",
-      "space_pct": 8.52,
-      "stop_pct": -6.0,
-      "change_pct": 5.84,
-      "money_flow_pct": 13.2,
-      "amount_ratio": 2.5279,
-      "turnover_pct": 3.53,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.42,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          21.1,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          10.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 36,
-      "symbol": "001232.SZ",
-      "name": "嘉立创",
-      "score": 70.5,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "177.86-181.46",
-      "space_pct": 11.44,
-      "stop_pct": -5.61,
-      "change_pct": 2.79,
-      "money_flow_pct": 9.39,
-      "amount_ratio": 1.0152,
-      "turnover_pct": 8.47,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.04,
-      "dims": {
-        "趋势": [
-          14.5,
-          25.0
-        ],
-        "资金": [
-          16.8,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          6.8,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 37,
-      "symbol": "688090.SH",
-      "name": "瑞松科技",
-      "score": 70.35,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "55.69-56.81",
-      "space_pct": 17.18,
-      "stop_pct": -6.0,
-      "change_pct": 5.14,
-      "money_flow_pct": 20.29,
-      "amount_ratio": 1.489,
-      "turnover_pct": 7.19,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 2.86,
-      "dims": {
-        "趋势": [
-          19.7,
-          25.0
-        ],
-        "资金": [
-          22.3,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 38,
-      "symbol": "600681.SH",
-      "name": "百川能源",
-      "score": 70.3,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "3.52-3.60",
-      "space_pct": 6.0,
-      "stop_pct": -2.34,
-      "change_pct": 0.85,
-      "money_flow_pct": 7.25,
-      "amount_ratio": 1.3356,
-      "turnover_pct": 1.65,
-      "sector": "燃气Ⅱ",
-      "sector_score": 94.14,
-      "risk_reward": 2.56,
-      "dims": {
-        "趋势": [
-          19.4,
-          25.0
-        ],
-        "资金": [
-          18.2,
-          23.0
-        ],
-        "板块": [
-          15.0,
-          20.0
-        ],
-        "结构": [
-          5.3,
-          16.0
-        ],
-        "流动": [
-          7.8,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 39,
-      "symbol": "603786.SH",
-      "name": "科博达",
-      "score": 70.26,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "39.01-39.79",
-      "space_pct": 6.11,
-      "stop_pct": -6.0,
-      "change_pct": 5.46,
-      "money_flow_pct": 12.16,
-      "amount_ratio": 2.6344,
-      "turnover_pct": 1.28,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.02,
-      "dims": {
-        "趋势": [
-          17.5,
-          25.0
-        ],
-        "资金": [
-          20.8,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          9.5,
-          16.0
-        ],
-        "流动": [
-          6.5,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 40,
-      "symbol": "000837.SZ",
-      "name": "秦川机床",
-      "score": 70.25,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "10.03-10.23",
-      "space_pct": 8.21,
-      "stop_pct": -5.51,
-      "change_pct": 3.16,
-      "money_flow_pct": 7.97,
-      "amount_ratio": 1.5376,
-      "turnover_pct": 2.85,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.49,
-      "dims": {
-        "趋势": [
-          16.6,
-          25.0
-        ],
-        "资金": [
-          18.7,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          6.4,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 41,
-      "symbol": "600259.SH",
-      "name": "中稀有色",
-      "score": 70.1,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "69.29-70.69",
-      "space_pct": 9.56,
-      "stop_pct": -5.74,
-      "change_pct": 2.81,
-      "money_flow_pct": 7.1,
-      "amount_ratio": 1.391,
-      "turnover_pct": 3.78,
-      "sector": "小金属",
-      "sector_score": 51.5,
-      "risk_reward": 1.67,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          18.1,
-          23.0
-        ],
-        "板块": [
-          8.0,
-          20.0
-        ],
-        "结构": [
-          14.4,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 42,
-      "symbol": "300113.SZ",
-      "name": "顺网科技",
-      "score": 69.62,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "18.49-18.87",
-      "space_pct": 10.15,
-      "stop_pct": -6.0,
-      "change_pct": 6.62,
-      "money_flow_pct": 15.14,
-      "amount_ratio": 3.5938,
-      "turnover_pct": 15.25,
-      "sector": "游戏Ⅱ",
-      "sector_score": 89.38,
-      "risk_reward": 1.69,
-      "dims": {
-        "趋势": [
-          12.7,
-          25.0
-        ],
-        "资金": [
-          21.0,
-          23.0
-        ],
-        "板块": [
-          18.8,
-          20.0
-        ],
-        "结构": [
-          10.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 43,
-      "symbol": "688592.SH",
-      "name": "司南导航",
-      "score": 69.6,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "19.92-20.32",
-      "space_pct": 11.54,
-      "stop_pct": -5.75,
-      "change_pct": 3.76,
-      "money_flow_pct": 14.9,
-      "amount_ratio": 0.7042,
-      "turnover_pct": 3.69,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 2.01,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          16.3,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 44,
-      "symbol": "002877.SZ",
-      "name": "智能自控",
-      "score": 69.48,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "8.37-8.53",
-      "space_pct": 12.37,
-      "stop_pct": -6.0,
-      "change_pct": 3.17,
-      "money_flow_pct": 3.3,
-      "amount_ratio": 1.4947,
-      "turnover_pct": 12.3,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 2.06,
-      "dims": {
-        "趋势": [
-          11.7,
-          25.0
-        ],
-        "资金": [
-          13.7,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          15.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 45,
-      "symbol": "300580.SZ",
-      "name": "贝斯特",
-      "score": 69.33,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "18.53-18.91",
-      "space_pct": 11.13,
-      "stop_pct": -5.43,
-      "change_pct": 2.69,
-      "money_flow_pct": 7.6,
-      "amount_ratio": 1.4076,
-      "turnover_pct": 3.41,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 2.05,
-      "dims": {
-        "趋势": [
-          17.3,
-          25.0
-        ],
-        "资金": [
-          18.5,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          6.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 46,
-      "symbol": "002008.SZ",
-      "name": "大族激光",
-      "score": 69.23,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "56.31-57.45",
-      "space_pct": 12.85,
-      "stop_pct": -6.0,
-      "change_pct": 4.69,
-      "money_flow_pct": 10.71,
-      "amount_ratio": 1.1103,
-      "turnover_pct": 5.83,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 2.14,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          18.2,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 47,
-      "symbol": "002292.SZ",
-      "name": "奥飞娱乐",
-      "score": 69.16,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "9.86-10.06",
-      "space_pct": 12.59,
-      "stop_pct": -5.91,
-      "change_pct": 3.32,
-      "money_flow_pct": 7.55,
-      "amount_ratio": 1.4518,
-      "turnover_pct": 12.13,
-      "sector": "文娱用品",
-      "sector_score": 55.02,
-      "risk_reward": 2.13,
-      "dims": {
-        "趋势": [
-          13.9,
-          25.0
-        ],
-        "资金": [
-          18.4,
-          23.0
-        ],
-        "板块": [
-          9.0,
-          20.0
-        ],
-        "结构": [
-          14.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 48,
-      "symbol": "688107.SH",
-      "name": "安路科技",
-      "score": 69.03,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "26.22-26.74",
-      "space_pct": 9.8,
-      "stop_pct": -6.0,
-      "change_pct": 3.8,
-      "money_flow_pct": 6.94,
-      "amount_ratio": 1.0677,
-      "turnover_pct": 1.49,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 1.63,
-      "dims": {
-        "趋势": [
-          19.9,
-          25.0
-        ],
-        "资金": [
-          15.6,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          7.2,
-          16.0
-        ],
-        "流动": [
-          7.2,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 49,
-      "symbol": "300278.SZ",
-      "name": "华昌达",
-      "score": 68.97,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "3.77-3.85",
-      "space_pct": 9.28,
-      "stop_pct": -4.7,
-      "change_pct": 2.42,
-      "money_flow_pct": 14.81,
-      "amount_ratio": 0.9479,
-      "turnover_pct": 1.76,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.98,
-      "dims": {
-        "趋势": [
-          19.7,
-          25.0
-        ],
-        "资金": [
-          18.2,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          2.3,
-          16.0
-        ],
-        "流动": [
-          8.2,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 50,
-      "symbol": "002796.SZ",
-      "name": "世嘉科技",
-      "score": 68.82,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "20.06-20.46",
-      "space_pct": 11.09,
-      "stop_pct": -6.0,
-      "change_pct": 5.14,
-      "money_flow_pct": 5.65,
-      "amount_ratio": 1.4972,
-      "turnover_pct": 4.5,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.85,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          16.8,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 51,
-      "symbol": "688809.SH",
-      "name": "强一股份",
-      "score": 68.78,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "258.94-264.18",
-      "space_pct": 14.68,
-      "stop_pct": -6.0,
-      "change_pct": 5.07,
-      "money_flow_pct": 10.73,
-      "amount_ratio": 1.3025,
-      "turnover_pct": 7.32,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 2.45,
-      "dims": {
-        "趋势": [
-          21.3,
-          25.0
-        ],
-        "资金": [
-          20.2,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 52,
-      "symbol": "002558.SZ",
-      "name": "巨人网络",
-      "score": 68.67,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "21.56-22.00",
-      "space_pct": 8.03,
-      "stop_pct": -5.61,
-      "change_pct": 2.16,
-      "money_flow_pct": 4.93,
-      "amount_ratio": 1.6997,
-      "turnover_pct": 5.14,
-      "sector": "游戏Ⅱ",
-      "sector_score": 89.38,
-      "risk_reward": 1.43,
-      "dims": {
-        "趋势": [
-          19.4,
-          25.0
-        ],
-        "资金": [
-          16.0,
-          23.0
-        ],
-        "板块": [
-          18.8,
-          20.0
-        ],
-        "结构": [
-          0.8,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 53,
-      "symbol": "000887.SZ",
-      "name": "中鼎股份",
-      "score": 68.53,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "18.49-18.87",
-      "space_pct": 8.3,
-      "stop_pct": -6.0,
-      "change_pct": 5.9,
-      "money_flow_pct": 7.27,
-      "amount_ratio": 1.5243,
-      "turnover_pct": 3.91,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.38,
-      "dims": {
-        "趋势": [
-          16.4,
-          25.0
-        ],
-        "资金": [
-          18.2,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          10.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 54,
-      "symbol": "002911.SZ",
-      "name": "佛燃能源",
-      "score": 68.37,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "12.69-12.95",
-      "space_pct": 6.0,
-      "stop_pct": -5.93,
-      "change_pct": 4.65,
-      "money_flow_pct": 11.47,
-      "amount_ratio": 3.886,
-      "turnover_pct": 1.76,
-      "sector": "燃气Ⅱ",
-      "sector_score": 94.14,
-      "risk_reward": 1.01,
-      "dims": {
-        "趋势": [
-          6.5,
-          25.0
-        ],
-        "资金": [
-          19.6,
-          23.0
-        ],
-        "板块": [
-          20.2,
-          20.0
-        ],
-        "结构": [
-          9.2,
-          16.0
-        ],
-        "流动": [
-          8.2,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 55,
-      "symbol": "301018.SZ",
-      "name": "申菱环境",
-      "score": 68.2,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "69.42-70.82",
-      "space_pct": 15.61,
-      "stop_pct": -6.0,
-      "change_pct": 5.55,
-      "money_flow_pct": 13.09,
-      "amount_ratio": 1.2031,
-      "turnover_pct": 4.16,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 2.6,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          21.1,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 56,
-      "symbol": "000988.SZ",
-      "name": "华工科技",
-      "score": 68.18,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "68.56-69.94",
-      "space_pct": 11.26,
-      "stop_pct": -6.0,
-      "change_pct": 5.61,
-      "money_flow_pct": 10.48,
-      "amount_ratio": 1.473,
-      "turnover_pct": 4.58,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.88,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          20.1,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 57,
-      "symbol": "002870.SZ",
-      "name": "香山股份",
-      "score": 68.17,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "41.03-41.85",
-      "space_pct": 9.91,
-      "stop_pct": -6.0,
-      "change_pct": 4.04,
-      "money_flow_pct": 2.12,
-      "amount_ratio": 3.2005,
-      "turnover_pct": 6.13,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.65,
-      "dims": {
-        "趋势": [
-          14.2,
-          25.0
-        ],
-        "资金": [
-          11.5,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          15.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 58,
-      "symbol": "600601.SH",
-      "name": "方正科技",
-      "score": 68.09,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "9.54-9.74",
-      "space_pct": 14.62,
-      "stop_pct": -6.0,
-      "change_pct": 6.17,
-      "money_flow_pct": 9.21,
-      "amount_ratio": 1.2652,
-      "turnover_pct": 7.55,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.44,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          19.5,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 59,
-      "symbol": "600617.SH",
-      "name": "国新能源",
-      "score": 68.05,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "3.16-3.22",
-      "space_pct": 8.54,
-      "stop_pct": -4.25,
-      "change_pct": 2.24,
-      "money_flow_pct": 7.5,
-      "amount_ratio": 1.183,
-      "turnover_pct": 3.5,
-      "sector": "燃气Ⅱ",
-      "sector_score": 94.14,
-      "risk_reward": 2.01,
-      "dims": {
-        "趋势": [
-          17.3,
-          25.0
-        ],
-        "资金": [
-          16.9,
-          23.0
-        ],
-        "板块": [
-          20.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 60,
-      "symbol": "002303.SZ",
-      "name": "美盈森",
-      "score": 67.95,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "4.86-4.96",
-      "space_pct": 12.46,
-      "stop_pct": -6.0,
-      "change_pct": 3.81,
-      "money_flow_pct": 9.0,
-      "amount_ratio": 1.469,
-      "turnover_pct": 7.85,
-      "sector": "包装印刷",
-      "sector_score": 70.69,
-      "risk_reward": 2.08,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          19.4,
-          23.0
-        ],
-        "板块": [
-          13.5,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 61,
-      "symbol": "600345.SH",
-      "name": "长江通信",
-      "score": 67.93,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "41.79-42.63",
-      "space_pct": 11.87,
-      "stop_pct": -6.0,
-      "change_pct": 3.99,
-      "money_flow_pct": 6.5,
-      "amount_ratio": 1.8884,
-      "turnover_pct": 7.36,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.98,
-      "dims": {
-        "趋势": [
-          18.4,
-          25.0
-        ],
-        "资金": [
-          17.6,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 62,
-      "symbol": "600176.SH",
-      "name": "中国巨石",
-      "score": 67.85,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "29.48-30.08",
-      "space_pct": 11.95,
-      "stop_pct": -6.0,
-      "change_pct": 5.42,
-      "money_flow_pct": 9.99,
-      "amount_ratio": 1.1681,
-      "turnover_pct": 4.24,
-      "sector": "玻璃玻纤",
-      "sector_score": 81.95,
-      "risk_reward": 1.99,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          18.3,
-          23.0
-        ],
-        "板块": [
-          16.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 63,
-      "symbol": "605056.SH",
-      "name": "咸亨国际",
-      "score": 67.8,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "13.69-13.97",
-      "space_pct": 9.36,
-      "stop_pct": -6.0,
-      "change_pct": 5.73,
-      "money_flow_pct": 3.31,
-      "amount_ratio": 1.9007,
-      "turnover_pct": 3.43,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.56,
-      "dims": {
-        "趋势": [
-          16.5,
-          25.0
-        ],
-        "资金": [
-          13.8,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          12.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 64,
-      "symbol": "603029.SH",
-      "name": "天鹅股份",
-      "score": 67.73,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "16.24-16.56",
-      "space_pct": 7.92,
-      "stop_pct": -4.92,
-      "change_pct": 2.95,
-      "money_flow_pct": 6.16,
-      "amount_ratio": 0.9844,
-      "turnover_pct": 2.61,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 1.61,
-      "dims": {
-        "趋势": [
-          18.9,
-          25.0
-        ],
-        "资金": [
-          14.2,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          5.6,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 65,
-      "symbol": "300816.SZ",
-      "name": "艾可蓝",
-      "score": 67.68,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "51.62-52.66",
-      "space_pct": 14.27,
-      "stop_pct": -6.0,
-      "change_pct": 3.43,
-      "money_flow_pct": 14.83,
-      "amount_ratio": 1.4463,
-      "turnover_pct": 5.76,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 2.38,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          21.5,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          2.8,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 66,
-      "symbol": "603738.SH",
-      "name": "泰晶科技",
-      "score": 67.65,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "26.29-26.83",
-      "space_pct": 12.73,
-      "stop_pct": -6.0,
-      "change_pct": 3.87,
-      "money_flow_pct": 6.99,
-      "amount_ratio": 0.8424,
-      "turnover_pct": 4.7,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.12,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          13.8,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 67,
-      "symbol": "603689.SH",
-      "name": "皖天然气",
-      "score": 67.59,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "7.71-7.87",
-      "space_pct": 6.0,
-      "stop_pct": -2.17,
-      "change_pct": 1.56,
-      "money_flow_pct": 4.19,
-      "amount_ratio": 1.3667,
-      "turnover_pct": 1.11,
-      "sector": "燃气Ⅱ",
-      "sector_score": 94.14,
-      "risk_reward": 2.77,
-      "dims": {
-        "趋势": [
-          21.0,
-          25.0
-        ],
-        "资金": [
-          15.0,
-          23.0
-        ],
-        "板块": [
-          15.0,
-          20.0
-        ],
-        "结构": [
-          6.1,
-          16.0
-        ],
-        "流动": [
-          5.9,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 68,
-      "symbol": "002491.SZ",
-      "name": "通鼎互联",
-      "score": 67.57,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "14.56-14.86",
-      "space_pct": 13.34,
-      "stop_pct": -6.0,
-      "change_pct": 6.06,
-      "money_flow_pct": 8.97,
-      "amount_ratio": 1.4467,
-      "turnover_pct": 12.11,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 2.22,
-      "dims": {
-        "趋势": [
-          21.0,
-          25.0
-        ],
-        "资金": [
-          19.4,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 69,
-      "symbol": "600556.SH",
-      "name": "天下秀",
-      "score": 67.56,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "5.41-5.51",
-      "space_pct": 9.77,
-      "stop_pct": -6.0,
-      "change_pct": 5.61,
-      "money_flow_pct": 10.72,
-      "amount_ratio": 4.6256,
-      "turnover_pct": 16.69,
-      "sector": "广告营销",
-      "sector_score": 54.38,
-      "risk_reward": 1.63,
-      "dims": {
-        "趋势": [
-          13.8,
-          25.0
-        ],
-        "资金": [
-          18.6,
-          23.0
-        ],
-        "板块": [
-          8.8,
-          20.0
-        ],
-        "结构": [
-          15.6,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 70,
-      "symbol": "603991.SH",
-      "name": "领先股份",
-      "score": 67.5,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "132.27-134.95",
-      "space_pct": 13.35,
-      "stop_pct": -6.0,
-      "change_pct": 4.01,
-      "money_flow_pct": 8.69,
-      "amount_ratio": 1.5698,
-      "turnover_pct": 4.36,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 2.22,
-      "dims": {
-        "趋势": [
-          20.1,
-          25.0
-        ],
-        "资金": [
-          19.2,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 71,
-      "symbol": "688816.SH",
-      "name": "易思维",
-      "score": 67.5,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "50.36-51.38",
-      "space_pct": 8.65,
-      "stop_pct": -4.69,
-      "change_pct": 2.03,
-      "money_flow_pct": 6.62,
-      "amount_ratio": 1.7131,
-      "turnover_pct": 4.45,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.85,
-      "dims": {
-        "趋势": [
-          5.4,
-          25.0
-        ],
-        "资金": [
-          17.7,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          14.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 72,
-      "symbol": "688665.SH",
-      "name": "四方光电",
-      "score": 67.49,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "42.29-43.15",
-      "space_pct": 10.13,
-      "stop_pct": -6.0,
-      "change_pct": 3.41,
-      "money_flow_pct": 9.14,
-      "amount_ratio": 2.0264,
-      "turnover_pct": 1.3,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.69,
-      "dims": {
-        "趋势": [
-          7.0,
-          25.0
-        ],
-        "资金": [
-          19.5,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          15.0,
-          16.0
-        ],
-        "流动": [
-          6.5,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 73,
-      "symbol": "300565.SZ",
-      "name": "科信技术",
-      "score": 67.45,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "9.01-9.19",
-      "space_pct": 8.79,
-      "stop_pct": -5.31,
-      "change_pct": 4.24,
-      "money_flow_pct": 6.2,
-      "amount_ratio": 1.5892,
-      "turnover_pct": 5.4,
-      "sector": "通信设备",
-      "sector_score": 87.2,
-      "risk_reward": 1.65,
-      "dims": {
-        "趋势": [
-          18.3,
-          25.0
-        ],
-        "资金": [
-          17.3,
-          23.0
-        ],
-        "板块": [
-          18.2,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 74,
-      "symbol": "603088.SH",
-      "name": "宁波精达",
-      "score": 67.4,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "9.49-9.69",
-      "space_pct": 8.26,
-      "stop_pct": -4.19,
-      "change_pct": 2.13,
-      "money_flow_pct": 2.87,
-      "amount_ratio": 1.2162,
-      "turnover_pct": 2.25,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 1.97,
-      "dims": {
-        "趋势": [
-          19.7,
-          25.0
-        ],
-        "资金": [
-          13.1,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          6.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 75,
-      "symbol": "603989.SH",
-      "name": "艾华集团",
-      "score": 67.22,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "23.89-24.37",
-      "space_pct": 11.1,
-      "stop_pct": -6.0,
-      "change_pct": 4.1,
-      "money_flow_pct": 3.91,
-      "amount_ratio": 1.5048,
-      "turnover_pct": 5.19,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 1.85,
-      "dims": {
-        "趋势": [
-          20.2,
-          25.0
-        ],
-        "资金": [
-          14.6,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 76,
-      "symbol": "300148.SZ",
-      "name": "天舟文化",
-      "score": 67.15,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "4.00-4.08",
-      "space_pct": 10.66,
-      "stop_pct": -6.0,
-      "change_pct": 3.32,
-      "money_flow_pct": 8.01,
-      "amount_ratio": 1.6177,
-      "turnover_pct": 9.75,
-      "sector": "出版",
-      "sector_score": 48.06,
-      "risk_reward": 1.78,
-      "dims": {
-        "趋势": [
-          13.4,
-          25.0
-        ],
-        "资金": [
-          18.8,
-          23.0
-        ],
-        "板块": [
-          7.0,
-          20.0
-        ],
-        "结构": [
-          14.3,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 77,
-      "symbol": "000636.SZ",
-      "name": "风华高科",
-      "score": 67.13,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "33.40-34.08",
-      "space_pct": 13.09,
-      "stop_pct": -6.0,
-      "change_pct": 4.78,
-      "money_flow_pct": 8.65,
-      "amount_ratio": 0.9704,
-      "turnover_pct": 6.59,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.18,
-      "dims": {
-        "趋势": [
-          18.7,
-          25.0
-        ],
-        "资金": [
-          16.0,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 78,
-      "symbol": "600215.SH",
-      "name": "派斯林",
-      "score": 67.05,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "6.42-6.54",
-      "space_pct": 11.84,
-      "stop_pct": -6.0,
-      "change_pct": 5.02,
-      "money_flow_pct": 5.86,
-      "amount_ratio": 1.3159,
-      "turnover_pct": 5.52,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.97,
-      "dims": {
-        "趋势": [
-          6.1,
-          25.0
-        ],
-        "资金": [
-          17.0,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          15.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 79,
-      "symbol": "300933.SZ",
-      "name": "中辰股份",
-      "score": 66.91,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "6.11-6.23",
-      "space_pct": 8.42,
-      "stop_pct": -6.0,
-      "change_pct": 5.11,
-      "money_flow_pct": 22.09,
-      "amount_ratio": 1.3907,
-      "turnover_pct": 2.65,
-      "sector": "电网设备",
-      "sector_score": 51.71,
-      "risk_reward": 1.4,
-      "dims": {
-        "趋势": [
-          20.9,
-          25.0
-        ],
-        "资金": [
-          22.4,
-          23.0
-        ],
-        "板块": [
-          8.1,
-          20.0
-        ],
-        "结构": [
-          3.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 80,
-      "symbol": "300644.SZ",
-      "name": "南京聚隆",
-      "score": 66.81,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "18.98-19.36",
-      "space_pct": 9.07,
-      "stop_pct": -6.0,
-      "change_pct": 4.75,
-      "money_flow_pct": 7.71,
-      "amount_ratio": 1.6385,
-      "turnover_pct": 4.94,
-      "sector": "塑料",
-      "sector_score": 72.86,
-      "risk_reward": 1.51,
-      "dims": {
-        "趋势": [
-          20.5,
-          25.0
-        ],
-        "资金": [
-          18.5,
-          23.0
-        ],
-        "板块": [
-          14.1,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 81,
-      "symbol": "300375.SZ",
-      "name": "鹏翎股份",
-      "score": 66.76,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "4.07-4.15",
-      "space_pct": 6.79,
-      "stop_pct": -5.51,
-      "change_pct": 3.27,
-      "money_flow_pct": 4.36,
-      "amount_ratio": 2.5202,
-      "turnover_pct": 4.42,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.23,
-      "dims": {
-        "趋势": [
-          18.3,
-          25.0
-        ],
-        "资金": [
-          15.3,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          5.7,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 82,
-      "symbol": "688049.SH",
-      "name": "炬芯科技",
-      "score": 66.69,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "51.41-52.45",
-      "space_pct": 12.26,
-      "stop_pct": -5.66,
-      "change_pct": 2.65,
-      "money_flow_pct": -4.67,
-      "amount_ratio": 1.3019,
-      "turnover_pct": 6.23,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 2.16,
-      "dims": {
-        "趋势": [
-          15.8,
-          25.0
-        ],
-        "资金": [
-          6.8,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          15.9,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 83,
-      "symbol": "002681.SZ",
-      "name": "奋达科技",
-      "score": 66.56,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "4.66-4.76",
-      "space_pct": 8.24,
-      "stop_pct": -3.71,
-      "change_pct": 1.51,
-      "money_flow_pct": 3.65,
-      "amount_ratio": 1.5743,
-      "turnover_pct": 3.64,
-      "sector": "消费电子",
-      "sector_score": 66.17,
-      "risk_reward": 2.22,
-      "dims": {
-        "趋势": [
-          16.7,
-          25.0
-        ],
-        "资金": [
-          14.3,
-          23.0
-        ],
-        "板块": [
-          7.0,
-          20.0
-        ],
-        "结构": [
-          14.9,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 84,
-      "symbol": "300817.SZ",
-      "name": "双飞集团",
-      "score": 66.49,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "16.99-17.33",
-      "space_pct": 11.01,
-      "stop_pct": -4.98,
-      "change_pct": 2.63,
-      "money_flow_pct": 7.81,
-      "amount_ratio": 1.1125,
-      "turnover_pct": 4.48,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 2.21,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          16.6,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 85,
-      "symbol": "688400.SH",
-      "name": "凌云光",
-      "score": 66.46,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "42.83-43.69",
-      "space_pct": 17.43,
-      "stop_pct": -6.0,
-      "change_pct": 4.24,
-      "money_flow_pct": 10.19,
-      "amount_ratio": 1.1492,
-      "turnover_pct": 4.29,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 2.91,
-      "dims": {
-        "趋势": [
-          19.2,
-          25.0
-        ],
-        "资金": [
-          18.2,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 86,
-      "symbol": "300327.SZ",
-      "name": "中颖电子",
-      "score": 66.43,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "23.07-23.53",
-      "space_pct": 8.8,
-      "stop_pct": -4.3,
-      "change_pct": 2.33,
-      "money_flow_pct": 4.45,
-      "amount_ratio": 1.007,
-      "turnover_pct": 2.64,
-      "sector": "半导体",
-      "sector_score": 74.19,
-      "risk_reward": 2.05,
-      "dims": {
-        "趋势": [
-          18.3,
-          25.0
-        ],
-        "资金": [
-          12.5,
-          23.0
-        ],
-        "板块": [
-          14.5,
-          20.0
-        ],
-        "结构": [
-          7.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 87,
-      "symbol": "300421.SZ",
-      "name": "力星股份",
-      "score": 66.38,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "19.24-19.62",
-      "space_pct": 14.02,
-      "stop_pct": -4.96,
-      "change_pct": 2.53,
-      "money_flow_pct": 8.07,
-      "amount_ratio": 1.868,
-      "turnover_pct": 11.75,
-      "sector": "通用设备",
-      "sector_score": 75.38,
-      "risk_reward": 2.83,
-      "dims": {
-        "趋势": [
-          12.7,
-          25.0
-        ],
-        "资金": [
-          18.8,
-          23.0
-        ],
-        "板块": [
-          14.8,
-          20.0
-        ],
-        "结构": [
-          6.3,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 88,
-      "symbol": "301499.SZ",
-      "name": "维科精密",
-      "score": 66.23,
-      "action": "重点观察",
-      "setup_state": "突破前观察",
-      "next_action": "观察突破和量能",
-      "buy_price": "24.22-24.70",
-      "space_pct": 10.0,
-      "stop_pct": -6.0,
-      "change_pct": 5.43,
-      "money_flow_pct": 7.1,
-      "amount_ratio": 2.5408,
-      "turnover_pct": 2.81,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.67,
-      "dims": {
-        "趋势": [
-          16.4,
-          25.0
-        ],
-        "资金": [
-          18.1,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          6.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 89,
-      "symbol": "600563.SH",
-      "name": "法拉电子",
-      "score": 66.17,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "106.53-108.69",
-      "space_pct": 6.86,
-      "stop_pct": -3.59,
-      "change_pct": 2.23,
-      "money_flow_pct": 2.45,
-      "amount_ratio": 1.1741,
-      "turnover_pct": 1.92,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 1.91,
-      "dims": {
-        "趋势": [
-          20.2,
-          25.0
-        ],
-        "资金": [
-          10.8,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          3.1,
-          16.0
-        ],
-        "流动": [
-          8.8,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 90,
-      "symbol": "301013.SZ",
-      "name": "利和兴",
-      "score": 65.95,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "26.46-27.00",
-      "space_pct": 12.0,
-      "stop_pct": -6.0,
-      "change_pct": 4.17,
-      "money_flow_pct": 6.08,
-      "amount_ratio": 1.161,
-      "turnover_pct": 7.02,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 2.0,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          15.5,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 91,
-      "symbol": "300459.SZ",
-      "name": "汤姆猫",
-      "score": 65.88,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "4.02-4.10",
-      "space_pct": 8.61,
-      "stop_pct": -6.0,
-      "change_pct": 3.84,
-      "money_flow_pct": 8.0,
-      "amount_ratio": 2.4169,
-      "turnover_pct": 9.45,
-      "sector": "游戏Ⅱ",
-      "sector_score": 89.38,
-      "risk_reward": 1.44,
-      "dims": {
-        "趋势": [
-          3.1,
-          25.0
-        ],
-        "资金": [
-          18.8,
-          23.0
-        ],
-        "板块": [
-          18.8,
-          20.0
-        ],
-        "结构": [
-          11.5,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 92,
-      "symbol": "688813.SH",
-      "name": "泰金新能",
-      "score": 65.86,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "85.82-87.56",
-      "space_pct": 15.47,
-      "stop_pct": -6.0,
-      "change_pct": 4.63,
-      "money_flow_pct": 9.33,
-      "amount_ratio": 0.9333,
-      "turnover_pct": 11.81,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 2.58,
-      "dims": {
-        "趋势": [
-          20.7,
-          25.0
-        ],
-        "资金": [
-          16.1,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 93,
-      "symbol": "301418.SZ",
-      "name": "协昌科技",
-      "score": 65.86,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "30.20-30.80",
-      "space_pct": 9.06,
-      "stop_pct": -4.59,
-      "change_pct": 2.42,
-      "money_flow_pct": 9.47,
-      "amount_ratio": 0.909,
-      "turnover_pct": 2.89,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 1.97,
-      "dims": {
-        "趋势": [
-          20.2,
-          25.0
-        ],
-        "资金": [
-          16.0,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 94,
-      "symbol": "002138.SZ",
-      "name": "顺络电子",
-      "score": 65.84,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "39.94-40.74",
-      "space_pct": 12.11,
-      "stop_pct": -5.44,
-      "change_pct": 2.88,
-      "money_flow_pct": 9.46,
-      "amount_ratio": 0.7745,
-      "turnover_pct": 2.41,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.23,
-      "dims": {
-        "趋势": [
-          18.5,
-          25.0
-        ],
-        "资金": [
-          15.0,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 95,
-      "symbol": "002265.SZ",
-      "name": "建设工业",
-      "score": 65.81,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "21.01-21.43",
-      "space_pct": 10.18,
-      "stop_pct": -6.0,
-      "change_pct": 2.96,
-      "money_flow_pct": 4.23,
-      "amount_ratio": 1.1113,
-      "turnover_pct": 2.4,
-      "sector": "汽车零部件",
-      "sector_score": 71.88,
-      "risk_reward": 1.7,
-      "dims": {
-        "趋势": [
-          22.1,
-          25.0
-        ],
-        "资金": [
-          13.0,
-          23.0
-        ],
-        "板块": [
-          13.8,
-          20.0
-        ],
-        "结构": [
-          3.2,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 96,
-      "symbol": "603011.SH",
-      "name": "合锻智能",
-      "score": 65.58,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "19.09-19.47",
-      "space_pct": 12.49,
-      "stop_pct": -6.0,
-      "change_pct": 5.93,
-      "money_flow_pct": 9.93,
-      "amount_ratio": 1.5977,
-      "turnover_pct": 9.17,
-      "sector": "专用设备",
-      "sector_score": 77.19,
-      "risk_reward": 2.08,
-      "dims": {
-        "趋势": [
-          20.8,
-          25.0
-        ],
-        "资金": [
-          19.9,
-          23.0
-        ],
-        "板块": [
-          15.4,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 97,
-      "symbol": "300408.SZ",
-      "name": "三环集团",
-      "score": 65.56,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "79.41-81.01",
-      "space_pct": 16.32,
-      "stop_pct": -6.0,
-      "change_pct": 5.48,
-      "money_flow_pct": 11.62,
-      "amount_ratio": 0.963,
-      "turnover_pct": 2.77,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 2.72,
-      "dims": {
-        "趋势": [
-          18.2,
-          25.0
-        ],
-        "资金": [
-          17.4,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 98,
-      "symbol": "300747.SZ",
-      "name": "锐科激光",
-      "score": 65.54,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "43.65-44.53",
-      "space_pct": 11.04,
-      "stop_pct": -4.33,
-      "change_pct": 2.13,
-      "money_flow_pct": 10.38,
-      "amount_ratio": 0.5825,
-      "turnover_pct": 2.64,
-      "sector": "自动化设备",
-      "sector_score": 79.35,
-      "risk_reward": 2.55,
-      "dims": {
-        "趋势": [
-          18.9,
-          25.0
-        ],
-        "资金": [
-          13.9,
-          23.0
-        ],
-        "板块": [
-          16.0,
-          20.0
-        ],
-        "结构": [
-          3.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 99,
-      "symbol": "300319.SZ",
-      "name": "麦捷科技",
-      "score": 65.5,
-      "action": "重点观察",
-      "setup_state": "等待靠近关键位",
-      "next_action": "等待，不追价",
-      "buy_price": "14.84-15.14",
-      "space_pct": 11.5,
-      "stop_pct": -6.0,
-      "change_pct": 3.17,
-      "money_flow_pct": 4.4,
-      "amount_ratio": 0.911,
-      "turnover_pct": 6.14,
-      "sector": "元件",
-      "sector_score": 88.98,
-      "risk_reward": 1.92,
-      "dims": {
-        "趋势": [
-          21.4,
-          25.0
-        ],
-        "资金": [
-          11.7,
-          23.0
-        ],
-        "板块": [
-          18.7,
-          20.0
-        ],
-        "结构": [
-          0.0,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    },
-    {
-      "rank": 100,
-      "symbol": "002036.SZ",
-      "name": "联创电子",
-      "score": 65.47,
-      "action": "重点观察",
-      "setup_state": "突破确认",
-      "next_action": "条件买入/持有",
-      "buy_price": "5.96-6.08",
-      "space_pct": 8.78,
-      "stop_pct": -6.0,
-      "change_pct": 5.99,
-      "money_flow_pct": 14.38,
-      "amount_ratio": 4.0725,
-      "turnover_pct": 9.41,
-      "sector": "光学光电子",
-      "sector_score": 50.71,
-      "risk_reward": 1.46,
-      "dims": {
-        "趋势": [
-          15.9,
-          25.0
-        ],
-        "资金": [
-          20.3,
-          23.0
-        ],
-        "板块": [
-          7.8,
-          20.0
-        ],
-        "结构": [
-          12.1,
-          16.0
-        ],
-        "流动": [
-          9.1,
-          9.0
-        ],
-        "大盘": [
-          4.6,
-          7.0
-        ]
-      },
-      "selected_at": "2026-11-12T10:46:38",
-      "selected_new": true
-    }
-  ],
-  "note": "示例脱敏快照：前 100 名，供 GitHub Pages / 离线自测展示用"
+  "sectors": 128
+ },
+ "ranking": [
+  {
+   "rank": 1,
+   "symbol": "600681.SH",
+   "name": "百川能源",
+   "score": 69.38,
+   "action": "重点观察",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "3.55-3.63",
+   "space_pct": 6.0,
+   "stop_pct": -2.33,
+   "change_pct": 0.843,
+   "money_flow_pct": 7.25,
+   "amount_ratio": 1.4466,
+   "turnover_pct": 1.7669,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 2.57,
+   "dims": {
+    "趋势": [
+     20.3,
+     25.0
+    ],
+    "资金": [
+     18.2,
+     23.0
+    ],
+    "板块": [
+     9.6,
+     20.0
+    ],
+    "结构": [
+     15.9,
+     16.0
+    ],
+    "流动": [
+     8.2,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T13:58:37",
+   "selected_new": false
+  },
+  {
+   "rank": 2,
+   "symbol": "600628.SH",
+   "name": "新世界",
+   "score": 62.42,
+   "action": "重点观察",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "6.62-6.76",
+   "space_pct": 6.0,
+   "stop_pct": -3.75,
+   "change_pct": 2.137,
+   "money_flow_pct": 1.8,
+   "amount_ratio": 1.7065,
+   "turnover_pct": 3.0387,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.6,
+   "dims": {
+    "趋势": [
+     19.2,
+     25.0
+    ],
+    "资金": [
+     11.1,
+     23.0
+    ],
+    "板块": [
+     9.5,
+     20.0
+    ],
+    "结构": [
+     15.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 3,
+   "symbol": "002069.SZ",
+   "name": "獐子岛",
+   "score": 61.19,
+   "action": "重点观察",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "3.43-3.49",
+   "space_pct": 7.1,
+   "stop_pct": -4.36,
+   "change_pct": 2.671,
+   "money_flow_pct": 7.06,
+   "amount_ratio": 1.5317,
+   "turnover_pct": 2.8276,
+   "sector": "渔业",
+   "sector_score": 82.25,
+   "risk_reward": 1.63,
+   "dims": {
+    "趋势": [
+     19.5,
+     25.0
+    ],
+    "资金": [
+     18.0,
+     23.0
+    ],
+    "板块": [
+     16.8,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 4,
+   "symbol": "603967.SH",
+   "name": "中创物流",
+   "score": 59.53,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "13.27-13.53",
+   "space_pct": 6.0,
+   "stop_pct": -5.05,
+   "change_pct": 4.606,
+   "money_flow_pct": 19.07,
+   "amount_ratio": 2.9469,
+   "turnover_pct": 2.5054,
+   "sector": "物流",
+   "sector_score": 22.38,
+   "risk_reward": 1.19,
+   "dims": {
+    "趋势": [
+     15.4,
+     25.0
+    ],
+    "资金": [
+     22.1,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T13:30:39",
+   "selected_new": false
+  },
+  {
+   "rank": 5,
+   "symbol": "000882.SZ",
+   "name": "华联股份",
+   "score": 58.96,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "1.47-1.49",
+   "space_pct": 6.0,
+   "stop_pct": -6.0,
+   "change_pct": 4.965,
+   "money_flow_pct": 12.52,
+   "amount_ratio": 3.2369,
+   "turnover_pct": 4.6863,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.0,
+   "dims": {
+    "趋势": [
+     16.5,
+     25.0
+    ],
+    "资金": [
+     20.7,
+     23.0
+    ],
+    "板块": [
+     9.5,
+     20.0
+    ],
+    "结构": [
+     5.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 6,
+   "symbol": "603637.SH",
+   "name": "镇海股份",
+   "score": 57.96,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "12.21-12.45",
+   "space_pct": 9.86,
+   "stop_pct": -6.0,
+   "change_pct": 4.847,
+   "money_flow_pct": 4.74,
+   "amount_ratio": 2.1031,
+   "turnover_pct": 5.4459,
+   "sector": "专业工程",
+   "sector_score": 39.88,
+   "risk_reward": 1.64,
+   "dims": {
+    "趋势": [
+     14.4,
+     25.0
+    ],
+    "资金": [
+     15.7,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     14.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 7,
+   "symbol": "603080.SH",
+   "name": "新疆火炬",
+   "score": 57.5,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "20.37-20.79",
+   "space_pct": 6.33,
+   "stop_pct": -4.26,
+   "change_pct": 3.055,
+   "money_flow_pct": 18.29,
+   "amount_ratio": 5.0192,
+   "turnover_pct": 7.6287,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 1.49,
+   "dims": {
+    "趋势": [
+     1.9,
+     25.0
+    ],
+    "资金": [
+     20.0,
+     23.0
+    ],
+    "板块": [
+     14.8,
+     20.0
+    ],
+    "结构": [
+     13.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 8,
+   "symbol": "601330.SH",
+   "name": "绿色动力",
+   "score": 56.32,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "8.18-8.34",
+   "space_pct": 6.0,
+   "stop_pct": -4.32,
+   "change_pct": 2.481,
+   "money_flow_pct": 3.78,
+   "amount_ratio": 1.335,
+   "turnover_pct": 1.4755,
+   "sector": "环境治理",
+   "sector_score": 22.28,
+   "risk_reward": 1.39,
+   "dims": {
+    "趋势": [
+     23.8,
+     25.0
+    ],
+    "资金": [
+     14.5,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     6.6,
+     16.0
+    ],
+    "流动": [
+     7.2,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 9,
+   "symbol": "002369.SZ",
+   "name": "卓翼科技",
+   "score": 55.01,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "5.80-5.92",
+   "space_pct": 7.85,
+   "stop_pct": -5.75,
+   "change_pct": 3.534,
+   "money_flow_pct": 4.96,
+   "amount_ratio": 3.4166,
+   "turnover_pct": 7.1767,
+   "sector": "消费电子",
+   "sector_score": 28.28,
+   "risk_reward": 1.37,
+   "dims": {
+    "趋势": [
+     13.7,
+     25.0
+    ],
+    "资金": [
+     15.6,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     12.3,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 10,
+   "symbol": "688222.SH",
+   "name": "成都先导",
+   "score": 54.56,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "40.44-41.26",
+   "space_pct": 15.29,
+   "stop_pct": -6.0,
+   "change_pct": 5.229,
+   "money_flow_pct": 2.66,
+   "amount_ratio": 1.5039,
+   "turnover_pct": 8.8823,
+   "sector": "医疗服务",
+   "sector_score": 38.8,
+   "risk_reward": 2.55,
+   "dims": {
+    "趋势": [
+     15.9,
+     25.0
+    ],
+    "资金": [
+     12.7,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 11,
+   "symbol": "300962.SZ",
+   "name": "中金辐照",
+   "score": 54.27,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "13.80-14.08",
+   "space_pct": 6.74,
+   "stop_pct": -4.14,
+   "change_pct": 2.274,
+   "money_flow_pct": -2.47,
+   "amount_ratio": 1.7484,
+   "turnover_pct": 2.899,
+   "sector": "专业服务",
+   "sector_score": 19.9,
+   "risk_reward": 1.63,
+   "dims": {
+    "趋势": [
+     18.6,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     15.3,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 12,
+   "symbol": "000407.SZ",
+   "name": "胜利股份",
+   "score": 54.26,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "4.39-4.47",
+   "space_pct": 6.0,
+   "stop_pct": -6.0,
+   "change_pct": 1.839,
+   "money_flow_pct": 16.12,
+   "amount_ratio": 6.5149,
+   "turnover_pct": 13.2348,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 1.0,
+   "dims": {
+    "趋势": [
+     6.2,
+     25.0
+    ],
+    "资金": [
+     18.2,
+     23.0
+    ],
+    "板块": [
+     9.6,
+     20.0
+    ],
+    "结构": [
+     13.0,
+     16.0
+    ],
+    "流动": [
+     9.0,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 13,
+   "symbol": "603456.SH",
+   "name": "九洲药业",
+   "score": 53.49,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "16.93-17.27",
+   "space_pct": 7.82,
+   "stop_pct": -5.81,
+   "change_pct": 2.888,
+   "money_flow_pct": -0.5,
+   "amount_ratio": 1.7214,
+   "turnover_pct": 3.5945,
+   "sector": "医疗服务",
+   "sector_score": 38.8,
+   "risk_reward": 1.35,
+   "dims": {
+    "趋势": [
+     17.8,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     15.4,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 14,
+   "symbol": "002277.SZ",
+   "name": "友阿股份",
+   "score": 52.96,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "6.54-6.68",
+   "space_pct": 9.49,
+   "stop_pct": -6.0,
+   "change_pct": 5.929,
+   "money_flow_pct": -6.98,
+   "amount_ratio": 2.2089,
+   "turnover_pct": 4.9751,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.58,
+   "dims": {
+    "趋势": [
+     17.1,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     9.5,
+     20.0
+    ],
+    "结构": [
+     15.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 15,
+   "symbol": "601789.SH",
+   "name": "宁波建工",
+   "score": 52.38,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "3.97-4.05",
+   "space_pct": 6.0,
+   "stop_pct": -4.2,
+   "change_pct": 3.085,
+   "money_flow_pct": 7.45,
+   "amount_ratio": 2.8051,
+   "turnover_pct": 4.7343,
+   "sector": "房屋建设Ⅱ",
+   "sector_score": 48.76,
+   "risk_reward": 1.43,
+   "dims": {
+    "趋势": [
+     18.5,
+     25.0
+    ],
+    "资金": [
+     18.4,
+     23.0
+    ],
+    "板块": [
+     7.2,
+     20.0
+    ],
+    "结构": [
+     0.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 16,
+   "symbol": "600815.SH",
+   "name": "厦工股份",
+   "score": 52.19,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "3.18-3.24",
+   "space_pct": 9.17,
+   "stop_pct": -6.0,
+   "change_pct": 5.246,
+   "money_flow_pct": 14.23,
+   "amount_ratio": 2.9238,
+   "turnover_pct": 9.2739,
+   "sector": "工程机械",
+   "sector_score": 25.14,
+   "risk_reward": 1.53,
+   "dims": {
+    "趋势": [
+     18.5,
+     25.0
+    ],
+    "资金": [
+     21.4,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 17,
+   "symbol": "000635.SZ",
+   "name": "英 力 特",
+   "score": 51.36,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "10.89-11.11",
+   "space_pct": 10.93,
+   "stop_pct": -6.0,
+   "change_pct": 7.738,
+   "money_flow_pct": 16.32,
+   "amount_ratio": 2.747,
+   "turnover_pct": 13.0472,
+   "sector": "化学原料",
+   "sector_score": 23.47,
+   "risk_reward": 1.82,
+   "dims": {
+    "趋势": [
+     17.9,
+     25.0
+    ],
+    "资金": [
+     21.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 18,
+   "symbol": "600259.SH",
+   "name": "中稀有色",
+   "score": 51.21,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "73.28-74.76",
+   "space_pct": 9.16,
+   "stop_pct": -6.0,
+   "change_pct": 5.758,
+   "money_flow_pct": 7.1,
+   "amount_ratio": 2.3655,
+   "turnover_pct": 6.3836,
+   "sector": "小金属",
+   "sector_score": 20.7,
+   "risk_reward": 1.53,
+   "dims": {
+    "趋势": [
+     14.3,
+     25.0
+    ],
+    "资金": [
+     18.1,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T13:08:37",
+   "selected_new": false
+  },
+  {
+   "rank": 19,
+   "symbol": "603258.SH",
+   "name": "电魂网络",
+   "score": 51.1,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "18.70-19.08",
+   "space_pct": 13.74,
+   "stop_pct": -6.0,
+   "change_pct": 3.111,
+   "money_flow_pct": 22.21,
+   "amount_ratio": 2.7605,
+   "turnover_pct": 20.7316,
+   "sector": "游戏Ⅱ",
+   "sector_score": 37.16,
+   "risk_reward": 2.29,
+   "dims": {
+    "趋势": [
+     4.5,
+     25.0
+    ],
+    "资金": [
+     22.4,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     11.0,
+     16.0
+    ],
+    "流动": [
+     8.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 20,
+   "symbol": "603318.SH",
+   "name": "水发燃气",
+   "score": 50.8,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "8.74-8.92",
+   "space_pct": 7.72,
+   "stop_pct": -6.0,
+   "change_pct": 4.497,
+   "money_flow_pct": -6.6,
+   "amount_ratio": 2.8046,
+   "turnover_pct": 14.9192,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 1.29,
+   "dims": {
+    "趋势": [
+     15.9,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     14.8,
+     20.0
+    ],
+    "结构": [
+     5.6,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 21,
+   "symbol": "688343.SH",
+   "name": "云天励飞-U",
+   "score": 50.7,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "54.45-55.55",
+   "space_pct": 12.36,
+   "stop_pct": -6.0,
+   "change_pct": 6.838,
+   "money_flow_pct": 3.47,
+   "amount_ratio": 2.2283,
+   "turnover_pct": 5.0128,
+   "sector": "IT服务Ⅱ",
+   "sector_score": 18.71,
+   "risk_reward": 2.06,
+   "dims": {
+    "趋势": [
+     15.9,
+     25.0
+    ],
+    "资金": [
+     14.0,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.5,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 22,
+   "symbol": "300878.SZ",
+   "name": "维康药业",
+   "score": 50.31,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "34.65-35.35",
+   "space_pct": 9.06,
+   "stop_pct": -4.37,
+   "change_pct": 1.685,
+   "money_flow_pct": 1.98,
+   "amount_ratio": 2.5699,
+   "turnover_pct": 3.1701,
+   "sector": "中药Ⅱ",
+   "sector_score": 24.65,
+   "risk_reward": 2.07,
+   "dims": {
+    "趋势": [
+     15.8,
+     25.0
+    ],
+    "资金": [
+     11.4,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     14.4,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 23,
+   "symbol": "600228.SH",
+   "name": "返利科技",
+   "score": 50.22,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "10.33-10.53",
+   "space_pct": 9.22,
+   "stop_pct": -6.0,
+   "change_pct": 6.755,
+   "money_flow_pct": 17.71,
+   "amount_ratio": 2.9481,
+   "turnover_pct": 11.0577,
+   "sector": "数字媒体",
+   "sector_score": 28.18,
+   "risk_reward": 1.54,
+   "dims": {
+    "趋势": [
+     14.7,
+     25.0
+    ],
+    "资金": [
+     22.0,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     5.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 24,
+   "symbol": "601033.SH",
+   "name": "永兴股份",
+   "score": 50.0,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "14.87-15.17",
+   "space_pct": 6.0,
+   "stop_pct": -3.09,
+   "change_pct": 1.145,
+   "money_flow_pct": 7.73,
+   "amount_ratio": 1.6525,
+   "turnover_pct": 3.4201,
+   "sector": "环境治理",
+   "sector_score": 22.28,
+   "risk_reward": 1.94,
+   "dims": {
+    "趋势": [
+     19.0,
+     25.0
+    ],
+    "资金": [
+     18.6,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     3.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 25,
+   "symbol": "603817.SH",
+   "name": "海峡环保",
+   "score": 49.82,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "5.60-5.72",
+   "space_pct": 6.0,
+   "stop_pct": -2.25,
+   "change_pct": 1.071,
+   "money_flow_pct": -4.31,
+   "amount_ratio": 1.7057,
+   "turnover_pct": 2.2414,
+   "sector": "环境治理",
+   "sector_score": 22.28,
+   "risk_reward": 2.67,
+   "dims": {
+    "趋势": [
+     18.5,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 26,
+   "symbol": "600617.SH",
+   "name": "国新能源",
+   "score": 49.67,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "3.23-3.29",
+   "space_pct": 7.97,
+   "stop_pct": -4.7,
+   "change_pct": 2.194,
+   "money_flow_pct": 7.5,
+   "amount_ratio": 1.4714,
+   "turnover_pct": 4.126,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 1.69,
+   "dims": {
+    "趋势": [
+     8.8,
+     25.0
+    ],
+    "资金": [
+     18.4,
+     23.0
+    ],
+    "板块": [
+     14.8,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 27,
+   "symbol": "600538.SH",
+   "name": "国发股份",
+   "score": 49.43,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.47-4.57",
+   "space_pct": 9.19,
+   "stop_pct": -4.19,
+   "change_pct": 0.222,
+   "money_flow_pct": 9.07,
+   "amount_ratio": 1.2762,
+   "turnover_pct": 2.4905,
+   "sector": "医疗器械",
+   "sector_score": 23.19,
+   "risk_reward": 2.19,
+   "dims": {
+    "趋势": [
+     18.2,
+     25.0
+    ],
+    "资金": [
+     19.4,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     3.2,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 28,
+   "symbol": "605169.SH",
+   "name": "洪通燃气",
+   "score": 49.38,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "13.41-13.69",
+   "space_pct": 7.94,
+   "stop_pct": -6.0,
+   "change_pct": 9.984,
+   "money_flow_pct": 5.82,
+   "amount_ratio": 2.1071,
+   "turnover_pct": 3.3181,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 1.32,
+   "dims": {
+    "趋势": [
+     14.7,
+     25.0
+    ],
+    "资金": [
+     16.9,
+     23.0
+    ],
+    "板块": [
+     14.8,
+     20.0
+    ],
+    "结构": [
+     12.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 29,
+   "symbol": "603097.SH",
+   "name": "江苏华辰",
+   "score": 49.3,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "21.25-21.67",
+   "space_pct": 9.52,
+   "stop_pct": -4.85,
+   "change_pct": 3.422,
+   "money_flow_pct": 9.41,
+   "amount_ratio": 3.3105,
+   "turnover_pct": 4.0171,
+   "sector": "电网设备",
+   "sector_score": 23.39,
+   "risk_reward": 1.96,
+   "dims": {
+    "趋势": [
+     3.0,
+     25.0
+    ],
+    "资金": [
+     19.3,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.1,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 30,
+   "symbol": "301360.SZ",
+   "name": "荣旗科技",
+   "score": 49.27,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "64.05-65.35",
+   "space_pct": 12.33,
+   "stop_pct": -6.0,
+   "change_pct": 1.49,
+   "money_flow_pct": 14.94,
+   "amount_ratio": 2.8211,
+   "turnover_pct": 16.3966,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 2.05,
+   "dims": {
+    "趋势": [
+     14.2,
+     25.0
+    ],
+    "资金": [
+     21.5,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 31,
+   "symbol": "300501.SZ",
+   "name": "海顺新材",
+   "score": 49.18,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "12.58-12.84",
+   "space_pct": 9.73,
+   "stop_pct": -6.0,
+   "change_pct": 3.333,
+   "money_flow_pct": 6.74,
+   "amount_ratio": 2.7614,
+   "turnover_pct": 5.417,
+   "sector": "包装印刷",
+   "sector_score": 34.31,
+   "risk_reward": 1.62,
+   "dims": {
+    "趋势": [
+     6.4,
+     25.0
+    ],
+    "资金": [
+     17.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     11.1,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 32,
+   "symbol": "603098.SH",
+   "name": "森特股份",
+   "score": 48.89,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "10.79-11.01",
+   "space_pct": 7.86,
+   "stop_pct": -6.0,
+   "change_pct": 4.107,
+   "money_flow_pct": 6.97,
+   "amount_ratio": 2.9038,
+   "turnover_pct": 2.3048,
+   "sector": "专业工程",
+   "sector_score": 39.88,
+   "risk_reward": 1.31,
+   "dims": {
+    "趋势": [
+     17.0,
+     25.0
+    ],
+    "资金": [
+     18.0,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 33,
+   "symbol": "603283.SH",
+   "name": "赛腾股份",
+   "score": 48.67,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "44.84-45.74",
+   "space_pct": 9.42,
+   "stop_pct": -6.0,
+   "change_pct": 5.571,
+   "money_flow_pct": 5.42,
+   "amount_ratio": 3.281,
+   "turnover_pct": 11.672,
+   "sector": "自动化设备",
+   "sector_score": 33.01,
+   "risk_reward": 1.57,
+   "dims": {
+    "趋势": [
+     12.8,
+     25.0
+    ],
+    "资金": [
+     16.2,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 34,
+   "symbol": "688799.SH",
+   "name": "华纳药厂",
+   "score": 48.07,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "52.47-53.53",
+   "space_pct": 9.93,
+   "stop_pct": -6.0,
+   "change_pct": 5.138,
+   "money_flow_pct": -4.31,
+   "amount_ratio": 2.4366,
+   "turnover_pct": 4.0765,
+   "sector": "化学制药",
+   "sector_score": 23.26,
+   "risk_reward": 1.65,
+   "dims": {
+    "趋势": [
+     14.5,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 35,
+   "symbol": "300960.SZ",
+   "name": "通业科技",
+   "score": 47.91,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "19.58-19.98",
+   "space_pct": 12.49,
+   "stop_pct": -6.0,
+   "change_pct": 2.593,
+   "money_flow_pct": 6.52,
+   "amount_ratio": 3.2443,
+   "turnover_pct": 7.2839,
+   "sector": "轨交设备Ⅱ",
+   "sector_score": 24.31,
+   "risk_reward": 2.08,
+   "dims": {
+    "趋势": [
+     3.0,
+     25.0
+    ],
+    "资金": [
+     17.3,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.6,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 36,
+   "symbol": "603926.SH",
+   "name": "铁流股份",
+   "score": 47.86,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "17.66-18.02",
+   "space_pct": 11.21,
+   "stop_pct": -6.0,
+   "change_pct": 4.327,
+   "money_flow_pct": 6.01,
+   "amount_ratio": 2.604,
+   "turnover_pct": 6.1294,
+   "sector": "汽车零部件",
+   "sector_score": 30.59,
+   "risk_reward": 1.87,
+   "dims": {
+    "趋势": [
+     2.1,
+     25.0
+    ],
+    "资金": [
+     17.1,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     14.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 37,
+   "symbol": "300094.SZ",
+   "name": "国联水产",
+   "score": 47.74,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "2.95-3.01",
+   "space_pct": 7.03,
+   "stop_pct": -3.52,
+   "change_pct": 2.055,
+   "money_flow_pct": -0.47,
+   "amount_ratio": 1.8034,
+   "turnover_pct": 8.2001,
+   "sector": "渔业",
+   "sector_score": 82.25,
+   "risk_reward": 2.0,
+   "dims": {
+    "趋势": [
+     9.9,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     16.8,
+     20.0
+    ],
+    "结构": [
+     6.4,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 38,
+   "symbol": "600926.SH",
+   "name": "杭州银行",
+   "score": 47.53,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "17.09-17.43",
+   "space_pct": 6.0,
+   "stop_pct": -2.14,
+   "change_pct": 0.349,
+   "money_flow_pct": 10.68,
+   "amount_ratio": 0.6085,
+   "turnover_pct": 0.3926,
+   "sector": "银行Ⅱ",
+   "sector_score": 34.92,
+   "risk_reward": 2.81,
+   "dims": {
+    "趋势": [
+     23.8,
+     25.0
+    ],
+    "资金": [
+     14.3,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     6.1,
+     16.0
+    ],
+    "流动": [
+     3.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 39,
+   "symbol": "605339.SH",
+   "name": "南侨食品",
+   "score": 47.52,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "14.47-14.77",
+   "space_pct": 11.33,
+   "stop_pct": -5.1,
+   "change_pct": 2.525,
+   "money_flow_pct": 6.19,
+   "amount_ratio": 2.5486,
+   "turnover_pct": 2.2161,
+   "sector": "休闲食品",
+   "sector_score": 24.22,
+   "risk_reward": 2.22,
+   "dims": {
+    "趋势": [
+     16.2,
+     25.0
+    ],
+    "资金": [
+     17.3,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 40,
+   "symbol": "002697.SZ",
+   "name": "红旗连锁",
+   "score": 47.51,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "5.30-5.40",
+   "space_pct": 6.9,
+   "stop_pct": -6.0,
+   "change_pct": 1.518,
+   "money_flow_pct": 9.78,
+   "amount_ratio": 4.4165,
+   "turnover_pct": 13.2028,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.15,
+   "dims": {
+    "趋势": [
+     14.0,
+     25.0
+    ],
+    "资金": [
+     18.4,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     3.1,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 41,
+   "symbol": "601366.SH",
+   "name": "利群股份",
+   "score": 47.51,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "3.74-3.82",
+   "space_pct": 8.37,
+   "stop_pct": -4.04,
+   "change_pct": 0.265,
+   "money_flow_pct": 4.45,
+   "amount_ratio": 1.4622,
+   "turnover_pct": 3.3619,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 2.07,
+   "dims": {
+    "趋势": [
+     20.0,
+     25.0
+    ],
+    "资金": [
+     15.4,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 42,
+   "symbol": "301512.SZ",
+   "name": "智信精密",
+   "score": 47.37,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "31.77-32.41",
+   "space_pct": 11.01,
+   "stop_pct": -6.0,
+   "change_pct": 2.295,
+   "money_flow_pct": 7.96,
+   "amount_ratio": 3.9205,
+   "turnover_pct": 9.6978,
+   "sector": "自动化设备",
+   "sector_score": 33.01,
+   "risk_reward": 1.84,
+   "dims": {
+    "趋势": [
+     1.4,
+     25.0
+    ],
+    "资金": [
+     17.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     14.2,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 43,
+   "symbol": "603029.SH",
+   "name": "天鹅股份",
+   "score": 47.25,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "16.29-16.61",
+   "space_pct": 7.99,
+   "stop_pct": -2.0,
+   "change_pct": 0.305,
+   "money_flow_pct": 6.16,
+   "amount_ratio": 1.2084,
+   "turnover_pct": 3.1535,
+   "sector": "专用设备",
+   "sector_score": 45.22,
+   "risk_reward": 3.99,
+   "dims": {
+    "趋势": [
+     5.3,
+     25.0
+    ],
+    "资金": [
+     17.3,
+     23.0
+    ],
+    "板块": [
+     1.0,
+     20.0
+    ],
+    "结构": [
+     15.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 44,
+   "symbol": "002324.SZ",
+   "name": "普利特",
+   "score": 47.22,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "9.26-9.44",
+   "space_pct": 8.48,
+   "stop_pct": -3.13,
+   "change_pct": 0.863,
+   "money_flow_pct": 7.06,
+   "amount_ratio": 2.9823,
+   "turnover_pct": 9.1932,
+   "sector": "塑料",
+   "sector_score": 24.85,
+   "risk_reward": 2.71,
+   "dims": {
+    "趋势": [
+     4.6,
+     25.0
+    ],
+    "资金": [
+     18.0,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T14:48:42",
+   "selected_new": false
+  },
+  {
+   "rank": 45,
+   "symbol": "002795.SZ",
+   "name": "永和智控",
+   "score": 47.03,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "7.49-7.65",
+   "space_pct": 11.79,
+   "stop_pct": -3.15,
+   "change_pct": -0.264,
+   "money_flow_pct": 14.83,
+   "amount_ratio": 2.8234,
+   "turnover_pct": 9.2085,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 3.74,
+   "dims": {
+    "趋势": [
+     1.2,
+     25.0
+    ],
+    "资金": [
+     21.5,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.5,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 46,
+   "symbol": "603660.SH",
+   "name": "苏州科达",
+   "score": 46.84,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "10.38-10.58",
+   "space_pct": 11.14,
+   "stop_pct": -2.72,
+   "change_pct": -0.19,
+   "money_flow_pct": 10.82,
+   "amount_ratio": 2.6542,
+   "turnover_pct": 8.0502,
+   "sector": "计算机设备",
+   "sector_score": 19.61,
+   "risk_reward": 4.1,
+   "dims": {
+    "趋势": [
+     2.4,
+     25.0
+    ],
+    "资金": [
+     20.3,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.3,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 47,
+   "symbol": "688378.SH",
+   "name": "奥来德",
+   "score": 46.83,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "42.37-43.23",
+   "space_pct": 12.92,
+   "stop_pct": -3.84,
+   "change_pct": 1.254,
+   "money_flow_pct": 9.95,
+   "amount_ratio": 1.6131,
+   "turnover_pct": 4.2623,
+   "sector": "光学光电子",
+   "sector_score": 24.32,
+   "risk_reward": 3.37,
+   "dims": {
+    "趋势": [
+     2.4,
+     25.0
+    ],
+    "资金": [
+     19.9,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 48,
+   "symbol": "600368.SH",
+   "name": "五洲交通",
+   "score": 46.64,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "4.31-4.39",
+   "space_pct": 6.0,
+   "stop_pct": -1.91,
+   "change_pct": 0.928,
+   "money_flow_pct": 7.5,
+   "amount_ratio": 0.9691,
+   "turnover_pct": 1.2869,
+   "sector": "铁路公路",
+   "sector_score": 35.64,
+   "risk_reward": 3.15,
+   "dims": {
+    "趋势": [
+     19.0,
+     25.0
+    ],
+    "资金": [
+     15.2,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     6.1,
+     16.0
+    ],
+    "流动": [
+     6.5,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 49,
+   "symbol": "601825.SH",
+   "name": "沪农商行",
+   "score": 46.58,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "9.08-9.26",
+   "space_pct": 6.0,
+   "stop_pct": -2.68,
+   "change_pct": 1.214,
+   "money_flow_pct": 15.06,
+   "amount_ratio": 0.6566,
+   "turnover_pct": 0.2116,
+   "sector": "银行Ⅱ",
+   "sector_score": 34.92,
+   "risk_reward": 2.24,
+   "dims": {
+    "趋势": [
+     20.1,
+     25.0
+    ],
+    "资金": [
+     16.0,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     7.1,
+     16.0
+    ],
+    "流动": [
+     3.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 50,
+   "symbol": "300498.SZ",
+   "name": "温氏股份",
+   "score": 46.39,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "16.77-17.11",
+   "space_pct": 6.0,
+   "stop_pct": -3.48,
+   "change_pct": 2.11,
+   "money_flow_pct": 2.67,
+   "amount_ratio": 1.0022,
+   "turnover_pct": 0.8419,
+   "sector": "养殖业",
+   "sector_score": 33.33,
+   "risk_reward": 1.73,
+   "dims": {
+    "趋势": [
+     20.3,
+     25.0
+    ],
+    "资金": [
+     9.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     6.4,
+     16.0
+    ],
+    "流动": [
+     4.9,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 51,
+   "symbol": "600566.SH",
+   "name": "济川药业",
+   "score": 46.35,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "29.57-30.17",
+   "space_pct": 6.0,
+   "stop_pct": -3.82,
+   "change_pct": 1.254,
+   "money_flow_pct": 4.3,
+   "amount_ratio": 1.1206,
+   "turnover_pct": 0.9874,
+   "sector": "中药Ⅱ",
+   "sector_score": 24.65,
+   "risk_reward": 1.57,
+   "dims": {
+    "趋势": [
+     21.2,
+     25.0
+    ],
+    "资金": [
+     13.2,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     6.7,
+     16.0
+    ],
+    "流动": [
+     5.4,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 52,
+   "symbol": "600630.SH",
+   "name": "龙头股份",
+   "score": 46.24,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "7.30-7.44",
+   "space_pct": 9.68,
+   "stop_pct": -5.68,
+   "change_pct": 3.366,
+   "money_flow_pct": 0.64,
+   "amount_ratio": 2.4336,
+   "turnover_pct": 13.8451,
+   "sector": "服装家纺",
+   "sector_score": 37.75,
+   "risk_reward": 1.7,
+   "dims": {
+    "趋势": [
+     8.0,
+     25.0
+    ],
+    "资金": [
+     8.5,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     15.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 53,
+   "symbol": "001331.SZ",
+   "name": "胜通能源",
+   "score": 45.67,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "34.49-35.19",
+   "space_pct": 17.8,
+   "stop_pct": -4.95,
+   "change_pct": -1.247,
+   "money_flow_pct": 18.67,
+   "amount_ratio": 1.9292,
+   "turnover_pct": 7.3754,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 3.6,
+   "dims": {
+    "趋势": [
+     6.0,
+     25.0
+    ],
+    "资金": [
+     22.1,
+     23.0
+    ],
+    "板块": [
+     9.6,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 54,
+   "symbol": "603366.SH",
+   "name": "日出东方",
+   "score": 45.61,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "13.04-13.30",
+   "space_pct": 9.62,
+   "stop_pct": -6.0,
+   "change_pct": 10.025,
+   "money_flow_pct": 64.31,
+   "amount_ratio": 4.9793,
+   "turnover_pct": 20.0592,
+   "sector": "厨卫电器",
+   "sector_score": 49.27,
+   "risk_reward": 1.6,
+   "dims": {
+    "趋势": [
+     18.3,
+     25.0
+    ],
+    "资金": [
+     20.7,
+     23.0
+    ],
+    "板块": [
+     7.4,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     8.7,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 55,
+   "symbol": "688765.SH",
+   "name": "禾元生物-U",
+   "score": 45.51,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "33.46-34.14",
+   "space_pct": 9.75,
+   "stop_pct": -5.12,
+   "change_pct": 1.624,
+   "money_flow_pct": 5.27,
+   "amount_ratio": 1.4106,
+   "turnover_pct": 2.4526,
+   "sector": "生物制品",
+   "sector_score": 26.01,
+   "risk_reward": 1.91,
+   "dims": {
+    "趋势": [
+     18.7,
+     25.0
+    ],
+    "资金": [
+     16.3,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     1.5,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 56,
+   "symbol": "002911.SZ",
+   "name": "佛燃能源",
+   "score": 45.29,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "12.80-13.06",
+   "space_pct": 6.0,
+   "stop_pct": -2.97,
+   "change_pct": 0.858,
+   "money_flow_pct": 11.47,
+   "amount_ratio": 2.6082,
+   "turnover_pct": 1.3172,
+   "sector": "燃气Ⅱ",
+   "sector_score": 75.26,
+   "risk_reward": 2.02,
+   "dims": {
+    "趋势": [
+     5.2,
+     25.0
+    ],
+    "资金": [
+     20.5,
+     23.0
+    ],
+    "板块": [
+     9.6,
+     20.0
+    ],
+    "结构": [
+     4.3,
+     16.0
+    ],
+    "流动": [
+     6.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 57,
+   "symbol": "600261.SH",
+   "name": "阳光照明",
+   "score": 45.14,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "6.31-6.43",
+   "space_pct": 12.84,
+   "stop_pct": -6.0,
+   "change_pct": 1.92,
+   "money_flow_pct": -10.42,
+   "amount_ratio": 3.4528,
+   "turnover_pct": 25.3785,
+   "sector": "照明设备Ⅱ",
+   "sector_score": 36.3,
+   "risk_reward": 2.14,
+   "dims": {
+    "趋势": [
+     18.3,
+     25.0
+    ],
+    "资金": [
+     6.4,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     12.9,
+     16.0
+    ],
+    "流动": [
+     7.7,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 58,
+   "symbol": "600103.SH",
+   "name": "青山纸业",
+   "score": 45.01,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "3.30-3.36",
+   "space_pct": 7.41,
+   "stop_pct": -2.44,
+   "change_pct": 1.524,
+   "money_flow_pct": 52.9,
+   "amount_ratio": 5.2882,
+   "turnover_pct": 19.3287,
+   "sector": "造纸",
+   "sector_score": 28.58,
+   "risk_reward": 3.04,
+   "dims": {
+    "趋势": [
+     2.4,
+     25.0
+    ],
+    "资金": [
+     20.4,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     13.5,
+     16.0
+    ],
+    "流动": [
+     8.8,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 59,
+   "symbol": "300629.SZ",
+   "name": "新劲刚",
+   "score": 44.93,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "19.33-19.73",
+   "space_pct": 8.52,
+   "stop_pct": -6.0,
+   "change_pct": 5.969,
+   "money_flow_pct": -5.73,
+   "amount_ratio": 2.7832,
+   "turnover_pct": 12.9998,
+   "sector": "军工电子Ⅱ",
+   "sector_score": 21.38,
+   "risk_reward": 1.42,
+   "dims": {
+    "趋势": [
+     17.1,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     9.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 60,
+   "symbol": "600853.SH",
+   "name": "龙建股份",
+   "score": 44.76,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "4.17-4.25",
+   "space_pct": 9.25,
+   "stop_pct": -6.0,
+   "change_pct": 9.922,
+   "money_flow_pct": 7.87,
+   "amount_ratio": 1.7142,
+   "turnover_pct": 10.0953,
+   "sector": "基础建设",
+   "sector_score": 37.38,
+   "risk_reward": 1.54,
+   "dims": {
+    "趋势": [
+     14.7,
+     25.0
+    ],
+    "资金": [
+     18.7,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.2,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 61,
+   "symbol": "600257.SH",
+   "name": "大湖股份",
+   "score": 44.68,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.89-4.99",
+   "space_pct": 6.0,
+   "stop_pct": -2.6,
+   "change_pct": 1.646,
+   "money_flow_pct": -4.23,
+   "amount_ratio": 1.2185,
+   "turnover_pct": 3.2907,
+   "sector": "渔业",
+   "sector_score": 82.25,
+   "risk_reward": 2.31,
+   "dims": {
+    "趋势": [
+     18.2,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     11.6,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 62,
+   "symbol": "688227.SH",
+   "name": "品高股份",
+   "score": 44.59,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "75.12-76.64",
+   "space_pct": 15.04,
+   "stop_pct": -3.59,
+   "change_pct": 0.132,
+   "money_flow_pct": 6.21,
+   "amount_ratio": 1.3902,
+   "turnover_pct": 3.7965,
+   "sector": "IT服务Ⅱ",
+   "sector_score": 18.71,
+   "risk_reward": 4.19,
+   "dims": {
+    "趋势": [
+     2.4,
+     25.0
+    ],
+    "资金": [
+     17.3,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     15.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 63,
+   "symbol": "002110.SZ",
+   "name": "三钢闽光",
+   "score": 44.54,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "3.00-3.06",
+   "space_pct": 6.0,
+   "stop_pct": -6.0,
+   "change_pct": 0.664,
+   "money_flow_pct": 38.07,
+   "amount_ratio": 6.8885,
+   "turnover_pct": 6.0033,
+   "sector": "普钢",
+   "sector_score": 40.86,
+   "risk_reward": 1.0,
+   "dims": {
+    "趋势": [
+     2.3,
+     25.0
+    ],
+    "资金": [
+     18.7,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     14.9,
+     16.0
+    ],
+    "流动": [
+     8.8,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 64,
+   "symbol": "601939.SH",
+   "name": "建设银行",
+   "score": 44.53,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "11.89-12.13",
+   "space_pct": 6.0,
+   "stop_pct": -2.58,
+   "change_pct": 0.755,
+   "money_flow_pct": 7.35,
+   "amount_ratio": 0.9165,
+   "turnover_pct": 1.2297,
+   "sector": "银行Ⅱ",
+   "sector_score": 34.92,
+   "risk_reward": 2.32,
+   "dims": {
+    "趋势": [
+     18.9,
+     25.0
+    ],
+    "资金": [
+     14.7,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.7,
+     16.0
+    ],
+    "流动": [
+     6.3,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 65,
+   "symbol": "603122.SH",
+   "name": "合富中国",
+   "score": 44.51,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "12.20-12.44",
+   "space_pct": 9.73,
+   "stop_pct": -6.0,
+   "change_pct": 2.924,
+   "money_flow_pct": 2.56,
+   "amount_ratio": 2.4937,
+   "turnover_pct": 13.6081,
+   "sector": "医疗服务",
+   "sector_score": 38.8,
+   "risk_reward": 1.62,
+   "dims": {
+    "趋势": [
+     16.1,
+     25.0
+    ],
+    "资金": [
+     12.5,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     1.6,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 66,
+   "symbol": "688729.SH",
+   "name": "屹唐股份",
+   "score": 44.48,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "22.65-23.11",
+   "space_pct": 10.31,
+   "stop_pct": -6.0,
+   "change_pct": 7.62,
+   "money_flow_pct": 5.09,
+   "amount_ratio": 3.147,
+   "turnover_pct": 5.3151,
+   "sector": "半导体",
+   "sector_score": 38.35,
+   "risk_reward": 1.72,
+   "dims": {
+    "趋势": [
+     14.5,
+     25.0
+    ],
+    "资金": [
+     16.0,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 67,
+   "symbol": "002222.SZ",
+   "name": "福晶科技",
+   "score": 44.48,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "50.75-51.77",
+   "space_pct": 11.07,
+   "stop_pct": -4.89,
+   "change_pct": 2.89,
+   "money_flow_pct": 6.45,
+   "amount_ratio": 1.8249,
+   "turnover_pct": 7.4841,
+   "sector": "光学光电子",
+   "sector_score": 24.32,
+   "risk_reward": 2.26,
+   "dims": {
+    "趋势": [
+     6.2,
+     25.0
+    ],
+    "资金": [
+     17.5,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     6.5,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 68,
+   "symbol": "600694.SH",
+   "name": "大商股份",
+   "score": 44.17,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "15.02-15.32",
+   "space_pct": 6.0,
+   "stop_pct": -3.19,
+   "change_pct": 1.133,
+   "money_flow_pct": -3.9,
+   "amount_ratio": 1.2023,
+   "turnover_pct": 1.7777,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.88,
+   "dims": {
+    "趋势": [
+     20.1,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     5.7,
+     16.0
+    ],
+    "流动": [
+     8.3,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 69,
+   "symbol": "300873.SZ",
+   "name": "海晨股份",
+   "score": 44.11,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "12.81-13.07",
+   "space_pct": 8.6,
+   "stop_pct": -5.76,
+   "change_pct": 3.936,
+   "money_flow_pct": -2.15,
+   "amount_ratio": 2.4863,
+   "turnover_pct": 8.258,
+   "sector": "物流",
+   "sector_score": 22.38,
+   "risk_reward": 1.49,
+   "dims": {
+    "趋势": [
+     7.4,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     15.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 70,
+   "symbol": "600483.SH",
+   "name": "福能股份",
+   "score": 43.99,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "10.86-11.08",
+   "space_pct": 6.0,
+   "stop_pct": -3.95,
+   "change_pct": 1.574,
+   "money_flow_pct": 5.12,
+   "amount_ratio": 0.9165,
+   "turnover_pct": 0.4974,
+   "sector": "电力",
+   "sector_score": 22.64,
+   "risk_reward": 1.52,
+   "dims": {
+    "趋势": [
+     21.4,
+     25.0
+    ],
+    "资金": [
+     12.6,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     6.4,
+     16.0
+    ],
+    "流动": [
+     3.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 71,
+   "symbol": "600814.SH",
+   "name": "杭州解百",
+   "score": 43.98,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "7.13-7.27",
+   "space_pct": 6.88,
+   "stop_pct": -3.78,
+   "change_pct": 1.124,
+   "money_flow_pct": -7.37,
+   "amount_ratio": 1.3758,
+   "turnover_pct": 2.4454,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.82,
+   "dims": {
+    "趋势": [
+     19.0,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     5.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 72,
+   "symbol": "603725.SH",
+   "name": "天安新材",
+   "score": 43.9,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "13.03-13.29",
+   "space_pct": 12.47,
+   "stop_pct": -6.0,
+   "change_pct": 10.033,
+   "money_flow_pct": 36.14,
+   "amount_ratio": 1.6843,
+   "turnover_pct": 5.9734,
+   "sector": "家居用品",
+   "sector_score": 32.62,
+   "risk_reward": 2.08,
+   "dims": {
+    "趋势": [
+     14.7,
+     25.0
+    ],
+    "资金": [
+     22.7,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 73,
+   "symbol": "600495.SH",
+   "name": "晋西车轴",
+   "score": 43.8,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.05-4.13",
+   "space_pct": 6.0,
+   "stop_pct": -2.43,
+   "change_pct": 0.988,
+   "money_flow_pct": 16.48,
+   "amount_ratio": 1.0979,
+   "turnover_pct": 1.2218,
+   "sector": "轨交设备Ⅱ",
+   "sector_score": 24.31,
+   "risk_reward": 2.47,
+   "dims": {
+    "趋势": [
+     17.9,
+     25.0
+    ],
+    "资金": [
+     19.7,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     6.3,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 74,
+   "symbol": "688115.SH",
+   "name": "思林杰",
+   "score": 43.74,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "53.45-54.53",
+   "space_pct": 14.43,
+   "stop_pct": -6.0,
+   "change_pct": 3.707,
+   "money_flow_pct": -7.87,
+   "amount_ratio": 2.2031,
+   "turnover_pct": 5.0476,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 2.41,
+   "dims": {
+    "趋势": [
+     6.7,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     15.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 75,
+   "symbol": "000429.SZ",
+   "name": "粤高速Ａ",
+   "score": 43.57,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "13.51-13.79",
+   "space_pct": 6.0,
+   "stop_pct": -2.47,
+   "change_pct": 0.22,
+   "money_flow_pct": 7.12,
+   "amount_ratio": 0.9473,
+   "turnover_pct": 0.7085,
+   "sector": "铁路公路",
+   "sector_score": 35.64,
+   "risk_reward": 2.43,
+   "dims": {
+    "趋势": [
+     20.2,
+     25.0
+    ],
+    "资金": [
+     14.8,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.2,
+     16.0
+    ],
+    "流动": [
+     4.4,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 76,
+   "symbol": "603536.SH",
+   "name": "惠发食品",
+   "score": 43.46,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "12.91-13.17",
+   "space_pct": 11.25,
+   "stop_pct": -6.0,
+   "change_pct": 10.042,
+   "money_flow_pct": 36.82,
+   "amount_ratio": 5.064,
+   "turnover_pct": 26.1963,
+   "sector": "食品加工",
+   "sector_score": 46.97,
+   "risk_reward": 1.87,
+   "dims": {
+    "趋势": [
+     17.1,
+     25.0
+    ],
+    "资金": [
+     20.6,
+     23.0
+    ],
+    "板块": [
+     6.7,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     7.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 77,
+   "symbol": "600795.SH",
+   "name": "国电电力",
+   "score": 43.37,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "5.32-5.42",
+   "space_pct": 6.0,
+   "stop_pct": -3.12,
+   "change_pct": 0.75,
+   "money_flow_pct": 8.55,
+   "amount_ratio": 0.7461,
+   "turnover_pct": 0.6481,
+   "sector": "电力",
+   "sector_score": 22.64,
+   "risk_reward": 1.93,
+   "dims": {
+    "趋势": [
+     20.2,
+     25.0
+    ],
+    "资金": [
+     14.2,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.8,
+     16.0
+    ],
+    "流动": [
+     4.2,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 78,
+   "symbol": "600023.SH",
+   "name": "浙能电力",
+   "score": 43.37,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "5.47-5.59",
+   "space_pct": 6.0,
+   "stop_pct": -3.34,
+   "change_pct": 1.654,
+   "money_flow_pct": 5.69,
+   "amount_ratio": 0.7769,
+   "turnover_pct": 0.2644,
+   "sector": "电力",
+   "sector_score": 22.64,
+   "risk_reward": 1.8,
+   "dims": {
+    "趋势": [
+     20.2,
+     25.0
+    ],
+    "资金": [
+     12.1,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     7.4,
+     16.0
+    ],
+    "流动": [
+     3.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 79,
+   "symbol": "688543.SH",
+   "name": "国科军工",
+   "score": 43.31,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "49.25-50.25",
+   "space_pct": 11.15,
+   "stop_pct": -6.0,
+   "change_pct": 4.869,
+   "money_flow_pct": -17.59,
+   "amount_ratio": 1.1586,
+   "turnover_pct": 4.8715,
+   "sector": "地面兵装Ⅱ",
+   "sector_score": 53.22,
+   "risk_reward": 1.86,
+   "dims": {
+    "趋势": [
+     19.6,
+     25.0
+    ],
+    "资金": [
+     5.1,
+     23.0
+    ],
+    "板块": [
+     8.5,
+     20.0
+    ],
+    "结构": [
+     2.1,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 80,
+   "symbol": "301331.SZ",
+   "name": "恩威医药",
+   "score": 43.29,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "23.55-24.03",
+   "space_pct": 11.13,
+   "stop_pct": -5.68,
+   "change_pct": 2.543,
+   "money_flow_pct": 3.19,
+   "amount_ratio": 1.6182,
+   "turnover_pct": 5.3085,
+   "sector": "中药Ⅱ",
+   "sector_score": 24.65,
+   "risk_reward": 1.96,
+   "dims": {
+    "趋势": [
+     14.5,
+     25.0
+    ],
+    "资金": [
+     13.6,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.9,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 81,
+   "symbol": "601860.SH",
+   "name": "紫金银行",
+   "score": 43.26,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "2.50-2.56",
+   "space_pct": 6.0,
+   "stop_pct": -1.35,
+   "change_pct": 0.0,
+   "money_flow_pct": 6.15,
+   "amount_ratio": 0.9248,
+   "turnover_pct": 1.7672,
+   "sector": "银行Ⅱ",
+   "sector_score": 34.92,
+   "risk_reward": 4.45,
+   "dims": {
+    "趋势": [
+     17.0,
+     25.0
+    ],
+    "资金": [
+     13.7,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.3,
+     16.0
+    ],
+    "流动": [
+     8.2,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 82,
+   "symbol": "300906.SZ",
+   "name": "日月明",
+   "score": 43.26,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "26.63-27.17",
+   "space_pct": 9.48,
+   "stop_pct": -3.62,
+   "change_pct": 0.112,
+   "money_flow_pct": 8.76,
+   "amount_ratio": 1.0026,
+   "turnover_pct": 1.8569,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 2.62,
+   "dims": {
+    "趋势": [
+     18.3,
+     25.0
+    ],
+    "资金": [
+     16.3,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     8.6,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 83,
+   "symbol": "600467.SH",
+   "name": "好当家",
+   "score": 43.12,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "2.46-2.50",
+   "space_pct": 6.0,
+   "stop_pct": -6.0,
+   "change_pct": 10.222,
+   "money_flow_pct": 1.45,
+   "amount_ratio": 3.6996,
+   "turnover_pct": 9.7001,
+   "sector": "渔业",
+   "sector_score": 82.25,
+   "risk_reward": 1.0,
+   "dims": {
+    "趋势": [
+     14.7,
+     25.0
+    ],
+    "资金": [
+     9.6,
+     23.0
+    ],
+    "板块": [
+     16.8,
+     20.0
+    ],
+    "结构": [
+     9.2,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 84,
+   "symbol": "688828.SH",
+   "name": "国仪公司-U",
+   "score": 43.0,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "70.57-71.99",
+   "space_pct": 12.4,
+   "stop_pct": -5.69,
+   "change_pct": 2.65,
+   "money_flow_pct": 12.2,
+   "amount_ratio": 1.7696,
+   "turnover_pct": 14.6204,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 2.18,
+   "dims": {
+    "趋势": [
+     7.8,
+     25.0
+    ],
+    "资金": [
+     20.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 85,
+   "symbol": "002419.SZ",
+   "name": "天虹股份",
+   "score": 42.89,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.99-5.09",
+   "space_pct": 9.0,
+   "stop_pct": -4.28,
+   "change_pct": 2.024,
+   "money_flow_pct": 7.13,
+   "amount_ratio": 2.066,
+   "turnover_pct": 5.8446,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 2.1,
+   "dims": {
+    "趋势": [
+     7.1,
+     25.0
+    ],
+    "资金": [
+     18.1,
+     23.0
+    ],
+    "板块": [
+     9.5,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 86,
+   "symbol": "600858.SH",
+   "name": "银座股份",
+   "score": 42.88,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.93-5.03",
+   "space_pct": 6.17,
+   "stop_pct": -3.44,
+   "change_pct": 1.22,
+   "money_flow_pct": 0.89,
+   "amount_ratio": 1.2799,
+   "turnover_pct": 2.2743,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 1.79,
+   "dims": {
+    "趋势": [
+     18.6,
+     25.0
+    ],
+    "资金": [
+     9.1,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     2.7,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 87,
+   "symbol": "301179.SZ",
+   "name": "泽宇智能",
+   "score": 42.71,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "19.14-19.52",
+   "space_pct": 7.76,
+   "stop_pct": -2.48,
+   "change_pct": 0.259,
+   "money_flow_pct": 3.9,
+   "amount_ratio": 0.7447,
+   "turnover_pct": 0.9136,
+   "sector": "电网设备",
+   "sector_score": 23.39,
+   "risk_reward": 3.12,
+   "dims": {
+    "趋势": [
+     21.1,
+     25.0
+    ],
+    "资金": [
+     9.7,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     6.6,
+     16.0
+    ],
+    "流动": [
+     5.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 88,
+   "symbol": "688826.SH",
+   "name": "频准激光",
+   "score": 42.67,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "601.92-614.08",
+   "space_pct": 12.98,
+   "stop_pct": -6.0,
+   "change_pct": 3.754,
+   "money_flow_pct": 7.35,
+   "amount_ratio": 1.6234,
+   "turnover_pct": 13.8902,
+   "sector": "光学光电子",
+   "sector_score": 24.32,
+   "risk_reward": 2.16,
+   "dims": {
+    "趋势": [
+     10.0,
+     25.0
+    ],
+    "资金": [
+     18.3,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 89,
+   "symbol": "300415.SZ",
+   "name": "伊之密",
+   "score": 42.57,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "18.77-19.15",
+   "space_pct": 7.95,
+   "stop_pct": -1.32,
+   "change_pct": -2.519,
+   "money_flow_pct": 24.38,
+   "amount_ratio": 3.9912,
+   "turnover_pct": 4.908,
+   "sector": "专用设备",
+   "sector_score": 45.22,
+   "risk_reward": 6.0,
+   "dims": {
+    "趋势": [
+     9.1,
+     25.0
+    ],
+    "资金": [
+     21.5,
+     23.0
+    ],
+    "板块": [
+     1.0,
+     20.0
+    ],
+    "结构": [
+     2.8,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T14:58:59",
+   "selected_new": false
+  },
+  {
+   "rank": 90,
+   "symbol": "605338.SH",
+   "name": "巴比食品",
+   "score": 42.55,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "20.44-20.86",
+   "space_pct": 8.97,
+   "stop_pct": -3.67,
+   "change_pct": 0.879,
+   "money_flow_pct": 8.11,
+   "amount_ratio": 0.9784,
+   "turnover_pct": 2.4004,
+   "sector": "食品加工",
+   "sector_score": 46.97,
+   "risk_reward": 2.44,
+   "dims": {
+    "趋势": [
+     17.1,
+     25.0
+    ],
+    "资金": [
+     15.7,
+     23.0
+    ],
+    "板块": [
+     1.5,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 91,
+   "symbol": "002838.SZ",
+   "name": "道恩股份",
+   "score": 42.4,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "23.01-23.47",
+   "space_pct": 7.82,
+   "stop_pct": -6.0,
+   "change_pct": 7.842,
+   "money_flow_pct": 4.21,
+   "amount_ratio": 4.8255,
+   "turnover_pct": 6.112,
+   "sector": "塑料",
+   "sector_score": 24.85,
+   "risk_reward": 1.3,
+   "dims": {
+    "趋势": [
+     15.4,
+     25.0
+    ],
+    "资金": [
+     13.2,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 92,
+   "symbol": "603014.SH",
+   "name": "威高血净",
+   "score": 42.38,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "34.11-34.79",
+   "space_pct": 6.0,
+   "stop_pct": -3.36,
+   "change_pct": 1.234,
+   "money_flow_pct": 2.36,
+   "amount_ratio": 1.569,
+   "turnover_pct": 3.1099,
+   "sector": "医疗器械",
+   "sector_score": 23.19,
+   "risk_reward": 1.78,
+   "dims": {
+    "趋势": [
+     16.4,
+     25.0
+    ],
+    "资金": [
+     12.2,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     4.6,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 93,
+   "symbol": "603708.SH",
+   "name": "家家悦",
+   "score": 42.37,
+   "action": "放弃",
+   "setup_state": "突破前观察",
+   "next_action": "观察突破和量能",
+   "buy_price": "9.51-9.71",
+   "space_pct": 6.0,
+   "stop_pct": -2.62,
+   "change_pct": 0.945,
+   "money_flow_pct": 1.39,
+   "amount_ratio": 0.9841,
+   "turnover_pct": 0.9144,
+   "sector": "一般零售",
+   "sector_score": 56.62,
+   "risk_reward": 2.29,
+   "dims": {
+    "趋势": [
+     21.0,
+     25.0
+    ],
+    "资金": [
+     7.2,
+     23.0
+    ],
+    "板块": [
+     4.2,
+     20.0
+    ],
+    "结构": [
+     5.7,
+     16.0
+    ],
+    "流动": [
+     5.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 94,
+   "symbol": "600967.SH",
+   "name": "内蒙一机",
+   "score": 42.35,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "13.02-13.28",
+   "space_pct": 9.45,
+   "stop_pct": -6.0,
+   "change_pct": 4.948,
+   "money_flow_pct": -16.79,
+   "amount_ratio": 1.3846,
+   "turnover_pct": 5.7627,
+   "sector": "地面兵装Ⅱ",
+   "sector_score": 53.22,
+   "risk_reward": 1.58,
+   "dims": {
+    "趋势": [
+     19.1,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     8.5,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 95,
+   "symbol": "301049.SZ",
+   "name": "超越科技",
+   "score": 42.23,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "19.60-20.00",
+   "space_pct": 9.3,
+   "stop_pct": -6.0,
+   "change_pct": 6.624,
+   "money_flow_pct": 5.35,
+   "amount_ratio": 4.4237,
+   "turnover_pct": 9.8309,
+   "sector": "环境治理",
+   "sector_score": 22.28,
+   "risk_reward": 1.55,
+   "dims": {
+    "趋势": [
+     4.2,
+     25.0
+    ],
+    "资金": [
+     15.0,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.4,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 96,
+   "symbol": "002481.SZ",
+   "name": "双塔食品",
+   "score": 42.23,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.38-4.46",
+   "space_pct": 6.0,
+   "stop_pct": -2.33,
+   "change_pct": 0.0,
+   "money_flow_pct": 5.95,
+   "amount_ratio": 0.9264,
+   "turnover_pct": 1.0712,
+   "sector": "农产品加工",
+   "sector_score": 39.05,
+   "risk_reward": 2.57,
+   "dims": {
+    "趋势": [
+     19.1,
+     25.0
+    ],
+    "资金": [
+     13.6,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     3.7,
+     16.0
+    ],
+    "流动": [
+     5.7,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 97,
+   "symbol": "002158.SZ",
+   "name": "汉钟精机",
+   "score": 42.22,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "22.57-23.03",
+   "space_pct": 8.8,
+   "stop_pct": -5.28,
+   "change_pct": 3.636,
+   "money_flow_pct": -4.67,
+   "amount_ratio": 2.3191,
+   "turnover_pct": 2.6288,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 1.67,
+   "dims": {
+    "趋势": [
+     7.6,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     13.4,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 98,
+   "symbol": "300581.SZ",
+   "name": "晨曦航空",
+   "score": 42.08,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "11.45-11.69",
+   "space_pct": 11.09,
+   "stop_pct": -6.0,
+   "change_pct": 4.517,
+   "money_flow_pct": -6.46,
+   "amount_ratio": 1.4259,
+   "turnover_pct": 10.1599,
+   "sector": "航空装备Ⅱ",
+   "sector_score": 26.15,
+   "risk_reward": 1.85,
+   "dims": {
+    "趋势": [
+     20.8,
+     25.0
+    ],
+    "资金": [
+     6.8,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.1,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 99,
+   "symbol": "002164.SZ",
+   "name": "宁波东力",
+   "score": 42.01,
+   "action": "放弃",
+   "setup_state": "突破确认",
+   "next_action": "条件买入/持有",
+   "buy_price": "23.28-23.76",
+   "space_pct": 15.46,
+   "stop_pct": -5.21,
+   "change_pct": 7.348,
+   "money_flow_pct": 16.96,
+   "amount_ratio": 2.0204,
+   "turnover_pct": 22.2518,
+   "sector": "通用设备",
+   "sector_score": 34.67,
+   "risk_reward": 2.97,
+   "dims": {
+    "趋势": [
+     5.4,
+     25.0
+    ],
+    "资金": [
+     21.9,
+     23.0
+    ],
+    "板块": [
+     6.1,
+     20.0
+    ],
+    "结构": [
+     8.0,
+     16.0
+    ],
+    "流动": [
+     8.3,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  },
+  {
+   "rank": 100,
+   "symbol": "002574.SZ",
+   "name": "明牌珠宝",
+   "score": 41.98,
+   "action": "放弃",
+   "setup_state": "等待靠近关键位",
+   "next_action": "等待，不追价",
+   "buy_price": "4.65-4.75",
+   "space_pct": 7.96,
+   "stop_pct": -4.09,
+   "change_pct": 1.075,
+   "money_flow_pct": 3.52,
+   "amount_ratio": 1.3514,
+   "turnover_pct": 1.9679,
+   "sector": "饰品",
+   "sector_score": 39.59,
+   "risk_reward": 1.95,
+   "dims": {
+    "趋势": [
+     18.8,
+     25.0
+    ],
+    "资金": [
+     14.1,
+     23.0
+    ],
+    "板块": [
+     0.9,
+     20.0
+    ],
+    "结构": [
+     0.0,
+     16.0
+    ],
+    "流动": [
+     9.0,
+     9.0
+    ],
+    "大盘": [
+     2.4,
+     7.0
+    ]
+   },
+   "selected_at": "2026-11-12T15:10:25",
+   "selected_new": true
+  }
+ ],
+ "files": {
+  "md": "auto_output/ranking/ranking_20261112_151005.md",
+  "csv": "auto_output/ranking/ranking_20261112_151005.csv",
+  "json": "auto_output/ranking/ranking_20261112_151005.json"
+ },
+ "snapshot_quality": {
+  "ok": true,
+  "flow_ratio": 1.0,
+  "sector_ratio": 1.0,
+  "reason": ""
+ },
+ "ranking_basis": "defined_snapshot",
+ "written": true,
+ "head_size": 100
 }

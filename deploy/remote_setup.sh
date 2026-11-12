@@ -32,8 +32,12 @@ fi
 echo
 
 echo "=== 1. 解压 ==="
-# 重部署时先停自己的服务，避免解压覆盖正在被读取的代码文件
-systemctl --user stop ths-dashboard.service >/dev/null 2>&1 || true
+# 重部署不停服务：Python 已把模块读进内存，覆盖 .py 不会影响在跑的进程，
+# 末尾 restart 才切到新代码。早停晚起一旦被中断（网络断、会话超时），
+# 看板会一直停在那儿——这正是 18:18 那次「服务挂了」的原因。
+if systemctl --user is-active ths-dashboard.service >/dev/null 2>&1; then
+  echo "看板在用旧代码运行，解压后重启切换"
+fi
 if [ -d "$APP_DIR" ]; then
   BAK="${APP_DIR}.bak.$(date +%Y%m%d_%H%M%S)"
   echo "备份旧目录 -> $BAK"
@@ -103,6 +107,7 @@ echo "=== 3. 启动 ==="
 systemctl --user daemon-reload
 systemctl --user enable --now ths-dashboard.service >/dev/null
 systemctl --user restart ths-dashboard.service   # 确保加载本次部署的新代码
+systemctl --user start ths-dashboard.service 2>/dev/null || true   # 幂等兜底：被中断也能起回来
 systemctl --user enable --now ths-midday.timer ths-close.timer >/dev/null
 sleep 2
 systemctl --user is-active ths-dashboard.service | sed 's/^/dashboard: /'
