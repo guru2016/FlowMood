@@ -61,6 +61,129 @@ def _resolve_market_score(explicit, base_dir: Path) -> float:
     return 58.35
 
 
+def snapshot_quality(rows: list[dict]) -> dict:
+    """判定评分输入是否完整，防止残缺行情把定稿榜单整体写坏。
+
+    七维评分里「资金 20 分 + 板块 18 分」占 38%，东财 clist 被限流走同花顺
+    兜底时这两列会整列归零/未分类，此时评分仍是合法数字但结论完全失真
+    （2026-11-12 午盘：最高分 85.68→65.63、条件买入 7→0、板块 128→1）。
+    宁可保留上一份完整榜单，也不能让这种结果覆盖 latest_ranking.json。
+    """
+    n = len(rows) or 1
+
+    def nonzero(v) -> bool:
+        try:
+            return abs(float(v or 0)) > 1e-6
+        except (TypeError, ValueError):
+            return False
+
+    flow = sum(1 for r in rows if nonzero(r.get("money_flow_pct"))) / n
+    sector = sum(
+        1 for r in rows
+        if str(r.get("sector") or "").strip() not in ("", "未分类")
+    ) / n
+    ok = flow >= 0.2 and sector >= 0.2
+    return {
+        "ok": ok,
+        "flow_ratio": round(flow, 3),
+        "sector_ratio": round(sector, 3),
+        "reason": "" if ok else (
+            f"主力资金覆盖 {flow:.0%}、行业覆盖 {sector:.0%}（均需 ≥20%），"
+            "判定为残缺快照"),
+    }
+
+
+# ---- 定稿字段基准 ----------------------------------------------------------
+# 行业是静态的；主力净占比只有东财 clist 给，而它对线上出口 IP 会按域名+频次
+# 断连，批量翻 56 页经常整轮失败。A 股作战系统 emotion_flow 的处理是「主力净
+# 占比与行业沿用收盘定稿快照，盘中只用实时报价覆盖价格后重排」。这里照此办理：
+# 每次成功定稿就记一份 code -> (资金流, 行业)，上游降级时按代码补回，只补这两
+# 列，价格/涨跌/量比仍用实时值，绝不拿旧价格冒充现价。
+BASE_FLOW_PATH = ROOT / "auto_output" / "base_flow_sector.json"
+
+
+def _load_base() -> dict[str, dict]:
+    for path in (BASE_FLOW_PATH, ROOT / "sample" / "base_flow_sector.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and data:
+                return data
+        except (OSError, ValueError, TypeError):
+            continue
+    # 没预生成时，从最近一份完整的历史排名归档现场恢复一次并缓存下来，
+    # 避免每次重排都去读几百 MB 的归档。
+    try:
+        cands = sorted((ROOT / "auto_output" / "ranking").glob("ranking_*.json"),
+                       key=lambda p: p.stat().st_mtime, reverse=True)[:6]
+    except OSError:
+        cands = []
+    for path in cands:
+        try:
+            rows = json.loads(path.read_text(encoding="utf-8")).get("ranking") or []
+            if len(rows) < 1000 or not snapshot_quality(rows)["ok"]:
+                continue
+            base = _base_from_rows(rows)
+            _save_base(base)
+            return base
+        except (OSError, ValueError, TypeError):
+            continue
+    return {}
+
+
+def _base_from_rows(rows: list[dict]) -> dict[str, dict]:
+    return {
+        str(r.get("code") or str(r.get("symbol") or "").split(".")[0]): {
+            "money_flow_pct": r.get("money_flow_pct"),
+            "sector": r.get("sector"),
+        }
+        for r in rows
+        if r.get("symbol") or r.get("code")
+    }
+
+
+def _save_base(base: dict[str, dict]) -> None:
+    try:
+        BASE_FLOW_PATH.parent.mkdir(parents=True, exist_ok=True)
+        BASE_FLOW_PATH.write_text(json.dumps(base, ensure_ascii=False), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def restore_from_base(rows: list[dict]) -> tuple[list[dict], dict]:
+    """整列缺资金流/行业时，按代码沿用最近一份完整定稿值。"""
+    before = snapshot_quality(rows)
+    if before["ok"]:
+        _save_base(_base_from_rows(rows))   # 数据完整，顺手刷新定稿基准
+        return rows, {"used": False, **before}
+    base = _load_base()
+    info = {"used": bool(base), "available": len(base), "matched": 0,
+            "before": before, "after": snapshot_quality(rows)}
+    if not base:
+        return rows, info
+    out: list[dict] = []
+    for raw in rows:
+        key = str(raw.get("code") or str(raw.get("symbol") or "").split(".")[0])
+        ref = base.get(key)
+        if not ref:
+            out.append(raw)
+            continue
+        row = dict(raw)
+        try:
+            cur = abs(float(row.get("money_flow_pct") or 0))
+        except (TypeError, ValueError):
+            cur = 0.0
+        if cur <= 1e-6 and ref.get("money_flow_pct") is not None:
+            row["money_flow_pct"] = ref["money_flow_pct"]
+        if (str(row.get("sector") or "未分类") in ("", "未分类")
+                and ref.get("sector")):
+            row["sector"] = ref["sector"]
+        row["base_fields"] = True
+        info["matched"] += 1
+        out.append(row)
+    info["after"] = snapshot_quality(out)
+    return out, info
+
+
 def build_ranking(snapshot: Path | None = None, config: Path | None = None,
                   market_score: float | None = None, top: int = 30,
                   write: bool = True, tag: str | None = None,
@@ -91,6 +214,9 @@ def build_ranking(snapshot: Path | None = None, config: Path | None = None,
     if quotes:
         from live_quotes import apply_quotes
         snap_rows, live_merge = apply_quotes(snap_rows, quotes)
+
+    # 上游降级时整列缺资金流/行业：沿用最近一次完整定稿值，只补这两列。
+    snap_rows, base_restore = restore_from_base(snap_rows)
 
     enriched, sector_scores = enrich(snap_rows, cfg.get("strong_sector_score_min", 70))
     raw = {r["symbol"]: r for r in enriched}
@@ -146,11 +272,35 @@ def build_ranking(snapshot: Path | None = None, config: Path | None = None,
         "market_score": market,
         "live": bool(quotes),
         "live_merge": live_merge,
+        "base_restore": base_restore,
+        # 前端据此标注「资金流沿用定稿」而不是让人误以为是盘中实时资金
+        "flow_source": ("live" if live_merge and any(
+            ("f184" in q or "f62" in q) for q in list(quotes.values())[:100]
+        ) else "defined" if base_restore.get("used") else "snapshot"),
         "stats": stats,
         "ranking": rows,
         "files": {},
     }
+
+    quality = snapshot_quality(snap_rows)
+    result["snapshot_quality"] = quality
+    # 「定稿」和「盘中重排」必须分开：作战系统只在收盘用完整定稿快照出榜单，
+    # 盘中拿实时报价覆盖价格后重排，结果只在内存、绝不覆盖定稿。混在一起
+    # 就会出现 11-12 那种「午盘把 85 分的定稿榜覆盖成 65 分」的口径错乱。
+    result["ranking_basis"] = (
+        "intraday_recalc" if quotes else
+        "defined_with_base" if base_restore.get("used") else
+        "defined_snapshot")
     if not write:
+        return result
+
+    # 残缺快照不落盘：md/csv/json 是历史归档可以留，但前端读的
+    # latest_ranking.json 必须保住上一份完整榜单，否则页面会静默显示一份
+    # 「全市场只有 7 只重点观察」的假结论，比不更新危险得多。
+    if not quality["ok"]:
+        result["written"] = False
+        result["latest_written"] = False
+        result["write_blocked"] = quality["reason"]
         return result
 
     out_dir = ROOT / "auto_output" / "ranking"
@@ -216,13 +366,21 @@ def build_ranking(snapshot: Path | None = None, config: Path | None = None,
         "json": str(json_path.relative_to(ROOT)),
     }
 
-    # ---- 前端用的轻量快照：只保留头部，别让浏览器拉 3MB ----
+    result["written"] = True
+    # ---- 前端用的轻量快照：只让「原生完整定稿」更新 ----
+    # 盘中重排 / 资金流沿用定稿值的结果只归档，不覆盖前端定稿榜单；
+    # 看板要看盘中变化，走 /api/ranking?live=1 实时重算。
+    if result["ranking_basis"] != "defined_snapshot":
+        result["latest_written"] = False
+        result["latest_note"] = "盘中重排结果仅归档，收盘定稿榜单保持不变"
+        return result
     head = min(100, len(rows))
     latest = dict(result)
     latest["ranking"] = rows[:head]
     latest["head_size"] = head
     (ROOT / "auto_output" / "latest_ranking.json").write_text(
         json.dumps(latest, ensure_ascii=False, indent=2), encoding="utf-8")
+    result["latest_written"] = True
 
     return result
 
@@ -250,10 +408,17 @@ def main() -> None:
             print(f"{r['rank']:>3} {r['symbol']:<11}{r['name'][:6]:<8}{r['score']:7.2f} {r['action']:<6}"
                   f"{(r['change_pct'] or 0):7.2f}{(r['money_flow_pct'] or 0):7.2f}"
                   f"{r['space_pct']:7.1f}  {r['sector'] or ''}")
+    if res.get("write_blocked"):
+        print(f"\n⚠ 未更新前端快照：{res['write_blocked']}")
+        print("  latest_ranking.json 保留上一份完整榜单（本次评分仅作诊断，不作定稿）")
+        return
     print("\n落盘:")
     for k, v in res["files"].items():
         print(f"  {k}: {v}")
-    print("  前端快照: auto_output/latest_ranking.json")
+    if res.get("latest_written"):
+        print("  前端快照: auto_output/latest_ranking.json（已更新定稿）")
+    else:
+        print(f"  前端快照: 保持不变（{res.get('latest_note', '盘中重排')}）")
 
 
 if __name__ == "__main__":

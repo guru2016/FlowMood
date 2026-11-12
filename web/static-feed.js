@@ -211,6 +211,13 @@
           live: FEED.live, live_reason: FEED.reason, quote_at: FEED.at,
           quote_source: FEED.source, live_warning: FEED.warning,
           live_merge: { hit: FEED.hit, total: FEED.total, elapsed: 1 },
+          // live 只代表「行情是实时的」，不代表「排名被重排过」。静态页没有
+          // 后端算七维评分，榜单成分/名次是构建那一刻的定稿，必须如实区分，
+          // 否则会把一份不会动的榜单标成「● 实时」让人误判。
+          ranking_live: false,
+          ranking_at: base.generated_at || '',
+          ranking_basis: base.ranking_basis || 'defined_snapshot',
+          flow_source: base.flow_source || 'defined',
           extra_quotes: FEED.extraQuotes,
           feed_digest: FEED.digest, source_label: BOOT.source_label || '示例快照'
         }));

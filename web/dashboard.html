@@ -510,7 +510,12 @@ async function loadRank(){try{const lim=$('ranklimit').value,live=$('ranklive').
  if(x.error){$('rankrows').innerHTML=`<tr><td colspan="11" class="muted">${esc(x.error)}</td></tr>`;$('rankstat').textContent='--';return}
  const s=x.stats||{},lv=x.live_merge||{},act=Object.entries(s.actions||{}).map(([k,v])=>`${k} ${v}`).join(' · ');
  const qtime=hhmmss(x.quote_at||x.generated_at),warn=x.live_warning?` <span class="up">⚠ ${esc(x.live_warning)}</span>`:'';
- const badge=x.live?`<span class="down">● 实时</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${warn}`:`<span class="muted">○ 快照</span> ${esc(String(x.snapshot_at||'').replace('T',' '))}${x.live_reason?'（'+esc(x.live_reason)+'）':''}`;
+ const rankAt=String(x.ranking_at||x.generated_at||'').replace('T',' ').slice(5,16);
+ const flowNote=x.flow_source==='defined'?' · <span class="warn">资金流为定稿值</span>':'';
+ const badge=FM.mode==='static'
+  ?`<span class="down">● 实时行情</span> 20s 刷新 · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span> · 榜单成分与名次不随盘中行情重排${flowNote}${warn}`
+  :x.live?`<span class="down">● 实时重排</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${flowNote}${warn}`
+  :`<span class="muted">○ 收盘定稿</span> ${esc(String(x.snapshot_at||'').replace('T',' '))}${x.live_reason?'（'+esc(x.live_reason)+'）':''}${flowNote}`;
  $('rankstat').innerHTML=`${badge}<br>样本 ${s.count} 只 · 最高 <b>${num(s.max)}</b> · 中位 ${num(s.median)} · 标准差 ${num(s.stdev)} · ≥72 分 <b>${s.ge72}</b> 只 · ${esc(act)}`;
  const rows=x.ranking||[];$('rankrows').innerHTML=rows.length?rows.map(p=>`<tr><td class="n">${p.rank}</td><td>${stkCell(p)}</td><td>${selTime(p)}</td><td class="n"><b>${num(p.score)}</b></td><td class="${p.action==='条件买入'?'buy':p.action==='重点观察'?'watch':'drop'}">${esc(p.action)}</td><td class="n">${pctTag(p.change_pct)}</td><td class="n">${pctTag(p.money_flow_pct)}</td><td>${esc(p.sector)}</td><td class="n">${num(p.space_pct,1)}%</td><td class="n">${num(p.stop_pct)}%</td><td><button class="detail-btn" data-sym="${esc(secKey(p.symbol))}">详情</button></td></tr>`).join(''):'<tr><td colspan="11" class="muted">暂无排名数据</td></tr>';
  $('livebadge').innerHTML=badge;$('quotesrc').innerHTML=`数据源 <b>${esc(x.quote_source||(x.live?'行情接口':'快照文件'))}</b> · 行情时间 <b>${esc(qtime)}</b>`;

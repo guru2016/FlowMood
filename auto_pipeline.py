@@ -211,7 +211,9 @@ def run_once(session: str = "close", skip_collect: bool = False,
              str(out_dir / "alerts.json")], logfile))
 
     # 7. 全市场评分排名：前端「排名」面板直接消费 latest_ranking.json
-    from auto_rank import build_ranking
+    #    盘中若采集行情源降级（缺资金流/行业），按 A 股作战系统资金流情绪法的
+    #    口径处理：不重采，拉实时报价覆盖定稿快照后重排，而不是拿残缺快照定稿。
+    from auto_rank import build_ranking, snapshot_quality
 
     def _ranking():
         market = None
@@ -220,11 +222,33 @@ def run_once(session: str = "close", skip_collect: bool = False,
                 market = float(json.loads(plan_json.read_text(encoding="utf-8"))["market_score"])
             except Exception:  # noqa: BLE001
                 market = None
+        quality = snapshot_quality(json.loads(snapshot.read_text(encoding="utf-8")))
+        quotes = None
+        if not quality["ok"]:
+            try:
+                from live_quotes import fetch_quotes_cached, is_trading_now
+                trading, _ = is_trading_now()
+                if trading:
+                    quotes, _ = fetch_quotes_cached()
+            except Exception:  # noqa: BLE001
+                quotes = None
+            log(f"[ranking] 快照残缺（{quality['reason']}），"
+                f"实时行情{'已获取，改走盘中重排' if quotes else '不可用，保留上一份完整榜单'}",
+                logfile)
         res = build_ranking(snapshot=snapshot, config=config, market_score=market,
-                            top=100, tag=stamp)
+                            top=100, tag=stamp, quotes=quotes)
+        if res.get("write_blocked"):
+            return False, f"快照残缺且实时行情不可用，已保留上一份完整榜单：{res['write_blocked']}"
         s = res["stats"]
-        return True, (f"样本{s['count']} 最高{s['max']:.2f} ≥72分{s['ge72']}只 "
-                      f"动作{s['actions']}")
+        detail = (f"样本{s['count']} 最高{s['max']:.2f} ≥72分{s['ge72']}只 "
+                  f"动作{s['actions']}")
+        if quotes:
+            detail += f" · 盘中实时行情重排（资金覆盖 {res['snapshot_quality']['flow_ratio']:.0%}）"
+        if res.get("latest_written"):
+            detail += " · 已更新收盘定稿榜单"
+        else:
+            detail += " · 盘中结果仅归档，定稿榜单不变（前端走 live=1 实时重算）"
+        return True, detail
     step("ranking", _ranking)
 
     # 8. 运行摘要

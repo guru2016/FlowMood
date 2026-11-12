@@ -178,6 +178,88 @@ def fetch_market_list(workers: int = 10) -> list[dict]:
     return list(quotes.values())
 
 
+def restore_flow_sector(targets: list[dict], prev_path: Path) -> tuple[list[dict], dict]:
+    """行情源降级时，用上一份完整定稿快照补回「主力净占比 / 行业」。
+
+    live_quotes.fetch_quotes() 在东财 clist 被限流时会切同花顺 realhead 兜底，
+    那份数据只有价格/涨跌/换手，没有 f184（主力净占比）和 f100（行业）。
+    fetch_market_list() 直接拿它当全市场列表用，build_row 只能写成
+    money_flow_pct=0、sector=未分类 —— 七维评分里的资金(20)、板块(18)
+    集体归零，2026-11-12 午盘就出现过「最高分 85.68→65.63、条件买入 7→0、
+    板块数 128→1」的整体塌陷。
+
+    对齐 A 股作战系统 emotion_flow 的口径：盘中不伪造资金流，主力净占比与
+    行业沿用最近一份完整定稿快照，只让价格/涨跌/量比随实时行情走。
+    返回 (补齐后的列表, 诊断信息)。
+    """
+    info = {"degraded": False, "flow_ratio": 1.0, "sector_ratio": 1.0,
+            "flow_restored": 0, "sector_restored": 0, "prev_count": 0}
+
+    def present(item: dict, key: str) -> bool:
+        try:
+            return abs(float(item.get(key) or 0)) > 1e-6
+        except (TypeError, ValueError):
+            return False
+
+    n = len(targets) or 1
+    flow_ratio = sum(1 for t in targets if present(t, "f184") or present(t, "f62")) / n
+    sector_ratio = sum(
+        1 for t in targets
+        if str(t.get("f100") or "").strip() not in ("", "未分类")
+    ) / n
+    info["flow_ratio"] = round(flow_ratio, 3)
+    info["sector_ratio"] = round(sector_ratio, 3)
+    flow_bad, sector_bad = flow_ratio < 0.2, sector_ratio < 0.2
+    if not (flow_bad or sector_bad):
+        return targets, info
+
+    info["degraded"] = True
+    prior: dict[str, dict] = {}
+    try:
+        prev = json.loads(prev_path.read_text(encoding="utf-8"))
+        if isinstance(prev, list):
+            prior = {str(r.get("code") or ""): r for r in prev if isinstance(r, dict)}
+    except (OSError, ValueError, TypeError):
+        prior = {}
+    # 定稿字段基准由 auto_rank 维护，比「上一份快照」可靠——上一份可能同样
+    # 已被残缺采集覆盖过，所以基准优先。
+    base_path = (Path(__file__).resolve().parent / "auto_output"
+                 / "base_flow_sector.json")
+    try:
+        base = json.loads(base_path.read_text(encoding="utf-8"))
+        if isinstance(base, dict):
+            prior.update({str(k): v for k, v in base.items() if isinstance(v, dict)})
+    except (OSError, ValueError, TypeError):
+        pass
+    info["prev_count"] = len(prior)
+
+    out: list[dict] = []
+    for raw in targets:
+        item = dict(raw)
+        old = prior.get(str(item.get("f12") or "")) or {}
+        restored = False
+        if flow_bad and not (present(item, "f184") or present(item, "f62")):
+            try:
+                v = float(old.get("money_flow_pct") or 0)
+            except (TypeError, ValueError):
+                v = 0.0
+            if abs(v) > 1e-6:
+                item["f184"] = v
+                info["flow_restored"] += 1
+                restored = True
+        if sector_bad:
+            cur = str(item.get("f100") or "").strip()
+            old_sector = str(old.get("sector") or "").strip()
+            if cur in ("", "未分类") and old_sector not in ("", "未分类"):
+                item["f100"] = old_sector
+                info["sector_restored"] += 1
+                restored = True
+        if restored:
+            item["_restored"] = True
+        out.append(item)
+    return out, info
+
+
 def is_tradable(item: dict) -> bool:
     """剔除停牌、退市、ST、北交所、无报价标的。"""
     code = str(item.get("f12") or "")
@@ -301,7 +383,8 @@ def build_row(item: dict, bars: list[tuple], session: str) -> dict | None:
         "sector": str(item.get("f100") or "未分类"),
         "limit_up": limit_up,
         "session": session,
-        "source": "em_clist+ths_line",
+        "source": ("em_clist+ths_line+prev_defined" if item.get("_restored")
+                   else "em_clist+ths_line"),
         "collected_at": datetime.now().isoformat(timespec="seconds"),
     }
 
@@ -356,6 +439,13 @@ def collect(workers: int = 32, limit: int | None = None, session: str = "close",
     if limit:
         targets = targets[:limit]
 
+    # 必须在写新快照之前读旧文件：降级行情缺的资金流/行业从这里沿用。
+    targets, restore = restore_flow_sector(targets, output)
+    if restore["degraded"]:
+        print(f"[collect] 行情源缺资金流/行业（覆盖 {restore['flow_ratio']:.0%}/"
+              f"{restore['sector_ratio']:.0%}），沿用上一份定稿快照：资金流 "
+              f"{restore['flow_restored']} 只 / 行业 {restore['sector_restored']} 只", flush=True)
+
     out: list[dict] = []
     done = 0
     with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -388,6 +478,7 @@ def collect(workers: int = 32, limit: int | None = None, session: str = "close",
         "elapsed_sec": round(time.time() - t0, 1),
         "elapsed_ratio": round(elapsed_ratio(), 3),
         "source": "auto_collect",
+        "restored_fields": restore,
     }
     output.with_name(output.stem + "_meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")

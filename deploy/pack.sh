@@ -15,7 +15,8 @@ FILES+=(web/dashboard.html web/static-feed.js sample dynamic/h5_api deploy)
 
 # 看板首屏要用的初始数据（不带全部历史报告，避免包体膨胀）
 for f in auto_output/latest_close.json auto_output/latest_midday.json \
-         auto_output/latest_ranking.json auto_output/research.sqlite3; do
+         auto_output/latest_ranking.json auto_output/base_flow_sector.json \
+         auto_output/research.sqlite3; do
   [ -f "$f" ] && FILES+=("$f")
 done
 for s in close midday; do

@@ -127,6 +127,12 @@ def ranking(limit=30):
     data['ranking'] = annotate(rows[:limit], scope='rank', keep=100)
     data['returned'] = len(data['ranking'])
     data['available'] = len(rows)
+    # 定稿榜单里的资金流本来就是采集那一刻的值，不是盘中实时资金流。
+    # 旧文件没有这些标注字段，读的时候补上，前端才不会把定稿说成实时。
+    data.setdefault('flow_source', 'defined')
+    data.setdefault('ranking_at', data.get('generated_at', ''))
+    data.setdefault('ranking_basis', 'defined_snapshot')
+    data['ranking_live'] = False
     return data
 
 
@@ -178,18 +184,24 @@ def live_ranking(limit=30):
             total = merge.get('total', 0) or 1
             coverage = hit / total
             res['live'] = True
+            res['ranking_live'] = True   # 真·七维评分重排，区别于静态页只换价格
             res['live_reason'] = why
             res['quote_at'] = datetime.fromtimestamp(quote_at).isoformat(timespec='seconds')
             res['quote_age_sec'] = int(age)
             res['coverage'] = round(coverage, 3)
-            if lq.LAST_SOURCE == 'ths_fallback':
-                warning = '东财列表不可用，价格来自同花顺（分钟级），资金流仍为快照值'
+            # 不能看 LAST_SOURCE 全局态：它是上一次 fetch 留下的，会拿上一轮的
+            # 「同花顺兜底」给这一轮东财完整行情挂上「资金流仍为快照值」的假警告。
+            # 只认本次 quotes 里到底有没有资金流字段。
+            probe = list(quotes.values())[:100]
+            has_flow = any(('f184' in q or 'f62' in q) for q in probe)
+            if not has_flow:
+                warning = '行情源不带主力资金流，资金流/行业沿用定稿快照值'
             elif coverage < 0.8:
                 warning = f'行情覆盖仅 {coverage:.0%}，其余仍为快照价格'
             else:
                 warning = f'行情滞后 {int(age)} 秒' if age > 30 else ''
             res['live_warning'] = warning
-            res['quote_source'] = lq.LAST_SOURCE
+            res['quote_source'] = 'eastmoney_clist' if has_flow else (lq.LAST_SOURCE or 'unknown')
             _live_cache['data'] = res
             _live_cache['at'] = time.time()
             data = dict(res)
