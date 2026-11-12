@@ -1,0 +1,6 @@
+# FlowMood 只依赖 Python 3.10+ 标准库，无第三方包，因此这里为空。
+# 行情拉取会用系统自带的 `curl` 子进程（auto_collect.py / live_quotes.py），
+# 运行环境需已安装 curl（macOS / Ubuntu / Debian 默认自带）。
+#
+# 若需要本地起看板：python3 dashboard_server.py
+# 若需要跑自测：    python3 tests/smoke_test.py

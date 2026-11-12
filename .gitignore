@@ -1,0 +1,68 @@
+# FlowMood 公开仓库：白名单式忽略。
+# 本目录同时是本地运行目录，含 1.2G APK 反编译产物、行情快照、SQLite、缓存与日志，
+# 默认全部忽略，只显式放行源码 / 配置 / 文档，避免误把数据或凭据推到公开仓库。
+/*
+
+# --- 元文件 ---
+!/.gitignore
+!/requirements.txt
+!/.editorconfig
+
+# --- Python 源码 ---
+!/*.py
+
+# --- 配置 ---
+!/strategy_config.json
+
+# --- 安装 / 运维脚本 ---
+!/*.sh
+
+# --- 文档（只放行说明类，历史调试报告不入库）---
+!/README.md
+!/README_FULL.md
+!/AUTOMATION.md
+!/FRONTEND.md
+!/SCHEDULE.md
+!/STOCK_SELECTOR.md
+!/RECOVERED_DATA_SPEC.md
+!/BACKTEST_SELECTOR.md
+
+# --- 前端 ---
+!/web/
+!/web/dashboard.html
+
+# --- 部署脚本 ---
+!/deploy/
+!/deploy/*.sh
+!/deploy/DEPLOY.md
+
+# --- GitHub Actions ---
+!/.github/
+!/.github/workflows/
+!/.github/workflows/*.yml
+
+# --- 自测 / 静态页 / 示例数据 ---
+!/tests/
+!/tests/*.py
+!/sample/
+!/sample/*.json
+!/docs/
+/docs/*
+!/docs/.gitkeep
+
+# --- 显式硬隔离：即使规则写漏也不入库 ---
+/apktool/
+/auto_output/
+/cache/
+/dist/
+/docs/index.html
+/logs/
+/dynamic/
+/frontend_output/
+/__pycache__/
+/.workbuddy/
+/*.sqlite3
+/*.sqlite3-journal
+/.deploy.local
+*.pyc
+.DS_Store

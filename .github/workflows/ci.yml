@@ -1,0 +1,90 @@
+name: FlowMood · 自测 / 排名 / 在线看板
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # GitHub cron 用 UTC；对应北京时间 11:35（午盘）与 15:10（收盘），仅工作日
+    - cron: '35 3 * * 1-5'
+    - cron: '10 7 * * 1-5'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: flowmood-pages
+  cancel-in-progress: false
+
+env:
+  TZ: Asia/Shanghai
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  verify:
+    name: 自测 + 生成排名看板
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@v4
+
+      - name: 准备 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 语法检查
+        run: python -m compileall -q .
+
+      - name: 离线冒烟自测
+        run: python tests/smoke_test.py
+
+      - name: 采集全市场行情（失败不阻断，回退示例快照）
+        continue-on-error: true
+        timeout-minutes: 12
+        run: |
+          python auto_collect.py --workers 24 --force
+          test -s normalized_snapshots.json
+          python auto_rank.py --top 30 --quiet
+
+      - name: 生成静态看板
+        run: python build_static.py --output docs/index.html
+
+      - name: 写入运行摘要（Actions 页面可直接查看）
+        run: cat docs/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 上传排名产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: flowmood-ranking
+          path: |
+            docs/index.html
+            docs/summary.md
+          retention-days: 14
+
+      - name: 配置 Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
+
+      - name: 上传 Pages 产物
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    name: 发布在线看板
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        name: 部署 GitHub Pages
+        uses: actions/deploy-pages@v4
