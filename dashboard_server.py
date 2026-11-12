@@ -58,6 +58,60 @@ def status():
             'auto': auto}
 
 
+def reports():
+    """午盘 / 收盘各取最新一份研究报告，供看板报告区切换展示。
+
+    与 /api/status 只给「最近一份」不同，这里固定返回两个时段，
+    这样前端和 GitHub Pages 静态页能拿到完全一样的数据结构。
+    """
+    out = {}
+    for session in ('midday', 'close'):
+        base = ROOT / 'auto_output' / session
+        if not base.exists():
+            continue
+        cands = sorted(base.glob('*/stock_report_*.json'),
+                       key=lambda p: p.stat().st_mtime, reverse=True)
+        if not cands:
+            continue
+        path = cands[0]
+        try:
+            report = json.loads(path.read_text(encoding='utf-8'))
+        except Exception:  # noqa: BLE001
+            continue
+        md = ''
+        md_files = sorted(path.parent.glob('report_*.md'),
+                          key=lambda p: p.stat().st_mtime, reverse=True)
+        if md_files:
+            try:
+                md = md_files[0].read_text(encoding='utf-8')
+            except Exception:  # noqa: BLE001
+                pass
+        meta = {}
+        latest = ROOT / 'auto_output' / f'latest_{session}.json'
+        if latest.exists():
+            try:
+                m = json.loads(latest.read_text(encoding='utf-8'))
+                meta = {'finished_at': m.get('finished_at'), 'elapsed_sec': m.get('elapsed_sec'),
+                        'all_ok': m.get('all_ok'),
+                        'steps': [{'step': s.get('step'), 'ok': s.get('ok')}
+                                  for s in (m.get('steps') or [])]}
+            except Exception:  # noqa: BLE001
+                pass
+        out[session] = {
+            'session': session,
+            'generated_at': report.get('generated_at'),
+            'market_score': report.get('market_score'),
+            'market_regime': report.get('market_regime'),
+            'position': report.get('position'),
+            'max_exposure': report.get('max_exposure'),
+            'plans': report.get('plans') or [],
+            'markdown': md,
+            'path': str(path.relative_to(ROOT)),
+            'meta': meta,
+        }
+    return {'reports': out}
+
+
 def ranking(limit=30):
     """读流水线写下的排名快照。文件本身只含头部，这里再按请求截断。"""
     path = ROOT / 'auto_output' / 'latest_ranking.json'
@@ -154,6 +208,7 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         if path == '/api/status': self.send_json(status()); return
+        if path == '/api/reports': self.send_json(reports()); return
         if path == '/api/ranking':
             qs = parse_qs(parsed.query)
             try:

@@ -10,16 +10,28 @@
 | 无需后端的静态排名看板（自动部署到 Pages） | [https://guru2016.github.io/FlowMood/](https://guru2016.github.io/FlowMood/) |
 
 `.github/workflows/ci.yml` 在 push / PR / 手动触发以及工作日**北京时间 11:35、15:10**
-自动运行：语法检查 → 离线冒烟自测 → 尝试采集全市场行情并重算排名 → 生成静态看板 →
-把 Top10 写进 Actions 运行摘要 → 发布 GitHub Pages。云端行情源不可达时会自动回退到
-`sample/latest_ranking.json` 示例快照，页面会明确标注数据来源，不会伪装成实时数据。
+自动运行：语法检查 → 离线冒烟自测 → 采集全市场行情并重算排名 → 跑同一条
+`auto_pipeline.py` 产出该时段研究报告 → 生成静态看板 → 写入 Actions 运行摘要 → 发布 Pages。
+云端行情源不可达时回退到 `sample/` 示例快照，页面明确标注数据来源，不会伪装成实时数据。
+
+**在线页面与本地看板是同一份 `web/dashboard.html`**，只是数据层不同：
+
+| 区域 | 内容 |
+|---|---|
+| 顶部 | 实时状态条（模式 / 数据源 / 覆盖 / 最高分 / ≥72 分数）+ 市场分、状态、仓位、候选数四卡 |
+| 报告区 | 午盘 / 收盘一键切换：报告正文、核心指标、判断依据、执行框架、板块排名、该时段候选表、流水线环节 |
+| 实时分析流 | 20 秒与上一帧对比生成事件（新入榜、排名跃升、条件买入触发、涨跌/资金流异动、心跳、市场摘要），持续滚动 |
+| 排名 / 计划 | 全市场评分排名 Top20/50/100（含入选时间）、最新候选计划、自动运行状态、报告文件 |
+
+- **本地 / VPS**：`dashboard_server.py` 提供 `/api/status`、`/api/reports`、`/api/ranking`（`live=1` 会用实时行情重算评分）。
+- **Pages**：`build_static.py` 在页面里内嵌报告与排名快照，再由 `web/static-feed.js` 用同形接口喂给页面；浏览器直连东财 `ulist.np` 批量报价，不可达时自动切同花顺 `realhead` 逐只兜底，每 20 秒刷新价格 / 涨跌 / 资金流。**评分沿用快照值并在页面标注**，不伪造实时重算。
 
 本地复现：
 
 ```bash
 python3 tests/smoke_test.py        # 离线自测，不联网
-python3 build_static.py            # 生成 docs/index.html
-python3 dashboard_server.py        # 带实时接口的完整看板，http://127.0.0.1:8787
+python3 build_static.py            # 生成 docs/index.html（与本地看板同源）
+python3 dashboard_server.py        # 带完整后端的看板，http://127.0.0.1:8787
 ```
 
 排名表与候选计划表的「入选时间」列，记录的是该标的**当日首次进入榜单的秒级时刻**

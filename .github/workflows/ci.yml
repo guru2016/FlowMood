@@ -1,4 +1,4 @@
-name: FlowMood · 自测 / 排名 / 在线看板
+name: FlowMood · 自测 / 午盘收盘报告 / 实时分析流看板
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
       - name: 离线冒烟自测
         run: python tests/smoke_test.py
 
-      - name: 采集全市场行情（失败不阻断，回退示例快照）
+      - name: 采集全市场行情并重算排名（失败不阻断）
         continue-on-error: true
         timeout-minutes: 12
         run: |
@@ -51,8 +51,30 @@ jobs:
           test -s normalized_snapshots.json
           python auto_rank.py --top 30 --quiet
 
-      - name: 生成静态看板
+      - name: 用本地同一条流水线产出研究报告
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          test -s normalized_snapshots.json || { echo "云端行情不可达，报告沿用仓库示例"; exit 0; }
+          H=$(date +%H)
+          if [ "$H" -ge 13 ]; then SESSION=close; else SESSION=midday; fi
+          echo "本次时段: $SESSION"
+          python auto_pipeline.py --session "$SESSION" --skip-collect --workers 16
+
+      - name: 生成静态看板（与本地 dashboard.html 同源）
         run: python build_static.py --output docs/index.html
+
+      - name: 静态页自检
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          h = Path('docs/index.html').read_text(encoding='utf-8')
+          keys = ('午盘报告', '收盘报告', '实时分析流', '该时段候选计划',
+                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间')
+          for k in keys:
+              assert k in h, f'静态页缺少 {k}'
+          print(f'静态页自检通过：{len(h)} bytes，关键区块齐全')
+          PY
 
       - name: 写入运行摘要（Actions 页面可直接查看）
         run: cat docs/summary.md >> "$GITHUB_STEP_SUMMARY"

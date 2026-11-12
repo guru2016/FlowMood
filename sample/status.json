@@ -1,0 +1,603 @@
+{
+  "report": {
+    "generated_at": "2026-11-12T11:35:29",
+    "session": "midday",
+    "market_score": 55.55,
+    "market_regime": "震荡",
+    "position": "轻仓",
+    "max_exposure": 0.3,
+    "plans": [
+      {
+        "symbol": "002406.SZ",
+        "name": "远东传动",
+        "action": "重点观察",
+        "score": 65.63,
+        "buy_price": "6.40-6.46",
+        "target_price": "6.82",
+        "space_pct": 6.0,
+        "stop_price": 6.18,
+        "stop_pct": -3.94,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（2.55%）",
+          "成交额温和放大 3.16 倍",
+          "换手率适中 3.2%",
+          "评分构成 趋势20.2/25 资金6.7/23 板块10.0/20 结构15.7/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 1.52",
+          "建议仓位 12.7%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.52,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 6.42,
+        "high20": 6.42,
+        "pullback_price": 6.45
+      },
+      {
+        "symbol": "300094.SZ",
+        "name": "国联水产",
+        "action": "重点观察",
+        "score": 65.3,
+        "buy_price": "2.99-3.03",
+        "target_price": "3.22",
+        "space_pct": 6.96,
+        "stop_price": 2.88,
+        "stop_pct": -4.48,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "趋势一致性 0.70",
+          "板块相对强度领先（3.08%）",
+          "成交额温和放大 2.39 倍",
+          "价格位于日内强势区",
+          "换手率适中 5.5%",
+          "评分构成 趋势19.5/25 资金6.8/23 板块10.0/20 结构15.9/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 1.55",
+          "建议仓位 11.2%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破前观察",
+        "next_action": "观察突破和量能",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.55,
+          "next_action": "观察突破和量能",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 3.01,
+        "high20": 3.01,
+        "pullback_price": 3.03
+      },
+      {
+        "symbol": "301631.SZ",
+        "name": "壹连科技",
+        "action": "重点观察",
+        "score": 63.57,
+        "buy_price": "52.93-53.47",
+        "target_price": "57.53",
+        "space_pct": 8.14,
+        "stop_price": 51.01,
+        "stop_pct": -4.12,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（2.11%）",
+          "成交额温和放大 1.69 倍",
+          "换手率适中 3.6%",
+          "评分构成 趋势18.2/25 资金6.8/23 板块10.0/20 结构15.4/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 1.98",
+          "建议仓位 12.1%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.98,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 53.03,
+        "high20": 53.03,
+        "pullback_price": 53.3
+      },
+      {
+        "symbol": "603227.SH",
+        "name": "雪峰科技",
+        "action": "重点观察",
+        "score": 60.77,
+        "buy_price": "7.19-7.27",
+        "target_price": "7.66",
+        "space_pct": 6.0,
+        "stop_price": 6.8,
+        "stop_pct": -6.0,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（5.09%）",
+          "接近日内突破位",
+          "成交额温和放大 4.36 倍",
+          "价格位于日内强势区",
+          "当日涨幅 5.1%，追涨降权 1%",
+          "评分构成 趋势20.2/25 资金5.4/23 板块10.0/20 结构15.3/16 流动6.8/9 大盘4.0/7",
+          "风险收益比 1.00",
+          "建议仓位 8.3%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破前观察",
+        "next_action": "观察突破和量能",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.0,
+          "next_action": "观察突破和量能",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 1,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 7.26,
+        "high20": 7.26,
+        "pullback_price": 7.3
+      },
+      {
+        "symbol": "600630.SH",
+        "name": "龙头股份",
+        "action": "重点观察",
+        "score": 60.61,
+        "buy_price": "7.39-7.47",
+        "target_price": "8.14",
+        "space_pct": 9.6,
+        "stop_price": 6.98,
+        "stop_pct": -6.0,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（4.21%）",
+          "成交额温和放大 3.39 倍",
+          "换手率适中 9.6%",
+          "评分构成 趋势16.2/25 资金6.4/23 板块10.0/20 结构14.8/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 1.60",
+          "建议仓位 8.3%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.6,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 7.38,
+        "high20": 7.38,
+        "pullback_price": 7.42
+      },
+      {
+        "symbol": "603037.SH",
+        "name": "凯众股份",
+        "action": "重点观察",
+        "score": 60.42,
+        "buy_price": "14.42-14.56",
+        "target_price": "16.48",
+        "space_pct": 13.72,
+        "stop_price": 13.62,
+        "stop_pct": -6.0,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "价格偏离20日均线 24.98%",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（3.57%）",
+          "成交额温和放大 2.22 倍",
+          "价格位于日内强势区",
+          "换手率适中 6.7%",
+          "评分构成 趋势15.9/25 资金6.8/23 板块10.0/20 结构14.6/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 2.29",
+          "建议仓位 8.3%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 2.29,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 14.37,
+        "high20": 14.37,
+        "pullback_price": 14.44
+      },
+      {
+        "symbol": "300878.SZ",
+        "name": "维康药业",
+        "action": "重点观察",
+        "score": 60.22,
+        "buy_price": "35.02-35.38",
+        "target_price": "38.37",
+        "space_pct": 9.01,
+        "stop_price": 33.47,
+        "stop_pct": -4.91,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "价格偏离20日均线 20.92%",
+          "独立行情/资金数据已确认",
+          "趋势一致性 0.70",
+          "板块相对强度领先（2.27%）",
+          "接近日内突破位",
+          "成交额温和放大 3.34 倍",
+          "价格位于日内强势区",
+          "换手率适中 2.1%",
+          "评分构成 趋势17.1/25 资金6.5/23 板块10.0/20 结构13.5/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 1.83",
+          "建议仓位 10.2%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.83,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 34.68,
+        "high20": 34.68,
+        "pullback_price": 34.85
+      },
+      {
+        "symbol": "688357.SH",
+        "name": "建龙微纳",
+        "action": "放弃",
+        "score": 59.61,
+        "buy_price": "27.18-27.46",
+        "target_price": "29.58",
+        "space_pct": 8.27,
+        "stop_price": 25.92,
+        "stop_pct": -5.11,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（3.37%）",
+          "成交额温和放大 2.23 倍",
+          "价格位于日内强势区",
+          "评分构成 趋势16.4/25 资金6.8/23 板块10.0/20 结构15.7/16 流动6.6/9 大盘4.0/7",
+          "风险收益比 1.62",
+          "建议仓位 9.8%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 1.62,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 27.29,
+        "high20": 27.29,
+        "pullback_price": 27.43
+      },
+      {
+        "symbol": "603029.SH",
+        "name": "天鹅股份",
+        "action": "放弃",
+        "score": 58.42,
+        "buy_price": "16.67-16.83",
+        "target_price": "18.06",
+        "space_pct": 7.84,
+        "stop_price": 16.12,
+        "stop_pct": -3.76,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（2.13%）",
+          "成交额温和放大 1.67 倍",
+          "换手率适中 2.2%",
+          "评分构成 趋势15.4/25 资金6.8/23 板块10.0/20 结构13.1/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 2.09",
+          "建议仓位 13.3%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 2.09,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 16.46,
+        "high20": 16.46,
+        "pullback_price": 16.54
+      },
+      {
+        "symbol": "688343.SH",
+        "name": "云天励飞-U",
+        "action": "放弃",
+        "score": 58.36,
+        "buy_price": "53.95-54.49",
+        "target_price": "61.02",
+        "space_pct": 12.53,
+        "stop_price": 50.97,
+        "stop_pct": -6.0,
+        "reasons": [
+          "趋势向上且收盘位于强势区",
+          "价格偏离20日均线 11.06%",
+          "独立行情/资金数据已确认",
+          "板块相对强度领先（5.32%）",
+          "成交额温和放大 2.53 倍",
+          "换手率适中 2.8%",
+          "当日涨幅 5.3%，追涨降权 3%",
+          "评分构成 趋势14.2/25 资金6.8/23 板块10.0/20 结构15.8/16 流动9.1/9 大盘4.0/7",
+          "风险收益比 2.09",
+          "建议仓位 8.3%"
+        ],
+        "invalid_conditions": [
+          "跌破止损价",
+          "所属题材强度跌破50",
+          "资金流连续转负",
+          "亏损后禁止向下摊平",
+          "盈利仓位不满足趋势延续则退出",
+          "趋势破坏或板块退潮时减仓退出"
+        ],
+        "setup_state": "突破确认",
+        "next_action": "条件买入/持有",
+        "journal": {
+          "trend_confirmed": true,
+          "breakout_confirmed": true,
+          "leader_confirmed": true,
+          "independent_confirmation": true,
+          "event_risk": false,
+          "sentiment_score": null,
+          "sentiment_delta": null,
+          "crowding_score": null,
+          "risk_reward": 2.09,
+          "next_action": "条件买入/持有",
+          "principle_pass_rate": 100.0,
+          "unmet_count": 0,
+          "core_unmet_conditions": [],
+          "core_conditions_passed": true
+        },
+        "pivot_price": 54.19,
+        "high20": 54.19,
+        "pullback_price": 54.46
+      }
+    ]
+  },
+  "report_path": "auto_output/midday/20261112_113506/stock_report_midday_20261112_113526.json",
+  "summary": {},
+  "alerts": {},
+  "auto": {
+    "midday": {
+      "session": "midday",
+      "finished_at": "2026-11-12T11:35:31",
+      "elapsed_sec": 25.5,
+      "all_ok": true,
+      "skipped": null,
+      "steps": [
+        {
+          "step": "collect",
+          "ok": true
+        },
+        {
+          "step": "selector",
+          "ok": true
+        },
+        {
+          "step": "performance_tracker",
+          "ok": true
+        },
+        {
+          "step": "performance_daily",
+          "ok": true
+        },
+        {
+          "step": "rolling_windows",
+          "ok": true
+        },
+        {
+          "step": "report_monitor",
+          "ok": true
+        },
+        {
+          "step": "ranking",
+          "ok": true
+        }
+      ]
+    },
+    "close": {
+      "session": "close",
+      "finished_at": "2026-11-11T15:51:41",
+      "elapsed_sec": 9.7,
+      "all_ok": true,
+      "skipped": null,
+      "steps": [
+        {
+          "step": "collect",
+          "ok": true
+        },
+        {
+          "step": "selector",
+          "ok": true
+        },
+        {
+          "step": "performance_tracker",
+          "ok": true
+        },
+        {
+          "step": "performance_daily",
+          "ok": true
+        },
+        {
+          "step": "rolling_windows",
+          "ok": true
+        },
+        {
+          "step": "report_monitor",
+          "ok": true
+        },
+        {
+          "step": "ranking",
+          "ok": true
+        }
+      ]
+    }
+  }
+}

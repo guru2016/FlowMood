@@ -1,0 +1,204 @@
+/* FlowMood 静态模式数据层（GitHub Pages 专用）
+ *
+ * 本地/VPS 看板由 dashboard_server.py 提供 /api/*；这里用同一套接口形状，
+ * 让 web/dashboard.html 在没有任何后端的静态托管上也能跑：
+ *   - 报告 / 状态 / 排名 来自 build_static.py 内嵌的 FLOWMOOD_BOOT 快照
+ *   - 价格、涨跌、资金流由浏览器直连行情源每 20 秒刷新（东财 ulist.np 为主，
+ *     同花顺 realhead 逐只兜底，两者都是公开只读接口）
+ *   - 评分沿用快照值，页面明确标注，不伪造"实时重算"
+ */
+(function () {
+  'use strict';
+  var BOOT = window.FLOWMOOD_BOOT || {};
+  var RANK0 = (BOOT.ranking && BOOT.ranking.ranking) || [];
+  var REFRESH_MS = 20000;
+
+  var FEED = {
+    rows: RANK0.map(function (r) { return Object.assign({}, r); }),
+    quotes: {}, live: false, reason: '正在连接行情源…', at: '', source: 'snapshot',
+    hit: 0, total: RANK0.length, warning: '', digest: [], started: false, failStreak: 0
+  };
+
+  function codeOf(symbol) { return String(symbol || '').split('.')[0]; }
+  function secid(symbol) {
+    var c = codeOf(symbol), s = String(symbol || '');
+    if (s.indexOf('.SH') >= 0 || /^(5|6|9)/.test(c)) return '1.' + c;
+    return '0.' + c;                       // 深市 / 创业板 / 北交所
+  }
+  function num(v) { var n = Number(v); return isFinite(n) ? n : null; }
+  // 统一按北京时间输出 ISO，前端 slice(11,19) 才是 09:35:12 而不是 01:35:12
+  function bjIso() {
+    var parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    }).formatToParts(new Date());
+    var v = {}; parts.forEach(function (p) { v[p.type] = p.value; });
+    return v.year + '-' + v.month + '-' + v.day + 'T' + v.hour + ':' + v.minute + ':' + v.second + '+08:00';
+  }
+
+  // ---- JSONP：<script> 不受同源策略限制，回调名可自定义或由上游固定 ----
+  function jsonp(url, cbName, timeoutMs) {
+    return new Promise(function (resolve) {
+      var done = false, s = document.createElement('script'), timer;
+      function finish(value) {
+        if (done) return;
+        done = true; clearTimeout(timer);
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        if (s.parentNode) s.parentNode.removeChild(s);
+        resolve(value);
+      }
+      window[cbName] = function (data) { finish(data); };
+      timer = setTimeout(function () { finish(null); }, timeoutMs || 7000);
+      s.src = url;
+      s.onerror = function () { finish(null); };
+      document.head.appendChild(s);
+    });
+  }
+
+  // ---- 主源：东财批量报价，一次拿全榜单的价格/涨跌/换手/主力资金流 ----
+  function emBatch(symbols) {
+    if (!symbols.length) return Promise.resolve(null);
+    var cb = 'FM_EM_' + Date.now().toString(36);
+    var ids = symbols.map(secid).join(',');
+    var url = 'https://push2.eastmoney.com/api/qt/ulist.np/get?cb=' + cb +
+      '&fltt=2&invt=2&secids=' + encodeURIComponent(ids) +
+      '&fields=f2,f3,f6,f8,f12,f14,f15,f16,f17,f18,f62,f184,f100';
+    return jsonp(url, cb, 8000).then(function (res) {
+      var diff = res && res.data && res.data.diff;
+      if (!diff || !diff.length) return null;
+      var out = {};
+      diff.forEach(function (r) {
+        var c = String(r.f12 || '');
+        if (c.length !== 6) return;
+        out[c] = {
+          f2: num(r.f2), f3: num(r.f3), f6: num(r.f6), f8: num(r.f8),
+          f14: r.f14, f184: num(r.f184), f100: r.f100
+        };
+      });
+      return Object.keys(out).length ? out : null;
+    });
+  }
+
+  // ---- 兜底：同花顺 realhead，回调名由 URL 路径固定，逐只加载 ----
+  function thsOne(code) {
+    var cb = 'quotebridge_v2_realhead_hs_' + code + '_last';
+    var url = 'https://d.10jqka.com.cn/v2/realhead/hs_' + code + '/last.js';
+    return jsonp(url, cb, 6500).then(function (res) {
+      var it = res && res.items;
+      if (!it) return null;
+      var n = function (k) { return num(it[k]); };
+      var price = n('10'), prev = n('6');
+      if (!price || price <= 0 || !prev) return null;
+      return { f2: price, f18: prev, f3: n('199112'), f6: n('19'), f8: n('1968584'), f14: it.name || '' };
+    });
+  }
+  function thsBatch(codes, concurrency) {
+    var out = {}, i = 0;
+    var workers = Array.from({ length: Math.min(concurrency || 16, codes.length) }, function () {
+      return (function next() {
+        if (i >= codes.length) return Promise.resolve();
+        var c = codes[i++];
+        return thsOne(c).then(function (q) { if (q) out[c] = q; return next(); });
+      })();
+    });
+    return Promise.all(workers).then(function () { return out; });
+  }
+
+  function applyQuotes() {
+    var hit = 0;
+    FEED.rows.forEach(function (r) {
+      var q = FEED.quotes[codeOf(r.symbol)];
+      if (!q) { delete r.quote_source; return; }
+      hit++;
+      if (q.f2 != null && q.f2 > 0) r.price = q.f2;
+      if (q.f3 != null) r.change_pct = q.f3;
+      if (q.f8 != null) r.turnover_pct = q.f8;
+      if (q.f184 != null) r.money_flow_pct = q.f184;   // 只有东财提供，兜底时保留快照
+      r.quote_source = FEED.source;
+    });
+    FEED.hit = hit;
+  }
+
+  function buildDigest() {
+    var rows = FEED.rows.slice(0, 100), out = [];
+    var valid = function (k) { return rows.filter(function (r) { return r[k] != null; }); };
+    var up = valid('change_pct').sort(function (a, b) { return b.change_pct - a.change_pct; }).slice(0, 2);
+    var flow = valid('money_flow_pct').sort(function (a, b) { return b.money_flow_pct - a.money_flow_pct; }).slice(0, 2);
+    var buys = rows.filter(function (r) { return r.action === '条件买入'; }).length;
+    var sectors = {};
+    rows.slice(0, 30).forEach(function (r) { var k = r.sector || '未分类'; sectors[k] = (sectors[k] || 0) + 1; });
+    var topSec = Object.entries(sectors).sort(function (a, b) { return b[1] - a[1]; })[0] || ['--', 0];
+    if (up.length) out.push({ kind: 'up', text: '实时涨幅居前：' + up.map(function (r) {
+      return r.name + ' ' + (r.change_pct > 0 ? '+' : '') + Number(r.change_pct).toFixed(2) + '%'; }).join('、') });
+    if (flow.length) out.push({ kind: 'flow', text: '主力净流入居前：' + flow.map(function (r) {
+      return r.name + ' ' + (r.money_flow_pct > 0 ? '+' : '') + Number(r.money_flow_pct).toFixed(2) + '%'; }).join('、') });
+    out.push({ kind: 'buy', text: '榜单内条件买入 ' + buys + ' 只 · Top30 最集中板块 ' + topSec[0] + '（' + topSec[1] + ' 只）' });
+    out.push({ kind: 'heart', text: '行情通道 ' + FEED.source + ' · 覆盖 ' + FEED.hit + '/' + FEED.total + ' 只 · ' + (FEED.at || '--') });
+    out.push({ kind: 'warn', text: '在线演示版：价格 / 涨跌 / 资金流为浏览器直连实时行情，评分沿用最近一次快照评分' });
+    return out;
+  }
+
+  function refresh() {
+    var symbols = FEED.rows.map(function (r) { return r.symbol; });
+    if (!symbols.length) return Promise.resolve();
+    return emBatch(symbols).then(function (em) {
+      var emCount = em ? Object.keys(em).length : 0;
+      var need = symbols.filter(function (s) { return !em || !em[codeOf(s)]; }).map(codeOf);
+      if (emCount >= symbols.length * 0.6 || !need.length) {
+        FEED.quotes = em || {};
+        FEED.source = 'eastmoney_ulist';
+        FEED.warning = emCount < symbols.length ? '部分代码未返回报价，其余沿用快照价格' : '';
+        return;
+      }
+      // 东财整链不可用时，逐只切同花顺；已拿到的东财结果优先保留资金流字段
+      return thsBatch(need, 20).then(function (ths) {
+        var merged = Object.assign({}, ths);
+        Object.keys(em || {}).forEach(function (c) { merged[c] = Object.assign({}, ths[c], em[c]); });
+        FEED.quotes = merged;
+        FEED.source = Object.keys(ths).length ? 'ths_realhead' : 'partial';
+        FEED.warning = '东财批量报价不可用，价格来自同花顺（分钟级），资金流仍为快照值';
+      });
+    }).catch(function () { FEED.quotes = {}; FEED.source = 'unavailable'; })
+      .then(function () {
+        applyQuotes();
+        var ok = FEED.hit >= FEED.total * 0.6;
+        FEED.live = ok;
+        FEED.reason = ok ? '浏览器直连行情' : '行情源暂不可用，已回退快照';
+        FEED.at = bjIso();
+        FEED.failStreak = ok ? 0 : FEED.failStreak + 1;
+        FEED.digest = buildDigest();
+        if (typeof window.FM.onTick === 'function') window.FM.onTick();
+      });
+  }
+
+  // ---- 与 dashboard_server.py 同形的接口 ----
+  window.FM = {
+    mode: 'static',
+    onTick: null,
+    get: function (path) {
+      var url = String(path || ''), q = url.indexOf('?');
+      var qs = new URLSearchParams(q >= 0 ? url.slice(q + 1) : '');
+      if (url.indexOf('/api/reports') === 0) return Promise.resolve({ reports: BOOT.reports || {} });
+      if (url.indexOf('/api/status') === 0) return Promise.resolve(BOOT.status || {});
+      if (url.indexOf('/api/ranking') === 0) {
+        var limit = Math.max(1, Math.min(parseInt(qs.get('limit') || '30', 10) || 30, 100));
+        var base = BOOT.ranking || {};
+        return Promise.resolve(Object.assign({}, base, {
+          ranking: FEED.rows.slice(0, limit),
+          returned: Math.min(limit, FEED.rows.length), available: FEED.rows.length,
+          live: FEED.live, live_reason: FEED.reason, quote_at: FEED.at,
+          quote_source: FEED.source, live_warning: FEED.warning,
+          live_merge: { hit: FEED.hit, total: FEED.total, elapsed: 1 },
+          feed_digest: FEED.digest, source_label: BOOT.source_label || '示例快照'
+        }));
+      }
+      return Promise.resolve({ error: '在线演示版不支持该接口' });
+    },
+    post: function () {
+      return Promise.resolve({ ok: false, error: '在线演示版不触发流水线；请在本地或 VPS 看板运行' });
+    }
+  };
+
+  setTimeout(refresh, 400);
+  setInterval(refresh, REFRESH_MS);
+})();

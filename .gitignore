@@ -30,6 +30,7 @@
 # --- 前端 ---
 !/web/
 !/web/dashboard.html
+!/web/static-feed.js
 
 # --- 部署脚本 ---
 !/deploy/
