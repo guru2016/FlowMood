@@ -115,7 +115,14 @@ def run_once(session: str = "close", skip_collect: bool = False,
              config: Path | None = None) -> dict:
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     logfile = LOG_DIR / f"auto_{datetime.now():%Y%m%d}.log"
-    out_dir = OUT_ROOT / session / stamp
+    # 定稿窗口之外（部署验证、手工补跑、CI 迟到任务）跑出来的东西一律进
+    # _adhoc/：盘后指数与涨跌家数是残缺的，市场分会从 47 掉到 35，
+    # 一旦落进 auto_output/{session}/ 就会被看板当成「最新收盘报告」，
+    # 页面会出现一份「全市场全部放弃」的假结论。归档留着排查，但不进页面。
+    from auto_rank import defined_window
+    in_window, win_why = defined_window()
+    base_dir = OUT_ROOT / session if in_window else OUT_ROOT / "_adhoc" / session
+    out_dir = base_dir / stamp
     out_dir.mkdir(parents=True, exist_ok=True)
     db = db or (OUT_ROOT / "research.sqlite3")
     config = config or (ROOT / "strategy_config.json")
@@ -123,7 +130,7 @@ def run_once(session: str = "close", skip_collect: bool = False,
 
     t0 = time.time()
     steps: list[dict] = []
-    log(f"===== 开始 {session} 会话 =====", logfile)
+    log(f"===== 开始 {session} 会话（{win_why}）=====", logfile)
 
     # 非交易日直接优雅退出：让脚本自己判断，就不必维护节假日日历表
     if not skip_collect:
@@ -265,8 +272,12 @@ def run_once(session: str = "close", skip_collect: bool = False,
     }
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    (OUT_ROOT / f"latest_{session}.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    if in_window:
+        (OUT_ROOT / f"latest_{session}.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        manifest["published"] = False
+        manifest["publish_note"] = f"{win_why}，结果只进 _adhoc 归档，不覆盖看板"
 
     failed = [s["step"] for s in steps if not s["ok"]]
     if failed:

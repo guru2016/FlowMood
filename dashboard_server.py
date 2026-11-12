@@ -29,6 +29,9 @@ def latest_json(pattern):
         if base.exists():
             hits.extend(base.rglob(pattern))
     for path in sorted(hits, key=lambda p: p.stat().st_mtime, reverse=True):
+        # _adhoc 是定稿窗口外的补跑归档（盘后/部署验证），数据残缺，不能当最新产出
+        if '_adhoc' in path.parts:
+            continue
         try:
             return json.loads(path.read_text(encoding='utf-8')), str(path.relative_to(ROOT))
         except Exception:
