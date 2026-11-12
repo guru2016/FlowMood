@@ -28,6 +28,9 @@ ssh -p "$PORT" "${SSH_OPTS[@]}" "$TARGET" \
   "bash /tmp/remote_setup.sh '$APP_DIR'"
 
 echo "--- 4/4 完成 ---"
-echo "看板在 VPS 内部: http://127.0.0.1:8787"
-echo "本机访问请建隧道: ssh -p $PORT -N -L 8787:127.0.0.1:8787 $TARGET"
-echo "                 然后打开 http://127.0.0.1:8787"
+BIND_PORT="${THS_BIND_PORT:-8787}"
+LAN_IP=$(ssh -p "$PORT" "${SSH_OPTS[@]}" "$TARGET" \
+  "ip -4 -o addr show scope global | awk '{print \$4}' | cut -d/ -f1 | grep -v '^172\.' | head -1" 2>/dev/null)
+echo "看板监听 0.0.0.0:${BIND_PORT}（局域网可直接访问）"
+[ -n "$LAN_IP" ] && echo "访问地址: http://${LAN_IP}:${BIND_PORT}"
+echo "要收回到仅本机：远端单元改 THS_HOST=127.0.0.1 后 systemctl --user restart ths-dashboard"

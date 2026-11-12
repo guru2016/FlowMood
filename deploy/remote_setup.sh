@@ -142,5 +142,5 @@ PY
 echo "  定时任务:"
 systemctl --user --no-pager list-timers 2>/dev/null | grep -E 'ths-(midday|close)' || echo "    （未列出，请检查 daemon-reload）"
 echo
-echo "部署完成。看板仅监听 127.0.0.1:8787（安全默认）。"
-echo "本机隧道: ssh -p <ssh_port> -N -L 8787:127.0.0.1:8787 <user>@<vps_host>"
+echo "部署完成。看板监听 $(grep -h '^Environment=THS_HOST' ~/.config/systemd/user/ths-dashboard.service | cut -d= -f3):8787"
+echo "局域网内直接用 http://<本机内网IP>:8787 打开；不需要 SSH 隧道。"
