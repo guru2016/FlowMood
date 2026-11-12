@@ -200,6 +200,29 @@ def restore_from_base(rows: list[dict]) -> tuple[list[dict], dict]:
     return out, info
 
 
+def defined_window(now=None) -> tuple[bool, str]:
+    """前端定稿榜单允许被覆盖的时间窗。
+
+    只有「真实行情时段」和两个定稿窗口（午盘 11:30–11:55、收盘 15:00–16:00）
+    内的原生快照才算定稿。盘后重跑（部署、手工触发、CI 迟到任务）拿到的
+    指数/涨跌家数是残缺的，市场分能从 47 掉到 35，覆盖上去就成了一份
+    「全市场 5000 只全部放弃」的假结论 —— 比不更新误导得多。
+    """
+    from live_quotes import is_trading_now      # 导入即统一到北京时区
+    now = now or datetime.now()
+    if now.weekday() >= 5:
+        return False, "周末非交易日"
+    trading, why = is_trading_now(now)
+    if trading:
+        return True, why
+    m = now.hour * 60 + now.minute
+    if 11 * 60 + 30 <= m <= 11 * 60 + 55:
+        return True, "午盘定稿窗口"
+    if 15 * 60 <= m <= 16 * 60:
+        return True, "收盘定稿窗口"
+    return False, why or "非定稿时段"
+
+
 def build_ranking(snapshot: Path | None = None, config: Path | None = None,
                   market_score: float | None = None, top: int = 30,
                   write: bool = True, tag: str | None = None,
@@ -387,6 +410,12 @@ def build_ranking(snapshot: Path | None = None, config: Path | None = None,
     if result["ranking_basis"] != "defined_snapshot":
         result["latest_written"] = False
         result["latest_note"] = "盘中重排结果仅归档，收盘定稿榜单保持不变"
+        return result
+    # 时间窗闸门：盘后/盘前重跑只归档，不动前端定稿（见 defined_window 注释）。
+    ok_win, win_why = defined_window()
+    if not ok_win:
+        result["latest_written"] = False
+        result["latest_note"] = f"非定稿时段（{win_why}），本次仅归档，前端定稿榜单保持不变"
         return result
     head = min(100, len(rows))
     latest = dict(result)
