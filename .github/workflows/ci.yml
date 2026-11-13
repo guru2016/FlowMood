@@ -74,7 +74,12 @@ jobs:
                   'openStock', 'showTab', 'stkchip', 'splitReport', 'extra_quotes')
           for k in keys:
               assert k in h, f'静态页缺少 {k}'
-          assert 'sjdp_' not in h, '静态页不应出现指标代码名'
+          # 只断言数据载荷：静态层的 JS 源码需要用 sjdp_* 作接口键去直连指标接口，
+          # 真正要防的是把原始代码名/JSON 字典当内容塞进页面数据里。
+          boot = h.split('window.FLOWMOOD_BOOT', 1)[-1].split('</script>', 1)[0]
+          assert 'sjdp_' not in boot, '静态页数据载荷不应出现指标代码名'
+          assert '大盘资金' in h and '融资融券' in h, '指标应以中文名展示'
+          assert 'loadMetricsLive' in h, '静态页应支持现拉核心指标'
           print(f'静态页自检通过：{len(h)} bytes，关键区块齐全，指标已中文化')
           PY
 
