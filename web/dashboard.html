@@ -171,6 +171,10 @@ button.btn-sm{padding:3px 8px;font-size:10.5px}
 .pill.is-empty{opacity:.68}
 .pill .ph{font-size:9.5px;color:var(--accent)}
 .strip-note{font-size:10.5px;color:var(--text-muted);margin-left:auto}
+.strip-sep{width:1px;height:15px;background:var(--border);margin:0 3px}
+.pill .asof{font-size:9.5px;color:var(--text-muted);border-left:1px solid var(--border);padding-left:5px;margin-left:1px}
+.pill .asof.today{color:var(--up-color)}
+.pill.is-live{border-color:var(--accent);color:var(--accent)}
 .dateline{width:100%;display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:var(--text-muted);border-top:1px dashed var(--border);padding-top:5px;margin-top:2px;font-variant-numeric:tabular-nums}
 .dateline b{color:var(--text-main);font-family:var(--mono)}
 .main-panel{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
@@ -241,7 +245,7 @@ button.btn-sm{padding:3px 8px;font-size:10.5px}
    <div class="kpi-card"><div class="kpi-label"><span>仓位建议</span><span id="kpi-postag" class="kpi-tag">--</span></div><div id="position" class="kpi-value">--</div><div class="kpi-bar"><i id="kpi-posbar" style="width:0%"></i></div></div>
    <div class="kpi-card"><div class="kpi-label"><span>候选数量</span><span id="kpi-counttag" class="kpi-tag">--</span></div><div id="count" class="kpi-value">--</div><svg id="kpi-spark" class="spark" viewBox="0 0 120 22" preserveAspectRatio="none" title="Top30 评分曲线（真实排名数据）"></svg></div>
   </section>
-  <div class="core-strip"><span class="strip-title">市场核心指标</span><span id="metrics" class="pills"></span><span id="metricsbar" class="strip-note">--</span><div id="ticker" class="dateline">正在加载…</div></div>
+  <div class="core-strip"><span class="strip-title">盘口实时</span><span id="breadth" class="pills"></span><span class="strip-sep"></span><span class="strip-title">核心指标</span><span id="metrics" class="pills"></span><span id="metricsbar" class="strip-note">--</span><div id="ticker" class="dateline">正在加载…</div></div>
   <section class="main-panel">
    <div class="panel-header">
     <div class="tabs">
@@ -302,7 +306,7 @@ const selTime=o=>{const s=o&&o.selected_at;if(!s)return '<span class="muted">--<
 const hhmmss=s=>String(s||'').slice(11,19)||'--:--:--';
 
 const S={status:{},reports:{},rank:{},sections:{},rests:{},session:'midday',prev:[],stream:[],first:true,ticks:0,digestShown:false,lastDigest:'',openSym:null,
- liveMetrics:null,liveAt:'',liveErr:''};
+ liveMetrics:null,liveAt:'',liveErr:'',breadth:null};
 let timer=null, auto=true;
 
 // ---------------------------------------------------------------- 个股索引
@@ -451,20 +455,57 @@ function renderMd(text){if(!text)return '<p class="muted-line">该时段暂无�
  if(inUl)out.push('</ul>');return out.join('')}
 
 // ---------------------------------------------------------------- 核心指标卡片
+// ---------------------------------------------------------------- 盘口实时广度
+// 核心指标里大盘资金/两融/温度是日频，盘中必然是昨收值；真正「此刻」的市场
+// 只能从全市场行情算：涨跌家数、涨跌停、两市成交额、平均涨幅。收盘后行情停在
+// 上一次收盘，这里算出来的就是收盘广度，不需要另写一套收盘逻辑。
+function fmtYi(v){
+ if(v==null||!isFinite(v))return '--';
+ return v>=10000?(v/10000).toFixed(2)+'万亿':v>=1?v.toFixed(0)+'亿':v.toFixed(2)+'亿'
+}
+function renderBreadth(){
+ const el=$('breadth');if(!el)return;
+ const b=S.breadth;
+ if(b&&b.unavailable){
+  el.innerHTML=`<span class="pill is-empty" title="静态托管没有全市场扫描，20 秒拉五千只不现实">${esc(b.note||'盘口广度需本地服务')}</span>`;return}
+ if(!b||b.error||!b.count){
+  el.innerHTML='<span class="pill is-empty">盘口广度 --</span>';return}
+ const tone=v=>v>0?'up':v<0?'down':'';
+ const sess=String(b.session||'');
+ // trading / break 都是「今天」的数（午间休市只是上午收盘那一刻的定格），
+ // 收盘后与未开盘才是上一交易日的结论。
+ const live=sess==='trading'||sess==='break';
+ const badge=live
+  ?`<span class="pill is-live">${sess==='trading'?'●':'◐'} ${esc(b.session_label||'盘中实时')}</span>`
+  :`<span class="pill">○ ${esc(b.session_label||'收盘定稿')}</span>`;
+ const parts=[
+  `<span class="pill" title="全市场 ${b.count} 只，涨跌比 ${b.ratio}">涨 <b class="up">${b.up}</b> <span style="color:var(--text-muted)">/</span> 跌 <b class="down">${b.down}</b>${b.flat?` <span style="color:var(--text-muted)">平 ${b.flat}</span>`:''}</span>`,
+  `<span class="pill" title="按 9.8% 近似的封板家数，ST 5cm 会漏计">涨停 <b class="up">${b.limit_up}</b> <span style="color:var(--text-muted)">/</span> 跌停 <b class="down">${b.limit_down}</b></span>`,
+  `<span class="pill" title="涨超 5% ${b.strong} 只 · 跌超 5% ${b.weak} 只">两市 <b>${fmtYi(b.amount_yi)}</b></span>`,
+  `<span class="pill" title="中位涨跌 ${b.median_change==null?'--':b.median_change+'%'}">均涨 <b class="${tone(b.avg_change)}">${b.avg_change>0?'+':''}${b.avg_change}%</b></span>`,
+  badge
+ ];
+ el.innerHTML=parts.join('')
+}
+
+// 核心指标：同花顺那 11 项是日频，盘中显示的一定是上一交易日收盘值。
+// 每个胶囊后面挂「今日 / 昨收 / 停更」的口径标签，收盘后上游补上当天数据会自动变「今日」。
 function renderMetrics(){const r=S.reports[S.session];
  const live=Array.isArray(S.liveMetrics)&&S.liveMetrics.length;
  const ms=live?S.liveMetrics:((r&&r.metrics)||[]),el=$('metrics');
  if(!ms.length){el.innerHTML='<span class="pill is-empty">该时段未生成核心指标</span>';$('metricsbar').textContent=S.liveErr?('指标拉取失败：'+S.liveErr):'--';return}
  const oldest=ms.map(m=>String(m.date_full||'')).filter(Boolean).sort().pop()||'';
+ const todayN=ms.filter(m=>m.asof_today).length;
  $('metricsbar').textContent=live
-  ?`实时拉取 ${S.liveAt} · ${ms.length} 项 · 日频数据，显示各自真实日期${oldest?'（最新 '+oldest+'）':''}`
+  ?`现拉 ${S.liveAt} · ${ms.length} 项${todayN?`（今日 ${todayN} 项）`:'（日频为昨收，收盘后换当日）'}${oldest?' · 最新 '+oldest:''}`
   :`${S.session==='midday'?'午盘':'收盘'}口径 ${r?('· 生成于 '+String(r.generated_at||'').replace('T',' ').slice(5,16)):''} · ${ms.length} 项`;
  el.innerHTML=ms.map(m=>{
   const tone=m.main_tone==='up'?'up':m.main_tone==='down'?'down':'';
   const extra=(m.items||[]).map(i=>`${i.label} ${i.value}`).join(' · ');
   const tip=[m.date_full,m.main_label,extra].filter(Boolean).join(' · ');
   const hint=m.hint?`<span class="ph">${esc(m.hint)}</span>`:'';
-  return `<span class="pill ${m.no_data?'is-empty':''}" title="${esc(tip)}">${esc(m.label)} <b class="${tone}">${esc(m.main_value)}</b><span style="font:10px var(--mono);color:var(--text-muted)">${esc(m.date_text)}</span>${hint}</span>`;
+  const asof=m.asof_label?`<span class="asof ${m.asof_today?'today':''}">${esc(m.asof_label)}</span>`:'';
+  return `<span class="pill ${m.no_data?'is-empty':''}" title="${esc(tip)}">${esc(m.label)} <b class="${tone}">${esc(m.main_value)}</b><span style="font:10px var(--mono);color:var(--text-muted)">${esc(m.date_text)}</span>${asof}${hint}</span>`;
  }).join('')}
 
 // ---------------------------------------------------------------- 报告区
@@ -579,11 +620,12 @@ function updateTicker(){const x=S.rank||{},s=x.stats||{},lv=x.live_merge||{};
 async function loadMetricsLive(){
  try{
   const x=await FM.get('/api/metrics');
+  S.breadth=(x&&x.breadth)||null;
   if(x&&Array.isArray(x.metrics)&&x.metrics.length){
    S.liveMetrics=x.metrics;S.liveAt=hhmmss(x.fetched_at)||'';S.liveErr=''
   }else{S.liveErr=(x&&x.error)||'返回为空'}
  }catch(e){S.liveErr=String(e&&e.message||e)}
- renderMetrics()
+ renderBreadth();renderMetrics()
 }
 async function refreshAll(){await Promise.all([load(),loadReports()]);await loadRank();await loadMetricsLive();
  rebuildSecurities();if(S.openSym)renderStock(S.openSym);updateTicker()}

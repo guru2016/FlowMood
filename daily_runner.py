@@ -47,11 +47,65 @@ def fetch_json(url: str, proxy: str | None = None) -> dict:
         return json.loads(response.read().decode("utf-8"))
 
 
+# 这几项的数据本身就是**排期表**（未来会发生的规模），看最近一次已发生没有意义，
+# 必须看「下一批」，否则「限售解禁」永远显示几个月前的旧数。
+FUTURE_PREFERRED = {"sjdp_lift_the_ban"}
+
+
 def latest_chart(body: dict) -> dict:
+    """取这条指标「该显示的那一个点」。
+
+    不能无脑取 point_list[-1]：限售解禁返回的是**未来排期**（末条可能是三个月后），
+    市场融资也会夹带未来日期但字段全空的脏行。取到末条就会把「12-30 解禁 346 亿」
+    当成「今天的解禁规模」显示。规则：
+      1. 丢掉主字段全空的脏行，以及未来日期但各字段全是 0 的占位行；
+      2. 排期类指标（限售解禁）优先取「今天及以后最近的一批」，由前端标「预告」；
+         ——不看排期表的话，解禁压力永远显示几个月前的数；
+      3. 其余取「今天及以前最近的一个」，这是已发生的真实值。
+    """
     data = body.get("data") or {}
     keys = data.get("point_key_list") or []
     points = data.get("point_list") or []
-    return dict(zip(keys, points[-1])) if points else {}
+    if not keys or not points:
+        return {}
+    key = str(data.get("key") or "")
+    # szzz（上证指数）只是每条数据附带的背景值，不能拿它证明「这期有数」：
+    # 市场融资近几天只有 szzz，ipo/add/bond 全空，若把它算进来就会选中空行。
+    value_keys = [k for k in keys if k not in ("date", "szzz")] or \
+                 [k for k in keys if k != "date"]
+    today = datetime.now().strftime("%Y%m%d")
+
+    def is_zero(v) -> bool:
+        if v in (None, ""):
+            return True                   # 空字段也算「没数」，占位行常常一半空一半 0.00
+        try:
+            return float(v) == 0.0
+        except (TypeError, ValueError):
+            return False
+
+    dated: list[tuple[str, dict]] = []
+    for p in points:
+        row = dict(zip(keys, p))
+        vals = [row.get(k) for k in value_keys]
+        if all(v in (None, "") for v in vals):
+            continue                      # 整行空
+        if str(row.get("date") or "") > today and all(is_zero(v) for v in vals):
+            continue                      # 未来占位行（各字段全 0），不是真实披露
+        dated.append((str(row.get("date") or ""), row))
+    if not dated:
+        return {}
+    if not any(d for d, _ in dated):
+        return dated[-1][1]
+
+    future = sorted((x for x in dated if x[0] > today), key=lambda x: x[0])
+    past = [(d, r) for d, r in dated if d and d <= today]
+    if key in FUTURE_PREFERRED and future:
+        return future[0][1]
+    if past:
+        return max(past, key=lambda x: x[0])[1]
+    if future:
+        return future[0][1]
+    return dated[-1][1]
 
 
 def score(metrics: dict[str, dict]) -> tuple[float, str, list[str]]:

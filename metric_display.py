@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any
 
 # (指标中文名, 主展示字段, 卡片里列出的字段顺序)
@@ -100,7 +100,52 @@ def _date_info(raw: Any) -> dict:
     limit = 95 if monthly else STALE_DAYS
     stale = bool(parsed and (today - parsed).days > limit)
     return {"date": s, "date_full": full, "date_text": short,
-            "stale": stale, "future": future}
+            "stale": stale, "future": future, "monthly": monthly}
+
+
+def _prev_trading_day(today: date) -> date:
+    """上一个交易日（只跳过周末）。节假日不做表，宁可把周一看到周五数据标成
+    「上一交易日」，也不硬编码一张会过期的节假日表。"""
+    d = today - timedelta(days=1)
+    while d.weekday() >= 5:
+        d -= timedelta(days=1)
+    return d
+
+
+def _asof(info: dict, monthly: bool, no_data: bool) -> dict:
+    """数据口径标签：这条指标到底是「今天的」「昨收的」还是「停更的」。
+
+    盘中用户看到的日频指标（大盘资金/两融/温度）几乎必然是上一交易日收盘值，
+    过去只显示一个 11-12 的日期，容易被当成「系统没更新」。这里把口径写死成
+    短标签，配日期一起显示，收盘后数据源补上当天值时会自动变成「今日」。
+    """
+    s = info.get("date") or ""
+    parsed = None
+    if re.fullmatch(r"\d{8}", s):
+        parsed = datetime.strptime(s, "%Y%m%d").date()
+    elif re.fullmatch(r"\d{6}", s):
+        parsed = date(int(s[:4]), int(s[4:]), 1)
+    if no_data:
+        return {"asof_label": "未披露", "asof_days": None, "asof_today": False}
+    if info.get("future"):
+        return {"asof_label": "预告", "asof_days": None, "asof_today": False}
+    if info.get("stale"):
+        return {"asof_label": "停更", "asof_days": None, "asof_today": False}
+    if not parsed:
+        return {"asof_label": "", "asof_days": None, "asof_today": False}
+    today = date.today()
+    days = (today - parsed).days
+    if parsed == today:
+        label = "今日"
+    elif monthly:
+        label = "本月" if days <= 31 else f"{max(1, round(days / 30))}月前"
+    elif parsed == _prev_trading_day(today):
+        label = "昨收"
+    elif days <= 3:
+        label = f"{days}日前"
+    else:
+        label = "历史"
+    return {"asof_label": label, "asof_days": days, "asof_today": parsed == today}
 
 
 def _display_value(field: str, value: Any) -> str:
@@ -155,6 +200,7 @@ def build_metric(key: str, raw: dict | None) -> dict | None:
     elif main_key == "temperature":
         t = _num(raw.get("temperature"))
         hint = "偏热" if t is not None and t >= 70 else "偏冷" if t is not None and t <= 30 else "中性"
+    asof = _asof(info, bool(info.get("monthly")), no_data)
     return {
         "label": label,
         "main_label": "本期披露" if no_data else FIELD_LABELS.get(main_key, "数值"),
@@ -165,6 +211,7 @@ def build_metric(key: str, raw: dict | None) -> dict | None:
         "hint": hint,
         "items": [i for i in items if i["key"] != main_key and not i["empty"]],
         **info,
+        **asof,
     }
 
 

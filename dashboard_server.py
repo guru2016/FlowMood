@@ -221,6 +221,99 @@ def live_ranking(limit=30):
 
 _METRIC_CACHE: dict = {'at': 0.0, 'data': None}
 METRIC_TTL = 120.0
+BREADTH_TTL = 25.0
+_BREADTH_CACHE: dict = {'at': 0.0, 'data': None}
+
+
+def market_breadth(ttl: float = BREADTH_TTL) -> dict:
+    """盘口广度：涨跌家数 / 涨跌停 / 两市成交额 / 平均涨幅。
+
+    这一层才是**真·实时**的：同花顺那 11 项「核心指标」里，大盘资金、两融、
+    市场温度都是日频，同花顺收盘后才补当天的点，盘中看到的一定是上一交易日
+    收盘值。想让盘中看到「现在的市场」，只能自己从全市场行情算。
+
+    收盘后行情停在上一次收盘，算出来的自然就是收盘广度，不需要另走一套逻辑。
+    """
+    now = time.time()
+    cached = _BREADTH_CACHE.get('data')
+    if cached and now - float(_BREADTH_CACHE.get('at') or 0) < ttl:
+        return dict(cached, cached=True)
+    try:
+        import live_quotes as lq
+        quotes, at = lq.fetch_quotes_cached(ttl=ttl)
+    except Exception as exc:  # noqa: BLE001
+        return {'error': f'行情不可达：{exc}'}
+    if not quotes:
+        return {'error': '行情为空'}
+    up = down = flat = 0
+    limit_up = limit_down = strong = weak = 0
+    amount = 0.0
+    pcts: list[float] = []
+    for q in quotes.values():
+        pct = q.get('f3')
+        if pct is None:
+            continue
+        try:
+            pct = float(pct)
+        except (TypeError, ValueError):
+            continue
+        pcts.append(pct)
+        if pct > 0.001:
+            up += 1
+        elif pct < -0.001:
+            down += 1
+        else:
+            flat += 1
+        # 涨跌停按 9.8% 近似：主板 10cm / 创业板科创板 20cm 都落在阈值外，
+        # ST 的 5cm 会被漏计，所以只作为「封板强度」参考，不当成精确家数。
+        if pct >= 9.8:
+            limit_up += 1
+        elif pct <= -9.8:
+            limit_down += 1
+        if pct >= 5:
+            strong += 1
+        elif pct <= -5:
+            weak += 1
+        try:
+            amount += float(q.get('f6') or 0.0)
+        except (TypeError, ValueError):
+            pass
+    trading, why = lq.is_trading_now()
+    now = time.time()          # 重新取，别用 fetch 之前的时刻，否则 age 会算出负数
+    total = len(pcts)
+    if not total:
+        return {'error': '行情无涨跌幅字段'}
+    pcts.sort()
+    # 会话只区分「数据是不是今天的」：早盘/午盘中是真在跳，午间休市是上午收盘的
+    # 定格值，三种都属于「今天」。收盘后/未开盘才是上一个交易日的结论。
+    if trading:
+        session, session_label = 'trading', why
+    elif why == '午间休市':
+        session, session_label = 'break', '午间休市·上午收盘'
+    elif why == '未开盘':
+        session, session_label = 'pre_open', '未开盘·昨收数据'
+    elif why == '周末':
+        session, session_label = 'closed', '休市·上周收盘'
+    else:
+        session, session_label = 'closed', '已收盘'
+    data = {
+        'count': total,
+        'up': up, 'down': down, 'flat': flat,
+        'limit_up': limit_up, 'limit_down': limit_down,
+        'strong': strong, 'weak': weak,
+        'amount_yi': round(amount / 1e8, 1),
+        'avg_change': round(sum(pcts) / total, 2),
+        'median_change': round(pcts[total // 2], 2),
+        'ratio': round(up / max(1, down), 2),
+        'quote_at': datetime.fromtimestamp(at).isoformat(timespec='seconds') if at else '',
+        'quote_age_sec': max(0, int(now - at)) if at else None,
+        'session': session,
+        'session_label': session_label,
+        'cached': False,
+    }
+    _BREADTH_CACHE['at'] = now
+    _BREADTH_CACHE['data'] = data
+    return data
 
 
 def metrics_live(ttl: float = METRIC_TTL) -> dict:
@@ -229,36 +322,48 @@ def metrics_live(ttl: float = METRIC_TTL) -> dict:
     这些指标（大盘资金、两融余额、市场温度…）是**日频**数据，同花顺在收盘后
     才补当天的点。旧做法是把指标跟着报告一起序列化，报告 15:10 生成后页面就一直
     停在那一刻，第二天看还是前一天、甚至更早的日期。这里每次按 TTL 去上游取最新，
-    页面照实显示数据的真实日期，不假装它是盘中实时值。
+    页面照实显示数据的真实日期与口径（今日 / 昨收 / 停更），不假装它是盘中实时值。
+
+    盘中真正能实时的是盘口广度（涨跌家数、涨跌停、成交额），单独由
+    ``market_breadth`` 从全市场行情算，一起返回给前端。
     """
     now = time.time()
+    breadth = market_breadth()
     cached = _METRIC_CACHE.get('data')
     if cached and now - float(_METRIC_CACHE.get('at') or 0) < ttl:
         out = dict(cached)
         out['cached'] = True
+        out['breadth'] = breadth
         return out
 
     try:
         from daily_runner import BASE, METRICS, fetch_json, latest_chart
         from metric_display import metrics_from_raw
     except Exception as exc:  # noqa: BLE001
-        return {'metrics': [], 'error': f'指标模块加载失败：{exc}'}
+        return {'metrics': [], 'breadth': breadth, 'error': f'指标模块加载失败：{exc}'}
 
     raw: dict[str, dict] = {}
     errors: list[str] = []
     for key in METRICS:
         try:
-            raw[key] = latest_chart(fetch_json(f'{BASE}{key}.json'))
+            # latest_chart 会把「整期没数」的指标返回空字典（例如市场融资最近
+            # 全是未来占位行）。给个空 date 占位，卡片照旧显示「本期未披露」，
+            # 不要让它从 11 项里悄悄消失。
+            raw[key] = latest_chart(fetch_json(f'{BASE}{key}.json')) or {'date': ''}
         except Exception as exc:  # noqa: BLE001
             errors.append(f'{key}: {exc}')
     if not raw:
-        return {'metrics': [], 'error': '指标接口全部不可达', 'errors': errors[:3]}
+        return {'metrics': [], 'breadth': breadth,
+                'error': '指标接口全部不可达', 'errors': errors[:3]}
 
+    metrics = metrics_from_raw(raw)
     data = {
-        'metrics': metrics_from_raw(raw),
+        'metrics': metrics,
+        'breadth': breadth,
         'fetched_at': datetime.now().isoformat(timespec='seconds'),
-        'source': '同花顺 dapan_v3',
+        'source': '同花顺 dapan_v3 + 全市场行情',
         'count': len(raw),
+        'realtime_count': sum(1 for m in metrics if m.get('asof_today')),
         'errors': errors[:3],
         'cached': False,
     }

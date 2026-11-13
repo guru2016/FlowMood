@@ -251,10 +251,34 @@
     }
     var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     return {
-      date_full: full, date_text: short,
+      date_full: full, date_text: short, monthly: monthly,
       future: !!(parsed && parsed > today),
       stale: !!(parsed && (today - parsed) / 86400000 > (monthly ? 95 : 30))
     };
+  }
+  // 与 metric_display._asof 同口径：今日 / 昨收 / N日前 / 停更 / 预告
+  function mAsOf(info, noData) {
+    if (noData) return { asof_label: '未披露', asof_today: false };
+    if (info.future) return { asof_label: '预告', asof_today: false };
+    if (info.stale) return { asof_label: '停更', asof_today: false };
+    if (!info.date_full) return { asof_label: '', asof_today: false };
+    var s = String(info.date_full).replace(/-/g, '');
+    var parsed;
+    if (s.length === 8) parsed = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8));
+    else if (s.length === 6) parsed = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, 1);
+    else return { asof_label: '', asof_today: false };
+    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var days = Math.round((today - parsed) / 86400000);
+    var label;
+    if (days === 0) label = '今日';
+    else if (info.monthly) label = days <= 31 ? '本月' : Math.max(1, Math.round(days / 30)) + '月前';
+    else {
+      var prev = new Date(today.getTime() - 86400000);
+      while (prev.getDay() === 0 || prev.getDay() === 6) prev = new Date(prev.getTime() - 86400000);
+      if (+parsed === +prev) label = '昨收';
+      else label = days <= 3 ? days + '日前' : '历史';
+    }
+    return { asof_label: label, asof_today: days === 0 };
   }
   function buildMetric(key, raw) {
     if (!raw || !MET_SPEC[key]) return null;
@@ -279,7 +303,9 @@
       label: label, main_label: no_data ? '本期披露' : (FIELD_LABELS[chosen.key] || '数值'),
       main_value: no_data ? '暂无数据' : chosen.value, main_tone: no_data ? 'flat' : chosen.tone,
       main_key: chosen ? chosen.key : mainField, no_data: no_data, hint: hint,
-      date_text: info.date_text, date_full: info.date_full, items: items
+      date_text: info.date_text, date_full: info.date_full, items: items,
+      asof_label: mAsOf(info, no_data).asof_label,
+      asof_today: mAsOf(info, no_data).asof_today
     };
   }
   function metricsLive() {
@@ -302,6 +328,10 @@
       if (!ok) return { metrics: [], error: '指标接口不可达（浏览器直连被拦）' };
       var data = {
         metrics: MET_KEYS.map(function (k) { return buildMetric(k, raw[k]); }).filter(Boolean),
+        // 静态托管没有后端，也没有全市场扫描：盘口广度（涨跌家数/涨跌停/成交额）
+        // 要逐页拉五千只，20 秒一轮会把上游打爆。如实标注「需本地服务」，
+        // 不要拿榜单那 100 只算个假的广度糊弄。
+        breadth: { unavailable: true, note: '盘口广度需本地服务' },
         fetched_at: bjIso(), source: '同花顺 dapan_v3（浏览器直连）', count: ok, cached: false
       };
       MET.at = Date.now(); MET.data = data;
