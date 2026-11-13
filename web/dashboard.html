@@ -301,7 +301,8 @@ const pctTag=v=>v==null?'<span class="muted">--</span>':`<span class="${v>0?'up'
 const selTime=o=>{const s=o&&o.selected_at;if(!s)return '<span class="muted">--</span>';const t=String(s).slice(11,19);const tag=o.selected_new?'<span class="newtag">新</span>':'';return `<span class="seltime" title="入选 ${esc(String(s).replace('T',' '))}">${esc(t)}</span>${tag}`};
 const hhmmss=s=>String(s||'').slice(11,19)||'--:--:--';
 
-const S={status:{},reports:{},rank:{},sections:{},rests:{},session:'midday',prev:[],stream:[],first:true,ticks:0,digestShown:false,lastDigest:'',openSym:null};
+const S={status:{},reports:{},rank:{},sections:{},rests:{},session:'midday',prev:[],stream:[],first:true,ticks:0,digestShown:false,lastDigest:'',openSym:null,
+ liveMetrics:null,liveAt:'',liveErr:''};
 let timer=null, auto=true;
 
 // ---------------------------------------------------------------- 个股索引
@@ -450,9 +451,14 @@ function renderMd(text){if(!text)return '<p class="muted-line">该时段暂无�
  if(inUl)out.push('</ul>');return out.join('')}
 
 // ---------------------------------------------------------------- 核心指标卡片
-function renderMetrics(){const r=S.reports[S.session],ms=(r&&r.metrics)||[],el=$('metrics');
- if(!ms.length){el.innerHTML='<span class="pill is-empty">该时段未生成核心指标</span>';$('metricsbar').textContent='--';return}
- $('metricsbar').textContent=`${S.session==='midday'?'午盘':'收盘'}口径 · ${ms.length} 项 · 中文结果（悬停看辅助字段与日期）`;
+function renderMetrics(){const r=S.reports[S.session];
+ const live=Array.isArray(S.liveMetrics)&&S.liveMetrics.length;
+ const ms=live?S.liveMetrics:((r&&r.metrics)||[]),el=$('metrics');
+ if(!ms.length){el.innerHTML='<span class="pill is-empty">该时段未生成核心指标</span>';$('metricsbar').textContent=S.liveErr?('指标拉取失败：'+S.liveErr):'--';return}
+ const oldest=ms.map(m=>String(m.date_full||'')).filter(Boolean).sort().pop()||'';
+ $('metricsbar').textContent=live
+  ?`实时拉取 ${S.liveAt} · ${ms.length} 项 · 日频数据，显示各自真实日期${oldest?'（最新 '+oldest+'）':''}`
+  :`${S.session==='midday'?'午盘':'收盘'}口径 ${r?('· 生成于 '+String(r.generated_at||'').replace('T',' ').slice(5,16)):''} · ${ms.length} 项`;
  el.innerHTML=ms.map(m=>{
   const tone=m.main_tone==='up'?'up':m.main_tone==='down'?'down':'';
   const extra=(m.items||[]).map(i=>`${i.label} ${i.value}`).join(' · ');
@@ -567,7 +573,19 @@ function updateTicker(){const x=S.rank||{},s=x.stats||{},lv=x.live_merge||{};
  $('nextrefresh').textContent=`下次刷新约 20 秒后 · 已刷新 ${S.ticks} 次`;
  const ge=Number(s.ge72)||0;$('kpi-regimetag').textContent=`≥72 分 ${s.ge72??'--'} 只`;
  $('kpi-regimebar').style.width=Math.min(100,ge/2)+'%';drawSpark()}
-async function refreshAll(){await Promise.all([load(),loadReports()]);await loadRank();
+// 核心指标单独向服务端要一份「现拉」的：报告里的那份是生成时冻住的，
+// 隔夜看就会停在昨天的日期。这里只对本地/VPS 生效，Pages 无后端就沿用报告值。
+async function loadMetricsLive(){
+ if(FM.mode==='static')return;
+ try{
+  const x=await FM.get('/api/metrics');
+  if(x&&Array.isArray(x.metrics)&&x.metrics.length){
+   S.liveMetrics=x.metrics;S.liveAt=hhmmss(x.fetched_at)||'';S.liveErr=''
+  }else{S.liveErr=(x&&x.error)||'返回为空'}
+ }catch(e){S.liveErr=String(e&&e.message||e)}
+ renderMetrics()
+}
+async function refreshAll(){await Promise.all([load(),loadReports()]);await loadRank();await loadMetricsLive();
  rebuildSecurities();if(S.openSym)renderStock(S.openSym);updateTicker()}
 function toggleAuto(){auto=$('autoflow').checked;if(FM.mode==='static')return;
  if(timer)clearInterval(timer);timer=null;if(auto)timer=setInterval(()=>{if(auto)refreshAll()},20000)}

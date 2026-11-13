@@ -219,6 +219,55 @@ def live_ranking(limit=30):
     return data
 
 
+_METRIC_CACHE: dict = {'at': 0.0, 'data': None}
+METRIC_TTL = 120.0
+
+
+def metrics_live(ttl: float = METRIC_TTL) -> dict:
+    """现拉核心指标，而不是读报告里那份生成时就冻住的值。
+
+    这些指标（大盘资金、两融余额、市场温度…）是**日频**数据，同花顺在收盘后
+    才补当天的点。旧做法是把指标跟着报告一起序列化，报告 15:10 生成后页面就一直
+    停在那一刻，第二天看还是前一天、甚至更早的日期。这里每次按 TTL 去上游取最新，
+    页面照实显示数据的真实日期，不假装它是盘中实时值。
+    """
+    now = time.time()
+    cached = _METRIC_CACHE.get('data')
+    if cached and now - float(_METRIC_CACHE.get('at') or 0) < ttl:
+        out = dict(cached)
+        out['cached'] = True
+        return out
+
+    try:
+        from daily_runner import BASE, METRICS, fetch_json, latest_chart
+        from metric_display import metrics_from_raw
+    except Exception as exc:  # noqa: BLE001
+        return {'metrics': [], 'error': f'指标模块加载失败：{exc}'}
+
+    raw: dict[str, dict] = {}
+    errors: list[str] = []
+    for key in METRICS:
+        try:
+            raw[key] = latest_chart(fetch_json(f'{BASE}{key}.json'))
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f'{key}: {exc}')
+    if not raw:
+        return {'metrics': [], 'error': '指标接口全部不可达', 'errors': errors[:3]}
+
+    data = {
+        'metrics': metrics_from_raw(raw),
+        'fetched_at': datetime.now().isoformat(timespec='seconds'),
+        'source': '同花顺 dapan_v3',
+        'count': len(raw),
+        'errors': errors[:3],
+        'cached': False,
+    }
+    # 有新数据才覆盖缓存，避免一次网络抖动把好的那份冲掉
+    _METRIC_CACHE['at'] = now
+    _METRIC_CACHE['data'] = data
+    return data
+
+
 def extra_quotes(raw: str) -> dict:
     """报告里的标的不一定在 Top100 榜单里，个股详情弹窗仍要能显示实时价。
 
@@ -253,6 +302,13 @@ class Handler(BaseHTTPRequestHandler):
         path = parsed.path
         if path == '/api/status': self.send_json(status()); return
         if path == '/api/reports': self.send_json(reports()); return
+        if path == '/api/metrics':
+            qs = parse_qs(parsed.query)
+            try:
+                ttl = max(0.0, min(float(qs.get('ttl', [str(METRIC_TTL)])[0]), 1800.0))
+            except (TypeError, ValueError):
+                ttl = METRIC_TTL
+            self.send_json(metrics_live(ttl)); return
         if path == '/api/ranking':
             qs = parse_qs(parsed.query)
             try:
