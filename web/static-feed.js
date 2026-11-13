@@ -193,6 +193,122 @@
       });
   }
 
+  // ---- 核心指标：浏览器直连同花顺 dapan_v3 ----
+  // 该接口返回 Access-Control-Allow-Origin: *，静态页也能现拉，不依赖任何后端。
+  // 指标本身是日频（收盘后补当日点），所以只照实显示每条自己的数据日期，
+  // 不把昨天的值标成今天的。
+  var MET_SPEC = {
+    sjdp_market_capital: ['大盘资金', 'net_inflow', ['net_inflow', 'szzz']],
+    sjdp_north_capital: ['北向资金', 'net_inflow', ['net_purchase', 'net_inflow', 'szzz']],
+    sjdp_temperature_hs: ['市场情绪', 'temperature', ['temperature']],
+    sjdp_rzrq: ['融资融券', 'jlr', ['lrye', 'jlr', 'szzz']],
+    sjdp_new_investors: ['新增开户', 'invest', ['invest', 'szzz']],
+    sjdp_market_financing: ['市场融资', 'bond', ['ipo', 'add', 'bond', 'szzz']],
+    sjdp_lift_the_ban: ['限售解禁', 'lift_the_ban', ['lift_the_ban', 'szzz']],
+    sjdp_increase_or_decrease: ['增减持', 'zjc', ['zjc', 'szzz']],
+    sjdp_new_fund_size: ['新增基金', 'new_fund_size', ['new_fund_size', 'szzz']],
+    sjdp_reverse_repurchase: ['逆回购', 'jtf', ['jtf', 'jhg', 'szzz']],
+    sjdp_dollar_rmb: ['美元人民币', 'dollar_rmb', ['dollar_rmb', 'szzz']]
+  };
+  var FIELD_LABELS = {
+    net_inflow: '净流入', net_purchase: '净买额', szzz: '上证指数', temperature: '市场温度',
+    lrye: '两融余额', jlr: '净流入', invest: '新增开户数', ipo: 'IPO 募资', add: '增发',
+    bond: '债券融资', lift_the_ban: '解禁规模', zjc: '增减持', new_fund_size: '新增基金规模',
+    jtf: '净投放', jhg: '净回购', dollar_rmb: '美元/人民币'
+  };
+  var SIGNED = { net_inflow: 1, net_purchase: 1, jlr: 1, zjc: 1, jtf: 1, jhg: 1 };
+  var MET_BASE = 'https://eq.10jqka.com.cn/open/api/dapan_v3/chart/';
+  var MET_TTL = 120000;
+  var MET_KEYS = Object.keys(MET_SPEC);
+  var MET = { at: 0, data: null };
+
+  function mNum(v) { var n = Number(v); return (v === null || v === '' || !isFinite(n)) ? null : n; }
+  function mTone(f, v) {
+    var n = mNum(v);
+    if (f === 'temperature' && n !== null) return n >= 70 ? 'up' : n <= 30 ? 'down' : 'flat';
+    if (SIGNED[f] && n !== null) return n > 0 ? 'up' : n < 0 ? 'down' : 'flat';
+    return 'flat';
+  }
+  function mDisplay(f, v) {
+    if (v === null || v === '') return '—';
+    var n = mNum(v); if (n === null) return String(v);
+    var raw = String(v).trim();
+    var text = raw.indexOf('.') >= 0 ? n.toFixed(2) : String(Math.round(n));
+    var parts = text.split('.'), int = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    text = parts.length > 1 ? int + '.' + parts[1] : int;
+    if (SIGNED[f] && n > 0) text = '+' + text;
+    return text;
+  }
+  function mDate(raw) {
+    var s = String(raw == null ? '' : raw).trim(), full = s, short = s, parsed = null, monthly = false;
+    if (/^\d{8}$/.test(s)) {
+      parsed = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8));
+      full = s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8);
+      short = s.slice(4, 6) + '-' + s.slice(6, 8);
+    } else if (/^\d{6}$/.test(s)) {
+      full = s.slice(0, 4) + '-' + s.slice(4, 6); short = full; monthly = true;
+      parsed = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, 1);
+    }
+    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return {
+      date_full: full, date_text: short,
+      future: !!(parsed && parsed > today),
+      stale: !!(parsed && (today - parsed) / 86400000 > (monthly ? 95 : 30))
+    };
+  }
+  function buildMetric(key, raw) {
+    if (!raw || !MET_SPEC[key]) return null;
+    var spec = MET_SPEC[key], label = spec[0], mainField = spec[1];
+    var items = spec[2].filter(function (f) { return f in raw; }).map(function (f) {
+      return { key: f, label: FIELD_LABELS[f] || f, value: mDisplay(f, raw[f]),
+               tone: mTone(f, raw[f]), empty: raw[f] === null || raw[f] === '' };
+    });
+    var chosen = null;
+    items.forEach(function (i) { if (!chosen && i.key === mainField && !i.empty) chosen = i; });
+    if (!chosen) items.forEach(function (i) { if (!chosen && i.key !== 'szzz' && !i.empty) chosen = i; });
+    var no_data = !chosen;
+    var info = mDate(raw.date), hint = '';
+    if (no_data) hint = '本期未披露';
+    else if (info.future) hint = '预告';
+    else if (info.stale) hint = '历史数据';
+    else if (chosen && chosen.key === 'temperature') {
+      var t = mNum(raw.temperature);
+      hint = (t !== null && t >= 70) ? '偏热' : (t !== null && t <= 30) ? '偏冷' : '中性';
+    }
+    return {
+      label: label, main_label: no_data ? '本期披露' : (FIELD_LABELS[chosen.key] || '数值'),
+      main_value: no_data ? '暂无数据' : chosen.value, main_tone: no_data ? 'flat' : chosen.tone,
+      main_key: chosen ? chosen.key : mainField, no_data: no_data, hint: hint,
+      date_text: info.date_text, date_full: info.date_full, items: items
+    };
+  }
+  function metricsLive() {
+    if (MET.data && Date.now() - MET.at < MET_TTL) return Promise.resolve(MET.data);
+    return Promise.all(MET_KEYS.map(function (key) {
+      return fetch(MET_BASE + key + '.json', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (body) {
+          var d = (body && body.data) || {}, ks = d.point_key_list || [], pts = d.point_list || [];
+          if (!pts.length) return null;
+          var row = pts[pts.length - 1], out = {};
+          ks.forEach(function (k, i) { out[k] = row[i]; });
+          out.__key = key;
+          return out;
+        })
+        .catch(function () { return null; });
+    })).then(function (rows) {
+      var raw = {}, ok = 0;
+      rows.forEach(function (r) { if (r) { raw[r.__key] = r; ok++; } });
+      if (!ok) return { metrics: [], error: '指标接口不可达（浏览器直连被拦）' };
+      var data = {
+        metrics: MET_KEYS.map(function (k) { return buildMetric(k, raw[k]); }).filter(Boolean),
+        fetched_at: bjIso(), source: '同花顺 dapan_v3（浏览器直连）', count: ok, cached: false
+      };
+      MET.at = Date.now(); MET.data = data;
+      return data;
+    });
+  }
+
   // ---- 与 dashboard_server.py 同形的接口 ----
   window.FM = {
     mode: 'static',
@@ -200,6 +316,7 @@
     get: function (path) {
       var url = String(path || ''), q = url.indexOf('?');
       var qs = new URLSearchParams(q >= 0 ? url.slice(q + 1) : '');
+      if (url.indexOf('/api/metrics') === 0) return metricsLive();
       if (url.indexOf('/api/reports') === 0) return Promise.resolve({ reports: BOOT.reports || {} });
       if (url.indexOf('/api/status') === 0) return Promise.resolve(BOOT.status || {});
       if (url.indexOf('/api/ranking') === 0) {

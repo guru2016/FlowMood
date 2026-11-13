@@ -573,10 +573,10 @@ function updateTicker(){const x=S.rank||{},s=x.stats||{},lv=x.live_merge||{};
  $('nextrefresh').textContent=`下次刷新约 20 秒后 · 已刷新 ${S.ticks} 次`;
  const ge=Number(s.ge72)||0;$('kpi-regimetag').textContent=`≥72 分 ${s.ge72??'--'} 只`;
  $('kpi-regimebar').style.width=Math.min(100,ge/2)+'%';drawSpark()}
-// 核心指标单独向服务端要一份「现拉」的：报告里的那份是生成时冻住的，
-// 隔夜看就会停在昨天的日期。这里只对本地/VPS 生效，Pages 无后端就沿用报告值。
+// 核心指标单独要一份「现拉」的：报告里的那份是生成时冻住的，
+// 隔夜看就会停在昨天的日期。本地服务走 /api/metrics，Pages 由 static-feed.js
+// 在浏览器里直连同花顺（该接口带 CORS），两条路返回同一形状。
 async function loadMetricsLive(){
- if(FM.mode==='static')return;
  try{
   const x=await FM.get('/api/metrics');
   if(x&&Array.isArray(x.metrics)&&x.metrics.length){

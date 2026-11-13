@@ -145,7 +145,12 @@ def test_static_page() -> None:
         html = out.read_text(encoding="utf-8")
         check("入选时间" in html and "评分" in html, "静态看板含「入选时间」列")
         check("市场核心指标" in html, "静态看板含核心指标胶囊条")
-        check("sjdp_" not in html, "静态页不含指标代码名")
+        # 原意是「别把 sjdp_* 代码名和 JSON 串当内容显示」。静态层的 JS 源码里
+        # 当然要出现这些接口键（浏览器直连指标接口要用），所以只断言数据载荷：
+        # 内嵌的 FLOWMOOD_BOOT 里不能再夹带原始代码名/原始字典。
+        boot = html.split("window.FLOWMOOD_BOOT", 1)[-1].split("</script>", 1)[0]
+        check("sjdp_" not in boot, "静态页数据载荷不含指标代码名")
+        check("大盘资金" in html and "融资融券" in html, "静态页指标以中文名展示")
         check("FlowMood" in html, "静态看板标题正确")
         for key, label in (("kpi-grid", "KPI 卡区"), ("core-strip", "指标胶囊条"),
                            ("main-panel", "标签页主面板"), ("right-sidebar", "右侧实时流侧栏"),
