@@ -97,6 +97,57 @@ def _live_status() -> dict:
             "summary": {}, "alerts": {}, "auto": auto}
 
 
+# 全市场评分基座：七维评分里「一天只变一次」的那部分量。
+# 盘中会变的是价格/成交额/换手/资金流，由浏览器现拉；这些不随盘中变化，
+# 随页面下发一次就够，静态页因此能在浏览器里对全市场重算评分。
+BASE_KEYS = ("symbol", "name", "price", "prev_close", "high", "low",
+             "avg_amount20", "atr14", "ma20", "high20", "pivot_price",
+             "trend_consistency", "sector", "limit_up")
+
+# 评分与动作判定用到的策略参数，原样下发，保证浏览器端与本地同一条阈值线。
+CONFIG_KEYS = ("require_leader", "require_independent_confirmation", "min_strong_sectors",
+               "strong_sector_score_min", "min_breakout_volume_ratio", "min_trend_consistency",
+               "min_principle_pass_rate", "max_ma_deviation_pct", "max_distance_from_breakout_pct",
+               "cooldown_days", "avoid_repeat_signal", "min_sentiment_delta",
+               "max_crowding_score", "require_breakout_confirmation", "min_turnover_pct",
+               "max_amount_ratio", "score_weights", "buy_score_min", "watch_score_min",
+               "max_change_pct", "max_atr_pct", "market_score_min_buy",
+               "min_target_space_pct", "max_stop_pct", "min_risk_reward", "risk_budget_pct",
+               "max_exposure", "commission_bps", "slippage_bps")
+
+
+def _base_pack() -> dict | None:
+    """打包全市场日线统计字段，供浏览器端重算七维评分。
+
+    没有快照文件（云端采集失败、或者仓库里没同步）时返回 None，
+    静态层会自动降级成「只刷行情、榜单沿用定稿」，不会拿半份数据假装能重排。
+    """
+    path = ROOT / "normalized_snapshots.json"
+    rows = _json(path)
+    if not isinstance(rows, list) or not rows:
+        return None
+    pack: list[list] = []
+    for r in rows:
+        if not isinstance(r, dict) or not r.get("symbol"):
+            continue
+        line = []
+        for key in BASE_KEYS:
+            v = r.get(key)
+            if isinstance(v, float):
+                v = round(v, 4)
+            line.append(v)
+        pack.append(line)
+    if len(pack) < 500:      # 明显残缺的快照不拿出来评分
+        return None
+    return {"v": 1, "keys": list(BASE_KEYS), "rows": pack,
+            "snapshot_at": (_json(ROOT / "normalized_snapshots_meta.json", {}) or {}).get("generated_at", "")}
+
+
+def _score_config() -> dict:
+    cfg = _json(ROOT / "strategy_config.json", {}) or {}
+    return {k: cfg[k] for k in CONFIG_KEYS if k in cfg}
+
+
 def collect_payload(source: Path | None = None) -> tuple[dict, str]:
     """优先用本机真实产出；没有（例如 GitHub Actions 云端采集失败）就用仓库示例。"""
     source = Path(source) if source else ROOT / "auto_output" / "latest_ranking.json"
@@ -124,6 +175,10 @@ def collect_payload(source: Path | None = None) -> tuple[dict, str]:
         "ranking": ranking,
         "source_label": label,
         "generated_at": ranking.get("generated_at", ""),
+        # 静态层拿这两样在浏览器里重算全市场评分；缺任一就自动降级为
+        # 「只刷行情、榜单沿用定稿」，绝不拿半份数据假装能重排。
+        "base": _base_pack(),
+        "config": _score_config(),
     }
     return boot, label
 
@@ -146,11 +201,16 @@ def render_html(boot: dict) -> str:
         boot["status"] = st
     tpl = (WEB / "dashboard.html").read_text(encoding="utf-8")
     feed = (WEB / "static-feed.js").read_text(encoding="utf-8")
+    engine = (WEB / "score-engine.js").read_text(encoding="utf-8")
     if PLACEHOLDER not in tpl:
         raise RuntimeError("web/dashboard.html 缺少 FLOWMOOD_BOOT 注入点")
-    blob = json.dumps(boot, ensure_ascii=False).replace("</", "<\\/")
-    inject = ("<!-- 静态模式：内嵌快照 + 浏览器端实时行情源；页面模板与本地看板同源 -->\n"
+    # 紧凑分隔符：全市场基座是大头，去掉 ", " / ": " 这些空格能省几十 KB
+    blob = json.dumps(boot, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    # 顺序有意义：score-engine 定义 window.FMScore，static-feed 依赖它重算评分，
+    # 所以引擎必须排在前面。
+    inject = ("<!-- 静态模式：内嵌快照 + 浏览器端全市场评分引擎；页面模板与本地看板同源 -->\n"
               f"<script>window.FLOWMOOD_BOOT={blob};</script>\n"
+              f"<script>\n{engine}\n</script>\n"
               f"<script>\n{feed}\n</script>\n")
     return tpl.replace(PLACEHOLDER, inject)
 

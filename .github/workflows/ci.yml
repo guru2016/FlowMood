@@ -51,6 +51,15 @@ jobs:
           test -s normalized_snapshots.json
           python auto_rank.py --top 30 --quiet
 
+      - name: 评分引擎对账（浏览器端 JS 与本地 Python 逐只比对）
+        timeout-minutes: 8
+        run: |
+          if [ -s normalized_snapshots.json ]; then
+            python tests/score_parity.py --live
+          else
+            echo "无全市场快照（云端采集未成功），跳过对账"
+          fi
+
       - name: 用本地同一条流水线产出研究报告
         continue-on-error: true
         timeout-minutes: 10
@@ -70,7 +79,7 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           keys = ('午盘报告', '收盘报告', '实时分析流', '该时段候选计划',
-                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间', '市场核心指标',
+                  'FLOWMOOD_BOOT', 'quotebridge_v2_realhead', '入选时间', '核心指标',
                   'openStock', 'showTab', 'stkchip', 'splitReport', 'extra_quotes')
           for k in keys:
               assert k in h, f'静态页缺少 {k}'
@@ -80,6 +89,17 @@ jobs:
           assert 'sjdp_' not in boot, '静态页数据载荷不应出现指标代码名'
           assert '大盘资金' in h and '融资融券' in h, '指标应以中文名展示'
           assert 'loadMetricsLive' in h, '静态页应支持现拉核心指标'
+          # 浏览器端评分引擎：Pages 能不能「和本地一样实时重排」全靠它
+          assert 'FMScore' in h, '静态页应包含浏览器端七维评分引擎'
+          assert 'applyQuotes' in h and 'makeSelectionBook' in h, '评分引擎应完整移植'
+          # 基座存在（云端采集成功）时，评分依赖的日线统计字段必须一起下发，
+          # 否则浏览器端只能拿默认值打分，算出来的分和本地对不上。
+          if '"base":' in boot:
+              for k in ('avg_amount20', 'pivot_price', 'trend_consistency', 'high20'):
+                  assert k in boot, f'评分基座缺少 {k}'
+              print('评分基座已随页面下发')
+          else:
+              print('本次未取到全市场快照：静态页将降级为「刷行情不重排」')
           print(f'静态页自检通过：{len(h)} bytes，关键区块齐全，指标已中文化')
           PY
 

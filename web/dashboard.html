@@ -467,7 +467,7 @@ function renderBreadth(){
  const el=$('breadth');if(!el)return;
  const b=S.breadth;
  if(b&&b.unavailable){
-  el.innerHTML=`<span class="pill is-empty" title="静态托管没有全市场扫描，20 秒拉五千只不现实">${esc(b.note||'盘口广度需本地服务')}</span>`;return}
+  el.innerHTML=`<span class="pill is-empty" title="全市场行情首次返回前，这里先留空，不拿榜单那 100 只凑一个假广度">${esc(b.note||'盘口广度：等待行情')}</span>`;return}
  if(!b||b.error||!b.count){
   el.innerHTML='<span class="pill is-empty">盘口广度 --</span>';return}
  const tone=v=>v>0?'up':v<0?'down':'';
@@ -560,12 +560,25 @@ async function loadRank(){try{const lim=$('ranklimit').value,live=$('ranklive').
  const flowNote=x.flow_source==='defined'?' · <span class="warn">资金流为定稿值</span>':'';
  // 云端 Pages 拿不到全市场采集时会回退仓库示例定稿：成分是固定的，
  // 必须显式说清日期，否则会被误读成「今天排名没更新」。
- const sampleNote=(x.source_label&&x.source_label!=='Actions 采集')
+ // 只有「连全市场基座都没有」时才说成分固定。有基座却拿不到行情是另一回事：
+ // 那是网络问题，不是数据源缺失，说成「未取到全市场行情」会误导。
+ const sampleNote=(x.source_label&&x.source_label!=='Actions 采集'&&!x.base_at)
   ?`<br><span class="warn">⚠ 云端未取到全市场行情，当前展示 ${esc(rankAt)} 的定稿快照（成分与名次固定不变），价格仍由浏览器直连刷新</span>`:'';
- const badge=FM.mode==='static'
-  ?`<span class="down">● 实时行情</span> 20s 刷新 · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span> · 榜单成分与名次不随盘中行情重排${flowNote}${warn}${sampleNote}`
-  :x.live?`<span class="down">● 实时重排</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${flowNote}${warn}`
-  :`<span class="muted">○ 收盘定稿</span> ${esc(String(x.snapshot_at||'').replace('T',' '))}${x.live_reason?'（'+esc(x.live_reason)+'）':''}${flowNote}`;
+ // Pages 上如果浏览器端拿到全市场行情并把七维评分重算了一遍（ranking_live），
+ // 那就是真的在重排，可以照本地口径标「实时重排」；否则如实退回定稿口径。
+ const liveRe=FM.mode==='static'?!!x.ranking_live:!!x.live;
+ let badge;
+ if(FM.mode==='static'&&liveRe){
+  badge=`<span class="down">● 实时重排</span> 浏览器内全市场重算 · 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只`
+   +(x.base_at?` · 日线基座 ${esc(String(x.base_at).slice(0,10))}`:'')+flowNote+warn;
+ }else if(FM.mode==='static'){
+  badge=`<span class="down">● 实时行情</span> · <span class="warn">○ 评分定稿 ${esc(rankAt)}</span>`
+   +(x.live_reason?`（${esc(x.live_reason)}）`:'')+flowNote+warn+sampleNote;
+ }else if(x.live){
+  badge=`<span class="down">● 实时重排</span> ${esc(x.live_reason||'')} 行情 ${esc(qtime)} · 覆盖 ${lv.hit||0}/${lv.total||0} 只${flowNote}${warn}`;
+ }else{
+  badge=`<span class="muted">○ 收盘定稿</span> ${esc(String(x.snapshot_at||'').replace('T',' '))}${x.live_reason?'（'+esc(x.live_reason)+'）':''}${flowNote}`;
+ }
  $('rankstat').innerHTML=`${badge}<br>样本 ${s.count} 只 · 最高 <b>${num(s.max)}</b> · 中位 ${num(s.median)} · 标准差 ${num(s.stdev)} · ≥72 分 <b>${s.ge72}</b> 只 · ${esc(act)}`;
  const rows=x.ranking||[];$('rankrows').innerHTML=rows.length?rows.map(p=>`<tr><td class="n">${p.rank}</td><td>${stkCell(p)}</td><td>${selTime(p)}</td><td class="n"><b>${num(p.score)}</b></td><td class="${p.action==='条件买入'?'buy':p.action==='重点观察'?'watch':'drop'}">${esc(p.action)}</td><td class="n">${pctTag(p.change_pct)}</td><td class="n">${pctTag(p.money_flow_pct)}</td><td>${esc(p.sector)}</td><td class="n">${num(p.space_pct,1)}%</td><td class="n">${num(p.stop_pct)}%</td><td><button class="detail-btn" data-sym="${esc(secKey(p.symbol))}">详情</button></td></tr>`).join(''):'<tr><td colspan="11" class="muted">暂无排名数据</td></tr>';
  $('livebadge').innerHTML=badge;$('quotesrc').innerHTML=`数据源 <b>${esc(x.quote_source||(x.live?'行情接口':'快照文件'))}</b> · 行情时间 <b>${esc(qtime)}</b>`;

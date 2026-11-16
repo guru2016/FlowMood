@@ -156,11 +156,150 @@
       return r.name + ' ' + (r.money_flow_pct > 0 ? '+' : '') + Number(r.money_flow_pct).toFixed(2) + '%'; }).join('、') });
     out.push({ kind: 'buy', text: '榜单内条件买入 ' + buys + ' 只 · Top30 最集中板块 ' + topSec[0] + '（' + topSec[1] + ' 只）' });
     out.push({ kind: 'heart', text: '行情通道 ' + FEED.source + ' · 覆盖 ' + FEED.hit + '/' + FEED.total + ' 只 · ' + (FEED.at || '--') });
-    out.push({ kind: 'warn', text: '在线演示版：价格 / 涨跌 / 资金流为浏览器直连实时行情，评分沿用最近一次快照评分' });
+    if (UNIVERSE.length) {
+      out.push({ kind: 'warn', text: MARKET_SCORED
+        ? '静态托管：全市场 ' + UNIVERSE.length + ' 只行情浏览器直连，七维评分在本地浏览器重算（公式与本地看板同源）'
+        : '静态托管：盘口已实时，七维评分 ' + (PHASE.key === 'auction' ? '09:30 起重算（竞价无成交额）' : '待行情返回后重算') });
+    } else {
+      out.push({ kind: 'warn', text: '在线演示版：价格 / 涨跌 / 资金流为浏览器直连实时行情，评分沿用最近一次快照评分' });
+    }
     return out;
   }
 
-  function refresh() {
+  // ---- 全市场基座：七维评分里「一天只变一次」的那部分量 ----
+  // build_static.py 把 5000+ 只的 atr14 / ma20 / high20 / pivot_price /
+  // trend_consistency / avg_amount20 打进页面；盘中会变的只有价格、成交额、
+  // 换手、资金流，那些由下面现拉。两者一拼，浏览器就能对全市场重算评分。
+  var BASE = BOOT.base || null;
+  var SCORE_CFG = BOOT.config || {};
+  var UNIVERSE = [];
+  var MARKET_STATS = null;
+  var MARKET_BREADTH = null;
+  var MARKET_SCORED = false;
+  var MARKET_AT = '';
+  var PHASE = { key: 'closed', label: '—', live: false, scored: false };
+
+  (function buildUniverse() {
+    if (!BASE || !Array.isArray(BASE.rows) || !BASE.rows.length) return;
+    var keys = BASE.keys;
+    var out = [];
+    for (var i = 0; i < BASE.rows.length; i++) {
+      var line = BASE.rows[i], r = {};
+      for (var k = 0; k < keys.length; k++) r[keys[k]] = line[k];
+      if (!r.symbol) continue;
+      r.code = codeOf(r.symbol);
+      r.limit_up = !!r.limit_up;
+      out.push(r);
+    }
+    UNIVERSE = out;
+  })();
+
+  // 入选时间落 localStorage：刷新页面后仍在榜的标的保持原入选时刻，
+  // 否则每刷一次整榜都会显示「刚刚入选」，那个字段就失去意义了。
+  var STORE = null;
+  try { STORE = window.localStorage; STORE.setItem('__fm_probe', '1'); STORE.removeItem('__fm_probe'); }
+  catch (e) { STORE = null; }
+  var SELECT = (window.FMScore && window.FMScore.makeSelectionBook(STORE)) || function () { };
+
+  var BATCH_SIZE = 400;      // 单次 ulist.np 的代码数（实测 300 只可全量返回，留余量）
+  var BATCH_CONC = 6;        // 并发批次数
+
+  // 全市场批量行情：按代码列表分批请求，而非 clist 翻页。
+  // clist 每页硬上限 100 条，5000 只要 56 个请求；按代码列表一次能带 300+，
+  // 同样的覆盖面只要十几个请求，刷新频率才可能做到一分钟级别。
+  function marketQuotes(secids) {
+    var groups = [];
+    for (var i = 0; i < secids.length; i += BATCH_SIZE) groups.push(secids.slice(i, i + BATCH_SIZE));
+    var out = {}, idx = 0, okBatches = 0;
+    function next() {
+      if (idx >= groups.length) return Promise.resolve();
+      var g = groups[idx++];
+      var cb = 'FM_MK' + Math.random().toString(36).slice(2, 8);
+      var url = 'https://push2.eastmoney.com/api/qt/ulist.np/get?cb=' + cb +
+        '&fltt=2&invt=2&secids=' + encodeURIComponent(g.join(',')) +
+        '&fields=f2,f3,f6,f8,f12,f14,f15,f16,f17,f18,f100,f184';
+      return jsonp(url, cb, 9000).then(function (res) {
+        var diff = res && res.data && res.data.diff;
+        if (diff && diff.length) {
+          okBatches++;
+          for (var j = 0; j < diff.length; j++) {
+            var r = diff[j], c = String(r.f12 || '');
+            if (c.length !== 6) continue;
+            var item = {
+              f2: num(r.f2), f3: num(r.f3), f6: num(r.f6), f8: num(r.f8),
+              f14: r.f14, f15: num(r.f15), f16: num(r.f16), f17: num(r.f17),
+              f18: num(r.f18), f100: r.f100
+            };
+            // 资金流缺失时不要塞 null 占位：applyQuotes 见到 f184 键在就会当成
+            // 「资金流是 0」，全市场资金维度会集体归零。让键干脆不存在，
+            // 那边会自动退回基座值。
+            if (r.f184 !== undefined && r.f184 !== null && r.f184 !== '-') item.f184 = num(r.f184);
+            out[c] = item;
+          }
+        }
+      }).then(next, next);
+    }
+    var workers = [];
+    for (var w = 0; w < BATCH_CONC; w++) workers.push(next());
+    return Promise.all(workers).then(function () {
+      return { quotes: out, ok: okBatches, total: groups.length };
+    });
+  }
+
+  // 盘口广度：涨跌家数、涨跌停、两市成交额、均涨/中位。
+  // 收盘后行情定格，这里算出来的自然就是收盘广度，不需要另写一套收盘逻辑。
+  function breadthOf(rows, ph) {
+    var up = 0, down = 0, flat = 0, lu = 0, ld = 0, strong = 0, weak = 0;
+    var amount = 0, pcts = [];
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i], pct = r.change_pct;
+      if (pct === null || pct === undefined || !isFinite(pct)) continue;
+      pcts.push(pct);
+      if (pct > 0.001) up++; else if (pct < -0.001) down++; else flat++;
+      // 涨跌停按 9.8% 近似：ST 的 5cm 会漏计，只当封板强度参考
+      if (pct >= 9.8) lu++; else if (pct <= -9.8) ld++;
+      if (pct >= 5) strong++; else if (pct <= -5) weak++;
+      var a = Number(r.amount);
+      if (isFinite(a)) amount += a;
+    }
+    var total = pcts.length;
+    if (!total) return { error: '行情无涨跌幅字段' };
+    pcts.sort(function (a, b) { return a - b; });
+    var sum = 0;
+    for (var k = 0; k < total; k++) sum += pcts[k];
+    return {
+      count: total, up: up, down: down, flat: flat,
+      limit_up: lu, limit_down: ld, strong: strong, weak: weak,
+      amount_yi: Math.round(amount / 1e6) / 100,
+      amount_label: ph.key === 'auction' ? '竞价成交' : '两市成交',
+      avg_change: Math.round(sum / total * 100) / 100,
+      median_change: Math.round(pcts[Math.floor(total / 2)] * 100) / 100,
+      ratio: Math.round(up / Math.max(1, down) * 100) / 100,
+      session: ph.key, session_label: ph.label,
+      live: ph.live, score_ready: ph.scored,
+      quote_at: MARKET_AT, cached: false
+    };
+  }
+
+  // 把内部状态写在 <html data-fm-*> 上：不占界面，但无头浏览器 / 冒烟测试
+  // 一眼就能看出「基座有没有加载、行情通不通、评分有没有真重算」，
+  // 不用去猜页面上那句话到底是被渲染了还是被兜底了。
+  function markState() {
+    try {
+      var ds = document.documentElement.dataset;
+      ds.fmMode = 'static';
+      ds.fmUniverse = String(UNIVERSE.length);
+      ds.fmBaseAt = (BASE && BASE.snapshot_at) || '';
+      ds.fmLive = FEED.live ? '1' : '0';
+      ds.fmScored = MARKET_SCORED ? '1' : '0';
+      ds.fmSource = FEED.source || '';
+      ds.fmHit = String(FEED.hit || 0);
+      ds.fmPhase = PHASE ? PHASE.key : '';
+      ds.fmReason = FEED.reason || '';
+    } catch (e) { /* 极端环境（无 DOM）忽略 */ }
+  }
+
+  function refreshLegacy() {
     var symbols = FEED.rows.map(function (r) { return r.symbol; }).concat(EXTRA);
     if (!symbols.length) return Promise.resolve();
     return emBatch(symbols).then(function (em) {
@@ -189,8 +328,98 @@
         FEED.at = bjIso();
         FEED.failStreak = ok ? 0 : FEED.failStreak + 1;
         FEED.digest = buildDigest();
+        markState();
         if (typeof window.FM.onTick === 'function') window.FM.onTick();
       });
+  }
+
+  // 全市场路径：一次拉五千只，同时喂「盘口广度」和「七维重排」两件事。
+  function refreshMarket(ph) {
+    var secids = UNIVERSE.map(function (r) { return secid(r.symbol); });
+    return marketQuotes(secids).then(function (res) {
+      var hit = Object.keys(res.quotes).length;
+      var total = UNIVERSE.length;
+      FEED.at = bjIso();
+      MARKET_AT = FEED.at;
+      FEED.hit = hit;
+      FEED.total = total;
+      if (hit < total * 0.5) {
+        // 大面积失败时不拿半份数据重排：那会算出一份看起来正常、实际漏了半个市场的榜单
+        FEED.live = false;
+        FEED.source = 'partial';
+        // 只写 reason：warning 会和 reason 一起渲染，两份同文案会重复显示
+        FEED.warning = '';
+        FEED.reason = '行情源返回不足（' + hit + '/' + total + '），榜单沿用上一轮';
+        FEED.failStreak++;
+        FEED.digest = buildDigest();
+        markState();
+        if (typeof window.FM.onTick === 'function') window.FM.onTick();
+        return;
+      }
+      FEED.failStreak = 0;
+      FEED.quotes = res.quotes;
+      FEED.source = 'eastmoney_ulist';
+      FEED.live = true;
+      FEED.reason = ph.label;
+      FEED.warning = res.ok < res.total ? '有 ' + (res.total - res.ok) + ' 批行情未返回，成分沿用基座值' : '';
+
+      var applied = window.FMScore.applyQuotes(UNIVERSE, res.quotes);
+      var live = applied.rows;
+      MARKET_BREADTH = breadthOf(live, ph);
+
+      if (ph.scored) {
+        var market = window.FMScore.fn((BOOT.ranking || {}).market_score, 58.35);
+        var ranked = window.FMScore.rank(live, {
+          market_score: market, session: 'close', config: SCORE_CFG, limit: 100
+        });
+        SELECT(ranked.ranking, 100);
+        FEED.rows = ranked.ranking;
+        MARKET_STATS = ranked.stats;
+        MARKET_SCORED = true;
+      } else {
+        // 集合竞价 / 未开盘：盘口照刷，评分沿用构建时的定稿
+        MARKET_SCORED = false;
+      }
+
+      // 报告里点开的个股不一定在 Top100 里，行情单独带一份出去
+      FEED.extraQuotes = {};
+      EXTRA.forEach(function (sym) {
+        var q = res.quotes[codeOf(sym)];
+        if (!q) return;
+        FEED.extraQuotes[sym] = {
+          price: q.f2, change_pct: q.f3, money_flow_pct: q.f184,
+          turnover_pct: q.f8, sector: q.f100
+        };
+      });
+
+      FEED.digest = buildDigest();
+      markState();
+      if (typeof window.FM.onTick === 'function') window.FM.onTick();
+    }).catch(function (e) {
+      FEED.live = false;
+      FEED.source = 'unavailable';
+      FEED.reason = '行情源不可用：' + String((e && e.message) || e);
+      FEED.failStreak++;
+      markState();
+      if (typeof window.FM.onTick === 'function') window.FM.onTick();
+    });
+  }
+
+  function refresh() {
+    PHASE = window.FMScore.phase();
+    // 有全市场基座就走重排路径；没有（CI 采集失败、仓库未同步快照）就退回
+    // 「只刷榜单那 100 只的行情」——宁可说清楚能力有限，也不假装能重排。
+    if (UNIVERSE.length) return refreshMarket(PHASE);
+    return refreshLegacy();
+  }
+
+  // 刷新节奏跟着时段走：交易时段一分钟，其余时间拉一次就够，
+  // 没必要让一个后台标签页每分钟耗掉一兆流量。
+  function schedule() {
+    var ms = PHASE.live ? 60000 : 300000;
+    setTimeout(function () {
+      refresh().catch(function () { }).then(schedule);
+    }, ms);
   }
 
   // ---- 核心指标：浏览器直连同花顺 dapan_v3 ----
@@ -308,16 +537,63 @@
       asof_today: mAsOf(info, no_data).asof_today
     };
   }
+  // 排期类指标：解禁看的是「下一批什么时候来」，取最近一个未来点并标「预告」
+  var FUTURE_PREFERRED = { sjdp_lift_the_ban: 1 };
+
+  // 北京时间今天 YYYYMMDD（指标日期是不带分隔的 8 位数字）
+  function bjToday() {
+    return bjIso().slice(0, 10).replace(/-/g, '');
+  }
+
+  // 取「该显示的那一个点」，规则与 daily_runner.latest_chart 一致：
+  // 不能无脑取末条——限售解禁返回的是未来排期，市场融资夹带未来占位行，
+  // 取末条会把「三个月后解禁 346 亿」当成今天的解禁规模显示。
+  function pickPoint(key, keys, points) {
+    var valueKeys = keys.filter(function (k) { return k !== 'date' && k !== 'szzz'; });
+    if (!valueKeys.length) valueKeys = keys.filter(function (k) { return k !== 'date'; });
+    var today = bjToday();
+    function isZero(v) {
+      if (v === null || v === undefined || v === '') return true;
+      var n = Number(v);
+      return isFinite(n) && n === 0;
+    }
+    var dated = [];
+    points.forEach(function (p) {
+      var row = {};
+      keys.forEach(function (k, i) { row[k] = p[i]; });
+      var vals = valueKeys.map(function (k) { return row[k]; });
+      if (vals.every(function (v) { return v === null || v === undefined || v === ''; })) return;
+      var d = String(row.date || '');
+      // 未来日期且各字段全 0 的是占位行，不是真实披露
+      if (d > today && vals.every(isZero)) return;
+      dated.push([d, row]);
+    });
+    if (!dated.length) return null;
+    if (!dated.some(function (x) { return x[0]; })) return dated[dated.length - 1][1];
+    var future = dated.filter(function (x) { return x[0] > today; })
+      .sort(function (a, b) { return a[0] < b[0] ? -1 : 1; });
+    var past = dated.filter(function (x) { return x[0] && x[0] <= today; })
+      .sort(function (a, b) { return a[0] < b[0] ? 1 : -1; });
+    if (FUTURE_PREFERRED[key] && future.length) return future[0][1];
+    if (past.length) return past[0][1];
+    if (future.length) return future[0][1];
+    return dated[dated.length - 1][1];
+  }
+
   function metricsLive() {
-    if (MET.data && Date.now() - MET.at < MET_TTL) return Promise.resolve(MET.data);
+    if (MET.data && Date.now() - MET.at < MET_TTL) {
+      // 缓存里那份 metrics 是日频，可以复用；盘口广度是分钟级，必须用当前值
+      return Promise.resolve(Object.assign({}, MET.data, { breadth: MARKET_BREADTH }));
+    }
     return Promise.all(MET_KEYS.map(function (key) {
       return fetch(MET_BASE + key + '.json', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
         .then(function (body) {
           var d = (body && body.data) || {}, ks = d.point_key_list || [], pts = d.point_list || [];
           if (!pts.length) return null;
-          var row = pts[pts.length - 1], out = {};
-          ks.forEach(function (k, i) { out[k] = row[i]; });
+          var out = pickPoint(key, ks, pts);
+          if (!out) return null;
+          out = Object.assign({}, out);
           out.__key = key;
           return out;
         })
@@ -325,13 +601,13 @@
     })).then(function (rows) {
       var raw = {}, ok = 0;
       rows.forEach(function (r) { if (r) { raw[r.__key] = r; ok++; } });
-      if (!ok) return { metrics: [], error: '指标接口不可达（浏览器直连被拦）' };
+      if (!ok) {
+        return { metrics: [], error: '指标接口不可达（浏览器直连被拦）', breadth: MARKET_BREADTH };
+      }
       var data = {
         metrics: MET_KEYS.map(function (k) { return buildMetric(k, raw[k]); }).filter(Boolean),
-        // 静态托管没有后端，也没有全市场扫描：盘口广度（涨跌家数/涨跌停/成交额）
-        // 要逐页拉五千只，20 秒一轮会把上游打爆。如实标注「需本地服务」，
-        // 不要拿榜单那 100 只算个假的广度糊弄。
-        breadth: { unavailable: true, note: '盘口广度需本地服务' },
+        // 盘口广度由全市场行情现算（见 refreshMarket），不再拿榜单那 100 只凑数
+        breadth: MARKET_BREADTH || { unavailable: true, note: '盘口广度：等待行情首次返回' },
         fetched_at: bjIso(), source: '同花顺 dapan_v3（浏览器直连）', count: ok, cached: false
       };
       MET.at = Date.now(); MET.data = data;
@@ -352,19 +628,23 @@
       if (url.indexOf('/api/ranking') === 0) {
         var limit = Math.max(1, Math.min(parseInt(qs.get('limit') || '30', 10) || 30, 100));
         var base = BOOT.ranking || {};
+        // 重排是否生效，取决于「有没有全市场基座」+「这一轮行情够不够」+「时段允不允许」，
+        // 三者缺一就如实退回定稿口径，不把一份不会动的榜单标成实时。
+        var ranked = MARKET_SCORED && FEED.live;
         return Promise.resolve(Object.assign({}, base, {
           ranking: FEED.rows.slice(0, limit),
-          returned: Math.min(limit, FEED.rows.length), available: FEED.rows.length,
+          returned: Math.min(limit, FEED.rows.length),
+          available: MARKET_STATS ? MARKET_STATS.count : FEED.rows.length,
+          stats: MARKET_STATS || base.stats,
           live: FEED.live, live_reason: FEED.reason, quote_at: FEED.at,
           quote_source: FEED.source, live_warning: FEED.warning,
-          live_merge: { hit: FEED.hit, total: FEED.total, elapsed: 1 },
-          // live 只代表「行情是实时的」，不代表「排名被重排过」。静态页没有
-          // 后端算七维评分，榜单成分/名次是构建那一刻的定稿，必须如实区分，
-          // 否则会把一份不会动的榜单标成「● 实时」让人误判。
-          ranking_live: false,
-          ranking_at: base.generated_at || '',
-          ranking_basis: base.ranking_basis || 'defined_snapshot',
-          flow_source: base.flow_source || 'defined',
+          live_merge: { hit: FEED.hit, total: FEED.total, elapsed: window.FMScore.elapsedRatio() },
+          breadth: MARKET_BREADTH,
+          ranking_live: ranked,
+          ranking_at: ranked ? MARKET_AT : (base.generated_at || ''),
+          ranking_basis: ranked ? 'intraday_recalc' : (base.ranking_basis || 'defined_snapshot'),
+          flow_source: ranked ? 'live' : (base.flow_source || 'defined'),
+          base_at: (BASE && BASE.snapshot_at) || '',
           extra_quotes: FEED.extraQuotes,
           feed_digest: FEED.digest, source_label: BOOT.source_label || '示例快照'
         }));
@@ -373,9 +653,14 @@
     },
     post: function () {
       return Promise.resolve({ ok: false, error: '在线演示版不触发流水线；请在本地或 VPS 看板运行' });
+    },
+    // 给页面用的能力自述：有没有全市场基座、能不能重排
+    capability: function () {
+      return { universe: UNIVERSE.length, can_rescore: !!(UNIVERSE.length && BASE && BASE.rows.length),
+               base_at: (BASE && BASE.snapshot_at) || '', phase: PHASE };
     }
   };
 
-  setTimeout(refresh, 400);
-  setInterval(refresh, REFRESH_MS);
+  // 首次立即拉一轮，之后按「交易时段 1 分钟 / 其余 5 分钟」自适应
+  refresh().catch(function () { }).then(schedule);
 })();
