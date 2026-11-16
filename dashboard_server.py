@@ -160,6 +160,16 @@ def live_ranking(limit=30):
         data = ranking(limit)
         data['live'] = False
         data['live_reason'] = why
+        # 集合竞价有价格但没有成交额，重算评分会让量能维度集体归零，
+        # 所以这里必须明说「盘口在跳、评分 09:30 起」，别让人以为系统卡住了。
+        try:
+            ph = lq.session_phase()
+            if ph.get('auction'):
+                data['live_reason'] = (f"{ph['label']}：盘口广度已在刷新，"
+                                       "七维评分 09:30 起（竞价无成交额）")
+                data['auction'] = True
+        except Exception:  # noqa: BLE001
+            pass
         return data
 
     # 必须先验证行情本身是不是新鲜、完整。东财间歇性限流时 fetch_quotes 会返回
@@ -278,30 +288,25 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
             amount += float(q.get('f6') or 0.0)
         except (TypeError, ValueError):
             pass
-    trading, why = lq.is_trading_now()
+    ph = lq.session_phase()                 # 展示口径（含集合竞价）
     now = time.time()          # 重新取，别用 fetch 之前的时刻，否则 age 会算出负数
     total = len(pcts)
     if not total:
         return {'error': '行情无涨跌幅字段'}
     pcts.sort()
-    # 会话只区分「数据是不是今天的」：早盘/午盘中是真在跳，午间休市是上午收盘的
-    # 定格值，三种都属于「今天」。收盘后/未开盘才是上一个交易日的结论。
-    if trading:
-        session, session_label = 'trading', why
-    elif why == '午间休市':
-        session, session_label = 'break', '午间休市·上午收盘'
-    elif why == '未开盘':
-        session, session_label = 'pre_open', '未开盘·昨收数据'
-    elif why == '周末':
-        session, session_label = 'closed', '休市·上周收盘'
-    else:
-        session, session_label = 'closed', '已收盘'
+    # session 分两件事说清楚：
+    #   live    = 这批行情是不是「今天正在形成」的（集合竞价算、收盘后不算）
+    #   trading = 现在能不能重算七维评分（只有连续竞价能，9:15 没有成交额）
+    session, session_label = ph['phase'], ph['label']
     data = {
         'count': total,
         'up': up, 'down': down, 'flat': flat,
         'limit_up': limit_up, 'limit_down': limit_down,
         'strong': strong, 'weak': weak,
         'amount_yi': round(amount / 1e8, 1),
+        # 集合竞价的成交额是撮合量级，跟全天不是一个口径，标签必须换，
+        # 否则「两市 82 亿」会让人以为今天量能崩了。
+        'amount_label': '竞价成交' if ph['auction'] else '两市成交',
         'avg_change': round(sum(pcts) / total, 2),
         'median_change': round(pcts[total // 2], 2),
         'ratio': round(up / max(1, down), 2),
@@ -309,6 +314,9 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
         'quote_age_sec': max(0, int(now - at)) if at else None,
         'session': session,
         'session_label': session_label,
+        'live': bool(ph['live']),
+        'auction': bool(ph['auction']),
+        'score_ready': bool(ph['trading']),
         'cached': False,
     }
     _BREADTH_CACHE['at'] = now

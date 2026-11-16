@@ -472,16 +472,15 @@ function renderBreadth(){
   el.innerHTML='<span class="pill is-empty">盘口广度 --</span>';return}
  const tone=v=>v>0?'up':v<0?'down':'';
  const sess=String(b.session||'');
- // trading / break 都是「今天」的数（午间休市只是上午收盘那一刻的定格），
- // 收盘后与未开盘才是上一交易日的结论。
- const live=sess==='trading'||sess==='break';
+ // live 由后端给（集合竞价 / 午间休市 都算「今天的数」），trading 只代表能否重算评分。
+ const live=b.live!==undefined?!!b.live:(sess==='trading'||sess==='break');
  const badge=live
-  ?`<span class="pill is-live">${sess==='trading'?'●':'◐'} ${esc(b.session_label||'盘中实时')}</span>`
+  ?`<span class="pill is-live" title="${b.score_ready===false?'集合竞价无成交额，七维评分 09:30 起重算':'行情实时刷新中'}">${sess==='trading'?'●':'◐'} ${esc(b.session_label||'盘中实时')}</span>`
   :`<span class="pill">○ ${esc(b.session_label||'收盘定稿')}</span>`;
  const parts=[
   `<span class="pill" title="全市场 ${b.count} 只，涨跌比 ${b.ratio}">涨 <b class="up">${b.up}</b> <span style="color:var(--text-muted)">/</span> 跌 <b class="down">${b.down}</b>${b.flat?` <span style="color:var(--text-muted)">平 ${b.flat}</span>`:''}</span>`,
   `<span class="pill" title="按 9.8% 近似的封板家数，ST 5cm 会漏计">涨停 <b class="up">${b.limit_up}</b> <span style="color:var(--text-muted)">/</span> 跌停 <b class="down">${b.limit_down}</b></span>`,
-  `<span class="pill" title="涨超 5% ${b.strong} 只 · 跌超 5% ${b.weak} 只">两市 <b>${fmtYi(b.amount_yi)}</b></span>`,
+  `<span class="pill" title="涨超 5% ${b.strong} 只 · 跌超 5% ${b.weak} 只">${esc(b.amount_label||'两市成交')} <b>${fmtYi(b.amount_yi)}</b></span>`,
   `<span class="pill" title="中位涨跌 ${b.median_change==null?'--':b.median_change+'%'}">均涨 <b class="${tone(b.avg_change)}">${b.avg_change>0?'+':''}${b.avg_change}%</b></span>`,
   badge
  ];

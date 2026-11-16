@@ -51,6 +51,10 @@ PAGE_SIZE = 100
 # A 股交易时段（不含集合竞价，判断"现在该不该刷实时"够用）
 MORNING = (dtime(9, 30), dtime(11, 30))
 AFTERNOON = (dtime(13, 0), dtime(15, 0))
+# 完整时钟：9:15 集合竞价开始 → 9:20 不可撤单 → 9:25 出开盘价 → 9:30 连续竞价
+AUCTION = (dtime(9, 15), dtime(9, 25))
+AUCTION_LOCK = dtime(9, 20)      # 9:20 之后不可撤单，虚拟撮合价才接近真实
+OPEN_CALL = (dtime(9, 25), dtime(9, 30))
 
 _lock = threading.Lock()
 _cache: dict = {"at": 0.0, "data": {}, "source": "eastmoney"}
@@ -79,7 +83,12 @@ def num(value, default: float = 0.0) -> float:
 
 
 def is_trading_now(now: datetime | None = None) -> tuple[bool, str]:
-    """返回 (是否在交易时段, 原因)。周末直接判否，节假日靠日K判断由调用方决定。"""
+    """返回 (是否在交易时段, 原因)。周末直接判否，节假日靠日K判断由调用方决定。
+
+    这是**评分门禁**，只认连续竞价 9:30–11:30 / 13:00–15:00。集合竞价虽然
+    有撮合价，但没有成交额，用它重算七维评分会让量能维度集体归零。
+    想判断「现在能不能看盘口」用 session_phase()。
+    """
     now = now or datetime.now()
     if now.weekday() >= 5:
         return False, "周末"
@@ -93,6 +102,46 @@ def is_trading_now(now: datetime | None = None) -> tuple[bool, str]:
     if MORNING[1] < t < AFTERNOON[0]:
         return False, "午间休市"
     return False, "已收盘"
+
+
+def session_phase(now: datetime | None = None) -> dict:
+    """当前处在交易时钟的哪一段——给「看盘口」用，不参与评分门禁。
+
+    盘口广度（涨跌家数、竞价涨停/高开家数）在 9:15 集合竞价就有信息：
+    9:25 开盘价一出来，市场当天的强弱态度基本定了，比 9:30 再看晚 5 分钟。
+    但那个时点全市场成交额≈0，拿来算七维评分会把量能维度打崩，所以
+    ``trading``（能否重算评分）与 ``live``（数据是不是今天的、在不在跳）分开。
+
+    返回 {phase, label, trading, live, auction}。
+    """
+    now = now or datetime.now()
+    if now.weekday() >= 5:
+        return {"phase": "closed", "label": "周末休市", "trading": False,
+                "live": False, "auction": False}
+    t = now.time()
+    if t < AUCTION[0]:
+        return {"phase": "pre_open", "label": "未开盘", "trading": False,
+                "live": False, "auction": False}
+    if t < AUCTION_LOCK:
+        return {"phase": "auction", "label": "集合竞价·可撤单", "trading": False,
+                "live": True, "auction": True}
+    if t < AUCTION[1]:
+        return {"phase": "auction", "label": "集合竞价·不可撤单", "trading": False,
+                "live": True, "auction": True}
+    if t < OPEN_CALL[1]:
+        return {"phase": "open_call", "label": "开盘价已定·待连续竞价",
+                "trading": False, "live": True, "auction": True}
+    if MORNING[0] <= t <= MORNING[1]:
+        return {"phase": "trading", "label": "早盘", "trading": True,
+                "live": True, "auction": False}
+    if MORNING[1] < t < AFTERNOON[0]:
+        return {"phase": "break", "label": "午间休市·上午收盘", "trading": False,
+                "live": True, "auction": False}
+    if AFTERNOON[0] <= t <= AFTERNOON[1]:
+        return {"phase": "trading", "label": "午盘", "trading": True,
+                "live": True, "auction": False}
+    return {"phase": "closed", "label": "已收盘", "trading": False,
+            "live": False, "auction": False}
 
 
 def _curl_page(page: int, timeout: float = 8.0, retries: int = 3) -> tuple[list[dict], int]:
