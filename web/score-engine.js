@@ -163,6 +163,9 @@
       var avg20 = fn(base.avg_amount20, 0);
       var amountRatio = avg20 > 0 ? amount / (avg20 * el) : 1.0;
       var cap = /^(30|68)/.test(code) ? 19.5 : 9.5;
+      // 涨停价由源头部直给（腾讯 q= 的第 48/49 个字段），有它就按价判：
+      // 涨跌幅近似对 ST（5cm）和北交所（30cm）是错的，按价判才不漏不多。
+      var luP = fn(item.lu, 0), ldP = fn(item.ld, 0);
       var row = Object.assign({}, base);
       row.price = round(price, 4);
       row.prev_close = round(prev, 4);
@@ -176,7 +179,9 @@
       row.amount_ratio = round(amountRatio, 4);
       row.breakout_volume_ratio = round(amountRatio, 4);
       row.sector = String(item.f100 || base.sector || '未分类');
-      row.limit_up = changePct >= cap;
+      row.limit_up_price = luP > 0 ? round(luP, 4) : null;
+      row.limit_down_price = ldP > 0 ? round(ldP, 4) : null;
+      row.limit_up = luP > 0 ? price >= luP - 0.005 : changePct >= cap;
       return row;
     });
     return { rows: out, hit: hit, miss: miss, elapsed: el };

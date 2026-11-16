@@ -117,6 +117,22 @@
     return Promise.all(workers).then(function () { return out; });
   }
 
+  // 按代码列表顺序拉腾讯行情（串行分批，给「只刷榜单 100 只」的降级路径用）
+  function txBatch(codes) {
+    var groups = [];
+    for (var i = 0; i < codes.length; i += TX_BATCH_SIZE) {
+      groups.push(codes.slice(i, i + TX_BATCH_SIZE).map(txSymbol));
+    }
+    var out = {};
+    return groups.reduce(function (p, g) {
+      return p.then(function () {
+        return txGroup(g).then(function (q) {
+          if (q) for (var k in q) out[k] = q[k];
+        });
+      });
+    }, Promise.resolve()).then(function () { return out; });
+  }
+
   function applyQuotes() {
     var hit = 0;
     FEED.rows.forEach(function (r) {
@@ -203,64 +219,187 @@
 
   var BATCH_SIZE = 400;      // 单次 ulist.np 的代码数（实测 300 只可全量返回，留余量）
   var BATCH_CONC = 6;        // 并发批次数
+  var TX_BATCH_SIZE = 400;   // 腾讯单批代码数（实测 800 只照返，留一半余量压 URL 长度）
+  var TX_BATCH_CONC = 4;
+
+  // 腾讯代码前缀：沪 sh / 深 sz / 北交所 bj
+  function txSymbol(symbol) {
+    var c = codeOf(symbol), s = String(symbol || '');
+    if (s.indexOf('.SH') >= 0 || /^(5|6|9)/.test(c)) return 'sh' + c;
+    if (/^(4|8)/.test(c)) return 'bj' + c;
+    return 'sz' + c;
+  }
+
+  // ---- 备用主通道：腾讯批量报价 ----
+  // 东财在部分网络整链不可达（macOS 上 TLS 直接被 RST，http 也一样），
+  // 而腾讯这家回 access-control-allow-origin: *、且不校验 Referer，
+  // 是「浏览器直连能通、一次又能给几百只」的全市场行情源。
+  // 它比东财多给三样东西：涨停价 / 跌停价（封板家数不用再按涨跌幅猜，
+  // ST 的 5cm 和北交所的 30cm 都不会算错）、量比、换手率真值。
+  var TX_RE = /v_(?:sh|sz|bj)(\d{6})="([^"]*)"/g;
+  function txParse(text) {
+    var out = {}, m;
+    TX_RE.lastIndex = 0;
+    while ((m = TX_RE.exec(text))) {
+      var p = m[2].split('~');
+      if (p.length < 50) continue;
+      var price = num(p[3]), prev = num(p[4]);
+      if (!(price > 0) || !(prev > 0)) continue;      // 停牌 / 无报价
+      var amt = num(p[37]), vol = num(p[6]);
+      out[m[1]] = {
+        f2: price, f18: prev,
+        // 涨跌幅按价格自算，不用源头的 p[32]：服务端那条通道也是这么算的，
+        // 两边取不同来源会让涨停判定和追涨惩罚在 0.001 级上漂移。
+        f3: Math.round((price / prev - 1) * 100000) / 1000,
+        f17: num(p[5]), f15: num(p[33]), f16: num(p[34]),
+        f6: amt == null ? null : amt * 1e4,           // 万元 → 元
+        f5: vol == null ? null : vol * 100,           // 手 → 股
+        f8: num(p[38]), f14: p[1],
+        lu: num(p[47]), ld: num(p[48]), vr: num(p[49]),
+        // 外盘 / 内盘（手）：主动买、主动卖的成交量。全市场汇总就是盘中
+        // 资金流的原始量，不必依赖同花顺那套日频指标。
+        outer: num(p[7]), inner: num(p[8])
+      };
+    }
+    return out;
+  }
+
+  function txGroup(list) {
+    var url = 'https://qt.gtimg.cn/q=' + list.join(',');
+    return fetch(url, { cache: 'no-store' }).then(function (r) {
+      return r.ok ? r.arrayBuffer() : null;
+    }).then(function (buf) {
+      if (!buf) return null;
+      var text;
+      // 上游声明 charset=GBK：必须是先取字节再按 GBK 解，直接 r.text() 会把
+      // 中文股票名解成乱码（名称其实走基座，但乱码会污染 f14 回显）。
+      try { text = new TextDecoder('gbk').decode(buf); }
+      catch (e) { text = new TextDecoder('utf-8').decode(buf); }
+      var parsed = txParse(text);
+      return Object.keys(parsed).length ? parsed : null;
+    }).catch(function () { return null; });
+  }
 
   // 全市场批量行情：按代码列表分批请求，而非 clist 翻页。
   // clist 每页硬上限 100 条，5000 只要 56 个请求；按代码列表一次能带 300+，
   // 同样的覆盖面只要十几个请求，刷新频率才可能做到一分钟级别。
-  function marketQuotes(secids) {
+  function emGroup(ids) {
+    var cb = 'FM_MK' + Math.random().toString(36).slice(2, 8);
+    var url = 'https://push2.eastmoney.com/api/qt/ulist.np/get?cb=' + cb +
+      '&fltt=2&invt=2&secids=' + encodeURIComponent(ids.join(',')) +
+      '&fields=f2,f3,f6,f8,f12,f14,f15,f16,f17,f18,f100,f184';
+    return jsonp(url, cb, 9000).then(function (res) {
+      var diff = res && res.data && res.data.diff;
+      if (!diff || !diff.length) return null;
+      var out = {};
+      for (var j = 0; j < diff.length; j++) {
+        var r = diff[j], c = String(r.f12 || '');
+        if (c.length !== 6) continue;
+        var item = {
+          f2: num(r.f2), f3: num(r.f3), f6: num(r.f6), f8: num(r.f8),
+          f14: r.f14, f15: num(r.f15), f16: num(r.f16), f17: num(r.f17),
+          f18: num(r.f18), f100: r.f100
+        };
+        // 资金流缺失时不要塞 null 占位：applyQuotes 见到 f184 键在就会当成
+        // 「资金流是 0」，全市场资金维度会集体归零。让键干脆不存在，
+        // 那边会自动退回基座值。
+        if (r.f184 !== undefined && r.f184 !== null && r.f184 !== '-') item.f184 = num(r.f184);
+        out[c] = item;
+      }
+      return Object.keys(out).length ? out : null;
+    }, function () { return null; });
+  }
+
+  // 东财整轮；先只打第一批探路，通了再并发其余批。
+  // 不探路的话，东财被墙时 13 批各等 9 秒，一轮刷新要两分钟，页面看着像卡死。
+  function emMarketQuotes(secids) {
     var groups = [];
     for (var i = 0; i < secids.length; i += BATCH_SIZE) groups.push(secids.slice(i, i + BATCH_SIZE));
-    var out = {}, idx = 0, okBatches = 0;
+    return emGroup(groups[0]).then(function (first) {
+      if (!first || Object.keys(first).length < groups[0].length * 0.5) return null;
+      var out = first, okB = 1, idx = 1;
+      function next() {
+        if (idx >= groups.length) return Promise.resolve();
+        var g = groups[idx++];
+        return emGroup(g).then(function (q) {
+          if (q) {
+            okB++;
+            for (var k in q) out[k] = q[k];
+          }
+          return next();
+        });
+      }
+      var workers = [];
+      for (var w = 0; w < BATCH_CONC; w++) workers.push(next());
+      return Promise.all(workers).then(function () {
+        return { quotes: out, ok: okB, total: groups.length, source: 'eastmoney_ulist' };
+      });
+    });
+  }
+
+  function txMarketQuotes(rows) {
+    var list = rows.map(function (r) { return txSymbol(r.symbol); });
+    var groups = [];
+    for (var i = 0; i < list.length; i += TX_BATCH_SIZE) groups.push(list.slice(i, i + TX_BATCH_SIZE));
+    var out = {}, idx = 0, okB = 0;
     function next() {
       if (idx >= groups.length) return Promise.resolve();
       var g = groups[idx++];
-      var cb = 'FM_MK' + Math.random().toString(36).slice(2, 8);
-      var url = 'https://push2.eastmoney.com/api/qt/ulist.np/get?cb=' + cb +
-        '&fltt=2&invt=2&secids=' + encodeURIComponent(g.join(',')) +
-        '&fields=f2,f3,f6,f8,f12,f14,f15,f16,f17,f18,f100,f184';
-      return jsonp(url, cb, 9000).then(function (res) {
-        var diff = res && res.data && res.data.diff;
-        if (diff && diff.length) {
-          okBatches++;
-          for (var j = 0; j < diff.length; j++) {
-            var r = diff[j], c = String(r.f12 || '');
-            if (c.length !== 6) continue;
-            var item = {
-              f2: num(r.f2), f3: num(r.f3), f6: num(r.f6), f8: num(r.f8),
-              f14: r.f14, f15: num(r.f15), f16: num(r.f16), f17: num(r.f17),
-              f18: num(r.f18), f100: r.f100
-            };
-            // 资金流缺失时不要塞 null 占位：applyQuotes 见到 f184 键在就会当成
-            // 「资金流是 0」，全市场资金维度会集体归零。让键干脆不存在，
-            // 那边会自动退回基座值。
-            if (r.f184 !== undefined && r.f184 !== null && r.f184 !== '-') item.f184 = num(r.f184);
-            out[c] = item;
-          }
+      return txGroup(g).then(function (q) {
+        if (q) {
+          okB++;
+          for (var k in q) out[k] = q[k];
         }
-      }).then(next, next);
+        return next();
+      });
     }
     var workers = [];
-    for (var w = 0; w < BATCH_CONC; w++) workers.push(next());
+    for (var w = 0; w < TX_BATCH_CONC; w++) workers.push(next());
     return Promise.all(workers).then(function () {
-      return { quotes: out, ok: okBatches, total: groups.length };
+      return { quotes: out, ok: okB, total: groups.length, source: 'tencent_qt' };
+    });
+  }
+
+  function marketQuotes(rows) {
+    var secids = rows.map(function (r) { return secid(r.symbol); });
+    return emMarketQuotes(secids).then(function (res) {
+      if (res) return res;
+      return txMarketQuotes(rows);
     });
   }
 
   // 盘口广度：涨跌家数、涨跌停、两市成交额、均涨/中位。
   // 收盘后行情定格，这里算出来的自然就是收盘广度，不需要另写一套收盘逻辑。
-  function breadthOf(rows, ph) {
+  function breadthOf(rows, ph, quotes) {
     var up = 0, down = 0, flat = 0, lu = 0, ld = 0, strong = 0, weak = 0;
-    var amount = 0, pcts = [];
+    var amount = 0, pcts = [], exact = 0;
+    var buyAmt = 0, sellAmt = 0, flowN = 0;
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i], pct = r.change_pct;
       if (pct === null || pct === undefined || !isFinite(pct)) continue;
       pcts.push(pct);
       if (pct > 0.001) up++; else if (pct < -0.001) down++; else flat++;
-      // 涨跌停按 9.8% 近似：ST 的 5cm 会漏计，只当封板强度参考
-      if (pct >= 9.8) lu++; else if (pct <= -9.8) ld++;
+      // 源头给了涨跌停价就按价判：ST 的 5cm、北交所的 30cm 都不会算错。
+      // 只有拿不到涨跌停价（东财字段里没有）时才退回 9.8% 近似，
+      // 那时 ST 的封板会被漏计，所以要把口径如实标出来。
+      var pe = Number(r.price), luP = Number(r.limit_up_price), ldP = Number(r.limit_down_price);
+      if (luP > 0 && isFinite(pe)) {
+        exact++;
+        if (pe >= luP - 0.005) lu++;
+        else if (ldP > 0 && pe <= ldP + 0.005) ld++;
+      } else if (pct >= 9.8) lu++; else if (pct <= -9.8) ld++;
       if (pct >= 5) strong++; else if (pct <= -5) weak++;
       var a = Number(r.amount);
       if (isFinite(a)) amount += a;
+      // 主动买/主动卖：靠外盘、内盘汇总。腾讯给这两个字段，东财不给，
+      // 所以资金流只在腾讯通道下才有值，没有就留 null，不能填 0 冒充。
+      var q = quotes ? quotes[String(r.code)] : null;
+      if (q && q.outer > 0 && q.inner > 0 && q.f6 > 0 && q.f5 > 0) {
+        var avgPx = q.f6 / q.f5;                 // 成交额 / 成交量 = 均价（元/股）
+        buyAmt += q.outer * 100 * avgPx;          // 外盘单位是手
+        sellAmt += q.inner * 100 * avgPx;
+        flowN++;
+      }
     }
     var total = pcts.length;
     if (!total) return { error: '行情无涨跌幅字段' };
@@ -277,6 +416,13 @@
       ratio: Math.round(up / Math.max(1, down) * 100) / 100,
       session: ph.key, session_label: ph.label,
       live: ph.live, score_ready: ph.scored,
+      limit_exact: exact > total * 0.5,
+      flow_net_yi: flowN ? Math.round((buyAmt - sellAmt) / 1e6) / 100 : null,
+      flow_buy_yi: flowN ? Math.round(buyAmt / 1e6) / 100 : null,
+      flow_sell_yi: flowN ? Math.round(sellAmt / 1e6) / 100 : null,
+      flow_ratio: (flowN && amount) ? Math.round((buyAmt - sellAmt) / amount * 10000) / 100 : null,
+      flow_count: flowN,
+      flow_basis: '主动买卖（外盘-内盘），全市场现算',
       quote_at: MARKET_AT, cached: false
     };
   }
@@ -311,13 +457,26 @@
         FEED.warning = emCount < symbols.length ? '部分代码未返回报价，其余沿用快照价格' : '';
         return;
       }
-      // 东财整链不可用时，逐只切同花顺；已拿到的东财结果优先保留资金流字段
-      return thsBatch(need, 20).then(function (ths) {
-        var merged = Object.assign({}, ths);
-        Object.keys(em || {}).forEach(function (c) { merged[c] = Object.assign({}, ths[c], em[c]); });
-        FEED.quotes = merged;
-        FEED.source = Object.keys(ths).length ? 'ths_realhead' : 'partial';
-        FEED.warning = '东财批量报价不可用，价格来自同花顺（分钟级），资金流仍为快照值';
+      // 东财整链不可用时先走腾讯：同花顺是逐只请求（100 只就是 100 个请求），
+      // 腾讯一批 400 只，而且和东财一样不受 CORS 限制。同花顺退到最后。
+      return txBatch(need).then(function (tx) {
+        var txCount = Object.keys(tx).length;
+        if (txCount >= need.length * 0.6) {
+          var merged = Object.assign({}, tx);
+          // 已拿到的东财结果优先保留：它带实时资金流，腾讯没有
+          Object.keys(em || {}).forEach(function (c) { merged[c] = Object.assign({}, tx[c], em[c]); });
+          FEED.quotes = merged;
+          FEED.source = 'tencent_qt';
+          FEED.warning = txCount < need.length ? '部分代码未返回报价，其余沿用快照价格' : '';
+          return;
+        }
+        return thsBatch(need, 20).then(function (ths) {
+          var m2 = Object.assign({}, ths);
+          Object.keys(em || {}).forEach(function (c) { m2[c] = Object.assign({}, ths[c], em[c]); });
+          FEED.quotes = m2;
+          FEED.source = Object.keys(ths).length ? 'ths_realhead' : 'partial';
+          FEED.warning = '东财与腾讯批量报价都不可用，价格来自同花顺（分钟级），资金流仍为快照值';
+        });
       });
     }).catch(function () { FEED.quotes = {}; FEED.source = 'unavailable'; })
       .then(function () {
@@ -335,8 +494,7 @@
 
   // 全市场路径：一次拉五千只，同时喂「盘口广度」和「七维重排」两件事。
   function refreshMarket(ph) {
-    var secids = UNIVERSE.map(function (r) { return secid(r.symbol); });
-    return marketQuotes(secids).then(function (res) {
+    return marketQuotes(UNIVERSE).then(function (res) {
       var hit = Object.keys(res.quotes).length;
       var total = UNIVERSE.length;
       FEED.at = bjIso();
@@ -358,14 +516,14 @@
       }
       FEED.failStreak = 0;
       FEED.quotes = res.quotes;
-      FEED.source = 'eastmoney_ulist';
+      FEED.source = res.source || 'eastmoney_ulist';
       FEED.live = true;
       FEED.reason = ph.label;
       FEED.warning = res.ok < res.total ? '有 ' + (res.total - res.ok) + ' 批行情未返回，成分沿用基座值' : '';
 
       var applied = window.FMScore.applyQuotes(UNIVERSE, res.quotes);
       var live = applied.rows;
-      MARKET_BREADTH = breadthOf(live, ph);
+      MARKET_BREADTH = breadthOf(live, ph, res.quotes);
 
       if (ph.scored) {
         var market = window.FMScore.fn((BOOT.ranking || {}).market_score, 58.35);

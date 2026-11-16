@@ -257,7 +257,10 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
         return {'error': '行情为空'}
     up = down = flat = 0
     limit_up = limit_down = strong = weak = 0
+    exact = 0
     amount = 0.0
+    buy_amt = sell_amt = 0.0
+    flow_n = 0
     pcts: list[float] = []
     for q in quotes.values():
         pct = q.get('f3')
@@ -274,9 +277,22 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
             down += 1
         else:
             flat += 1
-        # 涨跌停按 9.8% 近似：主板 10cm / 创业板科创板 20cm 都落在阈值外，
-        # ST 的 5cm 会被漏计，所以只作为「封板强度」参考，不当成精确家数。
-        if pct >= 9.8:
+        # 源直给涨跌停价就按价判（腾讯通道有），ST 的 5cm、北交所的 30cm
+        # 都不会算错；只有拿不到涨跌停价（东财字段里没有）时才退回 9.8% 近似，
+        # 那个口径会漏计 ST 封板，所以要在返回里标出来。
+        try:
+            px = float(q.get('f2') or 0)
+        except (TypeError, ValueError):
+            px = 0.0
+        lu_p = q.get('lu') or 0
+        ld_p = q.get('ld') or 0
+        if lu_p and px > 0:
+            exact += 1
+            if px >= float(lu_p) - 0.005:
+                limit_up += 1
+            elif ld_p and px <= float(ld_p) + 0.005:
+                limit_down += 1
+        elif pct >= 9.8:
             limit_up += 1
         elif pct <= -9.8:
             limit_down += 1
@@ -288,6 +304,25 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
             amount += float(q.get('f6') or 0.0)
         except (TypeError, ValueError):
             pass
+        # 主动买 / 主动卖：交易所把每笔成交按「打到卖价还是买价」记成外盘/内盘，
+        # 这是不依赖同花顺也能拿到的**盘中**资金流原始量。口径是「主动方向」，
+        # 不分单子大小，所以它不是「主力净流入」，只是同向的强弱证据。
+        outer, inner = q.get('outer'), q.get('inner')
+        try:
+            outer, inner = float(outer or 0.0), float(inner or 0.0)
+        except (TypeError, ValueError):
+            outer = inner = 0.0
+        if outer > 0 and inner > 0:
+            try:
+                amt_i = float(q.get('f6') or 0.0)
+                vol_i = float(q.get('f5') or 0.0)
+            except (TypeError, ValueError):
+                amt_i = vol_i = 0.0
+            if amt_i > 0 and vol_i > 0:
+                avg_px = amt_i / vol_i          # 成交额/成交量 = 均价（元/股）
+                buy_amt += outer * 100 * avg_px  # 外盘单位是手
+                sell_amt += inner * 100 * avg_px
+                flow_n += 1
     ph = lq.session_phase()                 # 展示口径（含集合竞价）
     now = time.time()          # 重新取，别用 fetch 之前的时刻，否则 age 会算出负数
     total = len(pcts)
@@ -302,8 +337,16 @@ def market_breadth(ttl: float = BREADTH_TTL) -> dict:
         'count': total,
         'up': up, 'down': down, 'flat': flat,
         'limit_up': limit_up, 'limit_down': limit_down,
+        'limit_exact': exact > total * 0.5,
         'strong': strong, 'weak': weak,
         'amount_yi': round(amount / 1e8, 1),
+        # 盘中资金流：全市场内外盘现算，不依赖同花顺那 11 项日频指标
+        'flow_net_yi': round((buy_amt - sell_amt) / 1e8, 1) if flow_n else None,
+        'flow_buy_yi': round(buy_amt / 1e8, 1) if flow_n else None,
+        'flow_sell_yi': round(sell_amt / 1e8, 1) if flow_n else None,
+        'flow_ratio': round((buy_amt - sell_amt) / amount * 100, 2) if (flow_n and amount) else None,
+        'flow_count': flow_n,
+        'flow_basis': '主动买卖（外盘-内盘），全市场现算',
         # 集合竞价的成交额是撮合量级，跟全天不是一个口径，标签必须换，
         # 否则「两市 82 亿」会让人以为今天量能崩了。
         'amount_label': '竞价成交' if ph['auction'] else '两市成交',

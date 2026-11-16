@@ -133,6 +133,51 @@ def score(metrics: dict[str, dict]) -> tuple[float, str, list[str]]:
     return round(total, 2), regime, reasons
 
 
+def _offline_candidates(primary: Path | None = None) -> list[Path]:
+    """指标拉不到时的候选目录，按「新 → 旧」排。
+
+    原实现只认一个固定目录（扒包时留下的 dynamic/h5_api），于是同花顺一断连，
+    报告里的「大盘资金」「市场温度」就整体退回扒包那天（几个月前），比上一次
+    运行拿到的真实值还旧——看着像数据倒退。最近几次真实运行留下的 raw 才是
+    「最后一个已知真值」。
+    """
+    dirs: list[Path] = []
+    if primary:
+        dirs.append(primary)
+    root = Path(__file__).resolve().parent / "auto_output"
+    try:
+        raws = sorted(root.glob("*/*/raw/*"), key=lambda p: p.stat().st_mtime, reverse=True)
+    except OSError:
+        raws = []
+    dirs.extend(raws[:12])
+    return [d for d in dirs if d.is_dir()]
+
+
+def _offline_body(key: str, dirs: list[Path]) -> dict | None:
+    """从候选目录里挑「数据日期最新」的那份。
+
+    不能只按文件时间：本次运行刚写进 raw 的其实是从旧样本复制来的，文件最新
+    但数据最旧。所以逐份读出来比数据日期，取最大。
+    """
+    best: dict | None = None
+    best_date = ""
+    for d in dirs:
+        p = d / f"{key}.json"
+        if not p.exists():
+            continue
+        try:
+            body = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        try:
+            dt = str(latest_chart(body).get("date") or "")
+        except Exception:  # noqa: BLE001
+            dt = ""
+        if best is None or dt > best_date:
+            best, best_date = body, dt
+    return best
+
+
 def run(out_dir: Path, db_path: Path, proxy: str | None, stocks_path: Path | None = None, session: str = "close", offline_dir: Path | None = None, config: dict | None = None) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -148,24 +193,34 @@ def run(out_dir: Path, db_path: Path, proxy: str | None, stocks_path: Path | Non
     )""")
     conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_stock_plan_run ON stock_plan(generated_at, session, symbol)")
     latest: dict[str, dict] = {}
+    offline_dirs = _offline_candidates(offline_dir)
+    offline_used: set[str] = set()
     for key in METRICS:
         try:
             body = fetch_json(f"{BASE}{key}.json", proxy)
         except Exception:
-            fallback = (offline_dir / f"{key}.json") if offline_dir else None
-            if not fallback or not fallback.exists():
+            body = _offline_body(key, offline_dirs)
+            if body is None:
                 raise
-            body = json.loads(fallback.read_text(encoding="utf-8"))
+            offline_used.add(key)
         (raw_dir / f"{key}.json").write_text(json.dumps(body, ensure_ascii=False, indent=2), encoding="utf-8")
         latest[key] = latest_chart(body)
         insert_h5_chart(conn, parse_h5_chart(body))
     try:
         sentiment_body = fetch_json(SENTIMENT_URL, proxy)
     except Exception:
-        fallback = (offline_dir / "sentiment_1B0016.json") if offline_dir else None
-        if not fallback or not fallback.exists():
+        sentiment_body = _offline_body("sentiment", offline_dirs) or {}
+        if not sentiment_body:
+            for d in offline_dirs:
+                p = d / "sentiment_1B0016.json"
+                if p.exists():
+                    try:
+                        sentiment_body = json.loads(p.read_text(encoding="utf-8"))
+                        break
+                    except (OSError, ValueError):
+                        continue
+        if not sentiment_body:
             raise
-        sentiment_body = json.loads(fallback.read_text(encoding="utf-8"))
     (raw_dir / "sentiment_1B0016.json").write_text(json.dumps(sentiment_body, ensure_ascii=False, indent=2), encoding="utf-8")
     insert_h5_sentiment(conn, parse_h5_sentiment(sentiment_body))
     conn.commit(); conn.close()
@@ -191,7 +246,9 @@ def run(out_dir: Path, db_path: Path, proxy: str | None, stocks_path: Path | Non
                 plan.stop_price, plan.stop_pct, json.dumps(plan.reasons, ensure_ascii=False),
                 json.dumps(plan.invalid_conditions, ensure_ascii=False)))
             conn.commit(); conn.close()
-        plan_payload={'generated_at': datetime.now().isoformat(timespec='seconds'),'session':session,'market_score':market_score,'market_regime':regime,'position':('标准仓' if market_score>=60 else '轻仓' if market_score>=42 else '空仓'),'max_exposure':(1.0 if market_score>=60 else .3 if market_score>=42 else 0.0),'metrics':{k:latest[k] for k in METRICS if latest.get(k)},'plans':[plan.__dict__ for plan in plans]}
+        # 只写「有几项是离线的」，不要写接口键名：那些 sjdp_* 会随 BOOT
+        # 一起进页面源码，指标代码名不该出现在看板数据里（冒烟会拦）。
+        plan_payload={'generated_at': datetime.now().isoformat(timespec='seconds'),'session':session,'market_score':market_score,'market_regime':regime,'position':('标准仓' if market_score>=60 else '轻仓' if market_score>=42 else '空仓'),'max_exposure':(1.0 if market_score>=60 else .3 if market_score>=42 else 0.0),'metrics':{k:latest[k] for k in METRICS if latest.get(k)},'metrics_offline_count':len(offline_used),'plans':[plan.__dict__ for plan in plans]}
         (out_dir / f"stock_report_{session}_{stamp}.json").write_text(json.dumps(plan_payload, ensure_ascii=False, indent=2), encoding="utf-8")
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return report

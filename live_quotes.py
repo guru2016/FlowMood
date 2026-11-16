@@ -336,11 +336,118 @@ def _min_quotes() -> int:
     return max(100, int(len(_snapshot_codes()) * SINA_MIN_COVERAGE))
 
 
+# ---------------------------------------------------------------- 腾讯批量
+TX_URL = "https://qt.gtimg.cn/q="
+TX_BATCH = 400          # 实测 800 只照返（URL 7KB），留一半余量
+
+
+def _tx_symbol(code: str) -> str:
+    """6 位代码 -> 腾讯行情符号。沪 sh / 深 sz / 北交所 bj。"""
+    if not code:
+        return ""
+    head = code[0]
+    if head in "569":
+        return "sh" + code
+    if head in "48":
+        return "bj" + code
+    return "sz" + code
+
+
+def _tx_chunk(symbols: list[str], timeout: float = 12.0) -> list[tuple[str, list[str]]]:
+    """拉一批腾讯行情 -> [(6位代码, 字段列表)]。断连/脏数据返回空，绝不抛。"""
+    url = TX_URL + ",".join(symbols)
+    try:
+        proc = subprocess.run(
+            ["curl", "-s", "-m", str(int(timeout)), "--noproxy", "*",
+             "-H", "User-Agent: Mozilla/5.0", url],
+            capture_output=True, timeout=timeout + 3)
+        text = proc.stdout.decode("gb18030", errors="replace")
+        out = []
+        for m in re.finditer(r'v_(?:sh|sz|bj)(\d{6})="([^"]*)"', text):
+            parts = m.group(2).split("~")
+            if len(parts) >= 50 and num(parts[3]) > 0 and num(parts[4]) > 0:
+                out.append((m.group(1), parts))
+        return out
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def fetch_quotes_tencent() -> tuple[dict[str, dict], dict]:
+    """腾讯批量报价：东财整轮不可达时的主通道，字段与新浪同构、但更全。
+
+    比新浪多给三样东西：涨跌停价（封板按价判，ST 的 5cm 和北交所的 30cm
+    都不会算错——板块打分里的 limitups 就数这个）、换手率真值（新浪那份要
+    靠成交量缩放估算）、量比。资金流与行业腾讯不提供，同新浪一样回填定稿值
+    并标 _flow_from=defined，评分口径一行不改。
+    """
+    try:
+        path = Path(__file__).resolve().parent / "normalized_snapshots.json"
+        rows = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}, {"coverage": 0.0, "total": 0}
+    if not isinstance(rows, list) or len(rows) < 50:
+        return {}, {"coverage": 0.0, "total": 0}
+    base_fields: dict[str, dict] = {}
+    try:
+        bp = Path(__file__).resolve().parent / "auto_output" / "base_flow_sector.json"
+        loaded = json.loads(bp.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            base_fields = loaded
+    except (OSError, ValueError, TypeError):
+        pass
+
+    base: dict[str, dict] = {}
+    syms: list[str] = []
+    for row in rows:
+        code = str(row.get("code") or "")
+        if len(code) != 6 or code in base:
+            continue
+        base[code] = row
+        syms.append(_tx_symbol(code))
+    chunks = [syms[i:i + TX_BATCH] for i in range(0, len(syms), TX_BATCH)]
+    pairs: list[tuple[str, list[str]]] = []
+    with ThreadPoolExecutor(max_workers=min(6, len(chunks) or 1)) as pool:
+        for got in pool.map(_tx_chunk, chunks):
+            pairs.extend(got)
+
+    quotes: dict[str, dict] = {}
+    for code, p in pairs:
+        snap = base.get(code)
+        if not snap:
+            continue
+        ref = base_fields.get(code) or {}
+        price, prev = num(p[3]), num(p[4])
+        if price <= 0 or prev <= 0:
+            continue
+        amt_wan, vol_hand = num(p[37]), num(p[6])
+        quotes[code] = {
+            "f12": code, "f14": str(snap.get("name") or p[1] or ""),
+            "f2": price, "f18": prev,
+            "f17": num(p[5]) or price, "f15": num(p[33]) or price,
+            "f16": num(p[34]) or price,
+            # 涨跌幅按价格自己算，与新浪通道同一口径，避免源值四舍五入引起的
+            # 阈值判定漂移（涨停价判定、追涨惩罚都看这个数）
+            "f3": round((price / prev - 1) * 100, 3),
+            "f5": (vol_hand or 0) * 100, "f6": (amt_wan or 0) * 1e4,
+            "f8": num(p[38]),
+            "f184": num(ref.get("money_flow_pct")) or num(snap.get("money_flow_pct")),
+            "f100": str(ref.get("sector") or snap.get("sector") or ""),
+            "lu": num(p[47]), "ld": num(p[48]), "vr": num(p[49]),
+            # 外盘 / 内盘（手）：主动买、主动卖成交量。是全市场盘中资金流的
+            # 原始量——不需要同花顺那套日频指标也能算净流入。
+            "outer": num(p[7]), "inner": num(p[8]),
+            "_flow_from": "defined",
+        }
+    return quotes, {"coverage": round(len(quotes) / (len(base) or 1), 3),
+                    "total": len(base)}
+
+
 def fetch_quotes(workers: int = 10, max_pages: int = 60) -> dict[str, dict]:
     """拉全市场实时行情，返回 {code: 行情字段}。
 
-    东财为主、同花顺为备：东财页失败先重试补齐，仍不足 MIN_QUOTES 时
-    用同花顺 realhead 补缺代码。返回结构对上层完全一致，调用方无感。
+    降级顺序：东财 clist（带实时资金流）→ 腾讯批量 → 新浪批量 → 同花顺逐只。
+    后三级都不提供实时资金流，从定稿回填并标 _flow_from=defined；返回结构对
+    上层完全一致，调用方无感。
     """
     global LAST_SOURCE
     first, total = _curl_page(1)
@@ -376,9 +483,17 @@ def fetch_quotes(workers: int = 10, max_pages: int = 60) -> dict[str, dict]:
         LAST_SOURCE = "eastmoney"
         return out
 
-    # 东财整轮断连时优先走新浪批量（9 请求覆盖全市场），比逐只同花顺快一个
-    # 数量级，且带定稿资金流，不会让全市场资金维度集体归零。东财已经拿到的
-    # 那几页带实时资金流，优先级更高，留着覆盖同代码的新浪行。
+    # 东财整轮断连时（实测 macOS 与部分机房出口对 push2 的 TLS 直接 RST，
+    # http 也一样）先走腾讯批量：13 请求覆盖全市场，还带涨跌停价与换手率真值。
+    tx, tmeta = fetch_quotes_tencent()
+    if (tx and len(tx) >= _min_quotes()
+            and tmeta.get("coverage", 0) >= SINA_MIN_COVERAGE):
+        merged = dict(tx)
+        merged.update(out)      # 东财已拿到的那几页带实时资金流，优先级更高
+        LAST_SOURCE = "tencent_batch"
+        return merged
+
+    # 再退新浪批量（9 请求，比逐只同花顺快一个数量级，也带定稿资金流）
     sina, smeta = fetch_quotes_sina()
     if (sina and len(sina) >= _min_quotes()
             and smeta.get("coverage", 0) >= SINA_MIN_COVERAGE):
@@ -485,6 +600,11 @@ def apply_quotes(rows: list[dict], quotes: dict[str, dict],
         avg_amount20 = num(base.get("avg_amount20"))
         amount_ratio = amount / (avg_amount20 * elapsed) if avg_amount20 > 0 else 1.0
         cap = 19.5 if code.startswith(("30", "68")) else 9.5
+        # 源头直给涨跌停价就按价判：涨跌幅近似对 ST（5cm）和北交所（30cm）是错的。
+        # 板块打分里的 limitups 就是数这个字段，判错会连带板块分和总评分。
+        lu_price = num(item.get("lu"))
+        is_limit_up = (price >= lu_price - 0.005) if lu_price and lu_price > 0 \
+            else change_pct >= cap
 
         row = dict(base)
         row.update({
@@ -500,7 +620,7 @@ def apply_quotes(rows: list[dict], quotes: dict[str, dict],
             "amount_ratio": round(amount_ratio, 4),
             "breakout_volume_ratio": round(amount_ratio, 4),
             "sector": str(item.get("f100") or base.get("sector") or "未分类"),
-            "limit_up": change_pct >= cap,
+            "limit_up": is_limit_up,
             "collected_at": datetime.now().isoformat(timespec="seconds"),
         })
         out.append(row)

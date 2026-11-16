@@ -98,11 +98,17 @@ def _live_status() -> dict:
 
 
 # 全市场评分基座：七维评分里「一天只变一次」的那部分量。
-# 盘中会变的是价格/成交额/换手/资金流，由浏览器现拉；这些不随盘中变化，
+# 盘中会变的是价格/涨跌/成交额，由浏览器现拉；这些不随盘中变化，
 # 随页面下发一次就够，静态页因此能在浏览器里对全市场重算评分。
+#
+# money_flow_pct 也放在基座里，因为没有任何一家免费行情源在浏览器侧供给
+# 全市场主力净占比：东财 f184 是唯一来源，而它一被墙，全市场就只剩 100 只
+# 带资金流、其余全缺，资金流维度会被整维剔掉重分配权重——算出来的分与
+# 本地不可比。带上定稿值后，浏览器端与本地「新浪降级」是同一种口径：
+# 资金流用定稿、价格涨跌成交额用实时。
 BASE_KEYS = ("symbol", "name", "price", "prev_close", "high", "low",
              "avg_amount20", "atr14", "ma20", "high20", "pivot_price",
-             "trend_consistency", "sector", "limit_up")
+             "trend_consistency", "sector", "limit_up", "money_flow_pct")
 
 # 评分与动作判定用到的策略参数，原样下发，保证浏览器端与本地同一条阈值线。
 CONFIG_KEYS = ("require_leader", "require_independent_confirmation", "min_strong_sectors",

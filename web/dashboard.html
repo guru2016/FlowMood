@@ -477,10 +477,12 @@ function renderBreadth(){
  const badge=live
   ?`<span class="pill is-live" title="${b.score_ready===false?'集合竞价无成交额，七维评分 09:30 起重算':'行情实时刷新中'}">${sess==='trading'?'●':'◐'} ${esc(b.session_label||'盘中实时')}</span>`
   :`<span class="pill">○ ${esc(b.session_label||'收盘定稿')}</span>`;
+ const luTip=b.limit_exact===false?'按 9.8% 近似的封板家数，ST 5cm 会漏计':'按涨停价比价，ST 与北交所口径也准';
  const parts=[
   `<span class="pill" title="全市场 ${b.count} 只，涨跌比 ${b.ratio}">涨 <b class="up">${b.up}</b> <span style="color:var(--text-muted)">/</span> 跌 <b class="down">${b.down}</b>${b.flat?` <span style="color:var(--text-muted)">平 ${b.flat}</span>`:''}</span>`,
-  `<span class="pill" title="按 9.8% 近似的封板家数，ST 5cm 会漏计">涨停 <b class="up">${b.limit_up}</b> <span style="color:var(--text-muted)">/</span> 跌停 <b class="down">${b.limit_down}</b></span>`,
+  `<span class="pill" title="${luTip}">涨停 <b class="up">${b.limit_up}</b> <span style="color:var(--text-muted)">/</span> 跌停 <b class="down">${b.limit_down}</b></span>`,
   `<span class="pill" title="涨超 5% ${b.strong} 只 · 跌超 5% ${b.weak} 只">${esc(b.amount_label||'两市成交')} <b>${fmtYi(b.amount_yi)}</b></span>`,
+  b.flow_net_yi!=null?`<span class="pill" title="主动买 ${b.flow_buy_yi} 亿 / 主动卖 ${b.flow_sell_yi} 亿 · 占成交 ${b.flow_ratio}% · ${esc(b.flow_basis||'')} · 覆盖 ${b.flow_count} 只">资金 <b class="${tone(b.flow_net_yi)}">${b.flow_net_yi>0?'+':''}${b.flow_net_yi}亿</b></span>`:'',
   `<span class="pill" title="中位涨跌 ${b.median_change==null?'--':b.median_change+'%'}">均涨 <b class="${tone(b.avg_change)}">${b.avg_change>0?'+':''}${b.avg_change}%</b></span>`,
   badge
  ];

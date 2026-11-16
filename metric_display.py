@@ -308,6 +308,12 @@ def clean_report_markdown(markdown: str) -> str:
 def normalize_report(report: dict) -> dict:
     """/api/reports 与 build_static.py 共用：补齐 metrics，清理正文。幂等。"""
     r = dict(report or {})
+    # 报告里任何形如 sjdp_* 的键都是上游接口名，不能跟着 BOOT 进页面源码：
+    # 静态页数据载荷只该有人话字段，接口键露出来是给冒烟测试拦的。
+    for key in [k for k in r if isinstance(k, str) and "sjdp_" in str(r.get(k))]:
+        v = r.get(key)
+        if isinstance(v, list) and all(isinstance(x, str) and x.startswith("sjdp_") for x in v):
+            r[key] = len(v)          # 名单型字段退化成一个计数
     md = r.get("markdown") or ""
     raw = r.get("metrics")
     if isinstance(raw, list) and raw:

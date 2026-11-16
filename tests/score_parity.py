@@ -103,6 +103,24 @@ console.log(JSON.stringify({ ranked: out.ranking.length, scored: out.stats.count
 """
 
 
+def real_quotes() -> dict | None:
+    """拉一份真实盘中行情（腾讯通道），用来验证两边吃同一份真数据是否同解。
+
+    比起模拟行情，这一步额外覆盖了「涨停价判封板」「换手率取源值」
+    「资金流回填定稿」这些只在真行情里才出现的情形。
+    """
+    try:
+        from live_quotes import fetch_quotes_tencent
+    except Exception:  # noqa: BLE001
+        return None
+    quotes, meta = fetch_quotes_tencent()
+    if not quotes or meta.get("coverage", 0) < 0.5:
+        print(f"腾讯行情不可达（覆盖 {meta.get('coverage')}），跳过真实行情对账")
+        return None
+    print(f"真实行情：{len(quotes)} 只，覆盖率 {meta['coverage']}")
+    return quotes
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", default=str(ROOT / "normalized_snapshots.json"))
@@ -110,6 +128,8 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=100)
     ap.add_argument("--live", action="store_true",
                     help="叠加一份确定性模拟行情，验证「行情覆盖→板块聚合→评分」整链")
+    ap.add_argument("--tencent", action="store_true",
+                    help="拉真实腾讯行情做对账（覆盖涨停价判封板等真行情分支）")
     args = ap.parse_args()
 
     snapshot = Path(args.snapshot)
@@ -129,8 +149,14 @@ def main() -> int:
                 pass
 
     rows = json.loads(snapshot.read_text(encoding="utf-8"))
-    quotes = make_quotes(rows) if args.live else None
-    mode = "盘中行情覆盖" if quotes else "静态快照"
+    if args.tencent:
+        quotes = real_quotes()
+        if quotes is None:
+            return 0
+        mode = "真实腾讯行情覆盖"
+    else:
+        quotes = make_quotes(rows) if args.live else None
+        mode = "盘中行情覆盖" if quotes else "静态快照"
     print(f"对账起点：{snapshot.name} · 市场分 {market} · {mode}")
     py = python_scores(snapshot, market, cfg, quotes=quotes)
 

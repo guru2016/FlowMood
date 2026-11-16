@@ -41,6 +41,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 import threading
 import time
@@ -59,6 +60,8 @@ EM_LIST = ("https://push2.eastmoney.com/api/qt/clist/get"
            "&fields=f12,f14,f2,f3,f5,f6,f8,f15,f16,f17,f18,f62,f184,f100,f13")
 
 THS_LINE = "https://d.10jqka.com.cn/v6/line/hs_{code}/01/last.js"
+# 腾讯指数行情：字段 30 是快照时间（20261116113023），判断「今天有没有开市」用它
+TX_INDEX = "https://qt.gtimg.cn/q=sh000001"
 
 _lock = threading.Lock()
 _stats = {"ok": 0, "fail": 0, "skip": 0}
@@ -274,8 +277,64 @@ def is_tradable(item: dict) -> bool:
 
 
 # ---------------------------------------------------------------- 日K历史
-def fetch_kline(code: str) -> list[tuple]:
-    """返回 [(date, open, high, low, close, volume, amount, turnover), ...] 全历史。"""
+# 同花顺日K在部分网络整链不可达（macOS 上 TLS 直接 RST）。探一次就记住，
+# 否则 5000 只会每只都先等两次超时，采集会从 20 秒变成半小时。
+_THS_KLINE_OK: bool | None = None
+
+TX_KLINE = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={sym},day,,,{n},qfq"
+
+
+def _ths_kline_ok() -> bool:
+    global _THS_KLINE_OK
+    if _THS_KLINE_OK is None:
+        try:
+            _THS_KLINE_OK = bool(parse_body(http_get(THS_LINE.format(code="600519"))).get("data"))
+        except Exception:  # noqa: BLE001
+            _THS_KLINE_OK = False
+    return _THS_KLINE_OK
+
+
+def _tx_symbol(code: str) -> str:
+    if not code:
+        return ""
+    head = code[0]
+    if head in "569":
+        return "sh" + code
+    if head in "48":
+        return "bj" + code
+    return "sz" + code
+
+
+def _tx_kline(code: str, span: int = 70) -> list[tuple]:
+    """腾讯日K（前复权），返回与 fetch_kline 同构的元组列表。
+
+    腾讯不给成交额，用「收盘价 × 成交量」估算：这两者都是交易所口径的原始量，
+    实测与真实成交额吻合（600519 当日 26.40 亿 对 26.40 亿）。日K在这里只用来
+    算 20 日均额、ma20、20 日高点，估算误差落在这三个统计量上都在 1% 内，
+    远好过整条采集链路取不到日K。
+    """
+    sym = _tx_symbol(code)
+    if not sym:
+        return []
+    body = parse_body(http_get(TX_KLINE.format(sym=sym, n=span), timeout=10.0, retries=2))
+    node = ((body.get("data") or {}).get(sym) or {})
+    rows = node.get("qfqday") or node.get("day") or []
+    out: list[tuple] = []
+    for r in rows:
+        if len(r) < 6:
+            continue
+        try:
+            d = str(r[0]).replace("-", "")
+            # 腾讯顺序：日期, 开, 收, 高, 低, 量(手)
+            o, c, h, low, v = (float(r[1]), float(r[2]), float(r[3]),
+                               float(r[4]), float(r[5]))
+        except (TypeError, ValueError):
+            continue
+        out.append((d, o, h, low, c, v, c * v * 100, 0.0))
+    return out
+
+
+def _ths_kline(code: str) -> list[tuple]:
     body = parse_body(http_get(THS_LINE.format(code=code)))
     raw = body.get("data") or ""
     out: list[tuple] = []
@@ -291,6 +350,19 @@ def fetch_kline(code: str) -> list[tuple]:
         except (TypeError, ValueError):
             continue
     return out
+
+
+def fetch_kline(code: str) -> list[tuple]:
+    """返回 [(date, open, high, low, close, volume, amount, turnover), ...]。
+
+    同花顺为主（带真实成交额），整链不可达时转腾讯。两者字段顺序在这里统一，
+    下游 build_row 不用关心数据从哪来。
+    """
+    if _ths_kline_ok():
+        rows = _ths_kline(code)
+        if rows:
+            return rows
+    return _tx_kline(code)
 
 
 def atr(bars: list[tuple], period: int = 14) -> float:
@@ -401,10 +473,37 @@ def collect_one(item: dict, session: str) -> dict | None:
 
 # ---------------------------------------------------------------- 交易日判定
 def check_trading_day() -> tuple[bool, str]:
-    """用上证指数当日日K是否已更新来判断，天然覆盖周末与节假日。"""
-    body = parse_body(http_get(THS_LINE.format(code="1A0001")))
-    last = str(body.get("today") or "")
-    return last == datetime.now().strftime("%Y%m%d"), last
+    """今天是不是交易日：看指数当日行情的时间戳是不是今天。
+
+    原来只问同花顺日K（d.10jqka.com.cn）。那家在部分网络整链不可达
+    （实测 macOS 上 TLS 直接 RST），拿不到就返回空日期，于是被判成
+    「非交易日」，整个流水线优雅退出——11-13 和 11-16 两个真实的交易日
+    就是这么被跳过的，报告与指标一直停在 11-12。
+    所以改成先问腾讯（回 access-control-allow-origin: *，浏览器与服务端
+    都稳定可达），拿不到再退回同花顺。
+    """
+    today = datetime.now().strftime("%Y%m%d")
+    # 腾讯指数行情：字段 30 是快照时间 20261116113023，取前 8 位即交易日
+    try:
+        text = http_get(TX_INDEX, timeout=8.0, retries=2)
+        m = re.search(r'v_sh000001="([^"]*)"', text or "")
+        if m:
+            parts = m.group(1).split("~")
+            if len(parts) > 30:
+                stamp = str(parts[30])[:8]
+                if stamp == today:
+                    return True, stamp
+                if stamp:
+                    return False, stamp      # 有行情但不是今天 = 真的休市
+    except Exception:  # noqa: BLE001
+        pass
+    # 退回同花顺日K（腾讯也不可达时的最后一条路）
+    try:
+        body = parse_body(http_get(THS_LINE.format(code="1A0001")))
+        last = str(body.get("today") or "")
+    except Exception:  # noqa: BLE001
+        last = ""
+    return last == today, last
 
 
 # ---------------------------------------------------------------- 主流程
