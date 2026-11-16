@@ -116,14 +116,8 @@ CONFIG_KEYS = ("require_leader", "require_independent_confirmation", "min_strong
                "max_exposure", "commission_bps", "slippage_bps")
 
 
-def _base_pack() -> dict | None:
-    """打包全市场日线统计字段，供浏览器端重算七维评分。
-
-    没有快照文件（云端采集失败、或者仓库里没同步）时返回 None，
-    静态层会自动降级成「只刷行情、榜单沿用定稿」，不会拿半份数据假装能重排。
-    """
-    path = ROOT / "normalized_snapshots.json"
-    rows = _json(path)
+def _pack_from_rows(rows) -> dict | None:
+    """把快照行压成页面里那份基座；行数太少说明快照残缺，宁可不出基座。"""
     if not isinstance(rows, list) or not rows:
         return None
     pack: list[list] = []
@@ -137,10 +131,38 @@ def _base_pack() -> dict | None:
                 v = round(v, 4)
             line.append(v)
         pack.append(line)
-    if len(pack) < 500:      # 明显残缺的快照不拿出来评分
+    if len(pack) < 500:
         return None
-    return {"v": 1, "keys": list(BASE_KEYS), "rows": pack,
-            "snapshot_at": (_json(ROOT / "normalized_snapshots_meta.json", {}) or {}).get("generated_at", "")}
+    return {"v": 1, "keys": list(BASE_KEYS), "rows": pack}
+
+
+def _base_pack() -> dict | None:
+    """打包全市场日线统计字段，供浏览器端重算七维评分。
+
+    优先用本次采集的快照；云端 Actions 经常抓不到东财全市场列表（出口被限流），
+    那时退回 `sample/score_base.json.gz`——最近一次从本机同步过去的基座。
+    两者都没有就返回 None，静态层降级成「只刷行情、榜单沿用定稿」，
+    绝不用半份数据假装能重排。
+    """
+    snap = ROOT / "normalized_snapshots.json"
+    pack = _pack_from_rows(_json(snap)) if snap.exists() else None
+    if pack:
+        meta = _json(ROOT / "normalized_snapshots_meta.json", {}) or {}
+        pack["snapshot_at"] = meta.get("generated_at", "")
+        pack["source"] = "live_snapshot"
+        return pack
+
+    gz = SAMPLE / "score_base.json.gz"
+    if gz.exists():
+        try:
+            import gzip
+            fallback = json.loads(gzip.decompress(gz.read_bytes()).decode("utf-8"))
+            if isinstance(fallback, dict) and fallback.get("rows"):
+                fallback["source"] = "sample_base"
+                return fallback
+        except Exception:  # noqa: BLE001  基座坏了就当没有，别让整页构建失败
+            pass
+    return None
 
 
 def _score_config() -> dict:

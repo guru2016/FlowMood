@@ -47,6 +47,7 @@
 !/tests/*.py
 !/sample/
 !/sample/*.json
+!/sample/*.gz
 !/docs/
 /docs/*
 !/docs/.gitkeep

@@ -90,7 +90,24 @@ def main() -> int:
     _dump(SAMPLE / "reports.json", {"reports": reports})
     if status:
         _dump(SAMPLE / "status.json", status)
+
+    # 评分基座也要同步：Actions 抓不到全市场行情是常态，没有这份基座，
+    # Pages 上的浏览器就没法重排，只能刷价格不排名次。
+    # 存 gzip（约 620 KB → 200 KB），仓库每次同步只增这么多。
+    from build_static import _base_pack
+    pack = _base_pack()
+    if pack and pack.get("source") == "live_snapshot":
+        import gzip
+        raw = json.dumps(pack, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        out = SAMPLE / "score_base.json.gz"
+        out.write_bytes(gzip.compress(raw, 9))
+        print(f"评分基座 {len(pack['rows'])} 只 · {len(raw) / 1024:.0f} KB → "
+              f"{out.stat().st_size / 1024:.0f} KB（{pack.get('snapshot_at', '')}）")
+    else:
+        print("跳过评分基座：没有可用的 normalized_snapshots.json")
+
     total = sum(p.stat().st_size for p in SAMPLE.glob("*.json"))
+    total += sum(p.stat().st_size for p in SAMPLE.glob("*.gz"))
     print(f"已写入 sample/（共 {total / 1024:.0f} KB）")
     return 0
 

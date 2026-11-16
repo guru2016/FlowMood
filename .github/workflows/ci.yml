@@ -94,7 +94,8 @@ jobs:
           assert 'applyQuotes' in h and 'makeSelectionBook' in h, '评分引擎应完整移植'
           # 基座存在（云端采集成功）时，评分依赖的日线统计字段必须一起下发，
           # 否则浏览器端只能拿默认值打分，算出来的分和本地对不上。
-          if '"base":' in boot:
+          # 注意采不到数据时这里是 "base":null，不能只判断键存在。
+          if '"base":{"v":' in boot:
               for k in ('avg_amount20', 'pivot_price', 'trend_consistency', 'high20'):
                   assert k in boot, f'评分基座缺少 {k}'
               print('评分基座已随页面下发')

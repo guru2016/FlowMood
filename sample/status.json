@@ -28,7 +28,11 @@
     "date_full": "2026-11-12",
     "date_text": "11-12",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "历史",
+    "asof_days": 4,
+    "asof_today": false
    },
    {
     "label": "北向资金",
@@ -58,7 +62,11 @@
     "date_full": "2024-08-16",
     "date_text": "08-16",
     "stale": true,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "停更",
+    "asof_days": null,
+    "asof_today": false
    },
    {
     "label": "市场情绪",
@@ -73,7 +81,11 @@
     "date_full": "2026-11-11",
     "date_text": "11-11",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "历史",
+    "asof_days": 5,
+    "asof_today": false
    },
    {
     "label": "融资融券",
@@ -103,7 +115,11 @@
     "date_full": "2026-11-11",
     "date_text": "11-11",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "历史",
+    "asof_days": 5,
+    "asof_today": false
    },
    {
     "label": "新增开户",
@@ -126,7 +142,11 @@
     "date_full": "2026-10",
     "date_text": "2026-10",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": true,
+    "asof_label": "2月前",
+    "asof_days": 46,
+    "asof_today": false
    },
    {
     "label": "市场融资",
@@ -135,13 +155,17 @@
     "main_tone": "flat",
     "main_key": "bond",
     "no_data": false,
-    "hint": "预告",
+    "hint": "",
     "items": [],
     "date": "20261116",
     "date_full": "2026-11-16",
     "date_text": "11-16",
     "stale": false,
-    "future": true
+    "future": false,
+    "monthly": false,
+    "asof_label": "今日",
+    "asof_days": 0,
+    "asof_today": true
    },
    {
     "label": "限售解禁",
@@ -156,7 +180,11 @@
     "date_full": "2026-12-30",
     "date_text": "12-30",
     "stale": false,
-    "future": true
+    "future": true,
+    "monthly": false,
+    "asof_label": "预告",
+    "asof_days": null,
+    "asof_today": false
    },
    {
     "label": "增减持",
@@ -179,7 +207,11 @@
     "date_full": "2026-11-11",
     "date_text": "11-11",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "历史",
+    "asof_days": 5,
+    "asof_today": false
    },
    {
     "label": "新增基金",
@@ -202,7 +234,11 @@
     "date_full": "2026-11",
     "date_text": "2026-11",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": true,
+    "asof_label": "本月",
+    "asof_days": 15,
+    "asof_today": false
    },
    {
     "label": "逆回购",
@@ -232,7 +268,11 @@
     "date_full": "2021-08-30",
     "date_text": "08-30",
     "stale": true,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "停更",
+    "asof_days": null,
+    "asof_today": false
    },
    {
     "label": "美元人民币",
@@ -255,7 +295,11 @@
     "date_full": "2026-11-11",
     "date_text": "11-11",
     "stale": false,
-    "future": false
+    "future": false,
+    "monthly": false,
+    "asof_label": "历史",
+    "asof_days": 5,
+    "asof_today": false
    }
   ],
   "plans": [
@@ -311,7 +355,7 @@
     "pivot_price": 3.59,
     "high20": 3.59,
     "pullback_price": 3.61,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -365,7 +409,7 @@
     "pivot_price": 6.69,
     "high20": 6.69,
     "pullback_price": 6.72,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -422,7 +466,7 @@
     "pivot_price": 3.67,
     "high20": 3.67,
     "pullback_price": 3.69,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -478,7 +522,7 @@
     "pivot_price": 12.83,
     "high20": 12.83,
     "pullback_price": 12.89,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -536,7 +580,7 @@
     "pivot_price": 1.5,
     "high20": 1.5,
     "pullback_price": 1.51,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -592,7 +636,7 @@
     "pivot_price": 12.24,
     "high20": 12.24,
     "pullback_price": 12.3,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -650,7 +694,7 @@
     "pivot_price": 20.3,
     "high20": 20.3,
     "pullback_price": 20.4,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -707,7 +751,7 @@
     "pivot_price": 8.33,
     "high20": 8.33,
     "pullback_price": 8.37,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -762,7 +806,7 @@
     "pivot_price": 5.73,
     "high20": 5.73,
     "pullback_price": 5.76,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    },
    {
@@ -820,7 +864,7 @@
     "pivot_price": 40.32,
     "high20": 40.32,
     "pullback_price": 40.52,
-    "selected_at": "2026-11-12T18:16:31",
+    "selected_at": "2026-11-16T10:08:43",
     "selected_new": false
    }
   ],
@@ -830,13 +874,13 @@
  "alerts": {},
  "auto": {
   "midday": {
-   "stamp": "20261112_113506",
-   "finished_at": "2026-11-12T11:35:31",
+   "stamp": "20261113_113505",
+   "finished_at": "2026-11-13T11:35:07",
    "all_ok": true
   },
   "close": {
-   "stamp": "20261112_151005",
-   "finished_at": "2026-11-12T15:10:25",
+   "stamp": "20261113_151006",
+   "finished_at": "2026-11-13T15:10:08",
    "all_ok": true
   }
  }
